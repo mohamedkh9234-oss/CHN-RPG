@@ -1,0 +1,1014 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<meta name="theme-color" content="#123b46"><title>Community Health Nursing RPG — Open World Prototype — Start Fix</title>
+<style>
+:root{--glass:rgba(9,30,39,.88);--line:#ffffff30;--mint:#64e3c1;--cream:#fff8e9}
+*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#b7d3d5;color:#f5fbfb;font-family:system-ui,-apple-system,"Segoe UI",sans-serif;touch-action:none}canvas{display:block;width:100%;height:100%}
+#hud{position:fixed;inset:0;pointer-events:none}.panel{background:var(--glass);border:1px solid var(--line);border-radius:15px;padding:9px 12px;box-shadow:0 8px 26px #00161d45;backdrop-filter:blur(9px)}
+#brand{position:absolute;top:8px;left:50%;right:auto;transform:translateX(-50%);max-width:70vw;text-align:center;background:rgba(9,30,39,.28);border:1px solid rgba(255,255,255,.18);box-shadow:none;padding:7px 16px;backdrop-filter:blur(5px);border-radius:14px}#brand b{display:block;font-size:13px;letter-spacing:.5px}#brand small{color:#d5eeee;font-size:10px}
+#stats{position:absolute;top:10px;left:10px;font-size:11px;line-height:1.8;min-width:120px}#stats b{color:var(--mint)}
+#stamina{position:absolute;top:108px;left:10px;width:145px;font-size:11px}#track{height:8px;border-radius:99px;background:#ffffff38;margin-top:5px;overflow:hidden}#fill{height:100%;width:100%;background:#68dfa7}
+#quest{position:absolute;top:218px;right:10px;width:min(260px,47vw);font-size:11px;line-height:1.55}#quest strong{color:#9bf2d7;display:block;margin-bottom:2px}
+#hint{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:12px;text-align:center;max-width:80vw;display:none}
+#cameraHint{position:absolute;right:10px;bottom:150px;font-size:10px;max-width:145px}
+#controls{position:absolute;inset:auto 0 10px;display:flex;justify-content:space-between;align-items:end;padding:0 12px;direction:ltr;pointer-events:none}
+#stick{width:112px;height:112px;border-radius:50%;border:2px solid #e7ffff75;background:#0b354d70;position:relative;pointer-events:auto;touch-action:none}
+#knob{position:absolute;left:31px;top:31px;width:46px;height:46px;border-radius:50%;background:#eafafaeb;border:2px solid white;box-shadow:0 3px 12px #00152266}
+#actions{display:flex;gap:8px;align-items:end;pointer-events:auto}.action{width:62px;height:62px;border-radius:50%;border:1px solid #c4f8f3aa;background:#164c53eF;color:white;font-weight:800;font-size:11px;touch-action:manipulation}.action:active{transform:scale(.96)}#interact{width:74px;height:74px;background:#087f70}
+#minimap{position:absolute;right:10px;top:78px;bottom:auto;width:112px;height:112px;border:2px solid #ffffffaa;border-radius:13px;background:#143b3c;overflow:hidden}
+#mapCanvas{width:100%;height:100%;image-rendering:auto}
+#desktophelp{position:absolute;bottom:12px;left:50%;transform:translateX(-50%);font-size:10px;background:#102b3fc2;border-radius:10px;padding:7px 10px;white-space:nowrap}
+#screen{position:fixed;inset:0;z-index:5;display:flex;align-items:center;justify-content:center;padding:18px;background:linear-gradient(135deg,#082632eF,#164e4eeF);overflow:auto}
+#screen .sheet{width:min(780px,100%);max-height:95%;overflow:auto;background:#f5fbf8;color:#183a40;border-radius:23px;padding:clamp(16px,3vw,28px);box-shadow:0 24px 70px #001a23a8;text-align:center}
+h1{margin:0 0 8px;font-size:clamp(22px,4vw,34px)}.sub{color:#547176;line-height:1.6;margin:0 auto 18px;max-width:600px}
+#avatars{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.choice{background:#fff;border:2px solid #d7e7e2;border-radius:16px;padding:12px;color:#173b41;cursor:pointer}.choice.selected{border-color:#138b79;background:#e9faf4;box-shadow:0 0 0 2px #138b7920}.avatarArt{height:130px;display:flex;align-items:end;justify-content:center;position:relative;background:linear-gradient(#d9eeea,#f8f4e8);border-radius:12px;margin-bottom:8px;overflow:hidden}
+.previewBody{position:absolute;bottom:7px;width:54px;height:82px;border-radius:17px 17px 9px 9px;background:#635b51}.previewHead{position:absolute;bottom:78px;width:37px;height:42px;border-radius:42% 42% 46% 46%;background:#7a4c35;z-index:2}.previewHair{position:absolute;bottom:62px;width:58px;height:84px;border-radius:40% 40% 30% 30%;background:#17191b;z-index:1}.previewScarf{position:absolute;bottom:67px;width:60px;height:69px;border-radius:45% 45% 25% 25%;background:#d995b3;z-index:2}.previewLeg{position:absolute;bottom:0;width:14px;height:16px;background:#342e2b}.previewText{font-size:11px;color:#5b7477;line-height:1.5}.primary{border:0;border-radius:12px;background:#087f70;color:#fff;font-weight:800;padding:13px 22px;font-size:15px;cursor:pointer;margin-top:15px;width:min(300px,100%)}
+#modal{position:fixed;inset:0;z-index:4;background:#00151bc9;display:none;align-items:center;justify-content:center;padding:18px;pointer-events:auto}
+.card{max-width:520px;width:100%;max-height:90%;overflow:auto;background:#f5fbf8;color:#173b41;border-radius:20px;padding:22px;box-shadow:0 24px 70px #001a23a8;line-height:1.65}.card h2{margin:0 0 8px}.card p{margin:8px 0}.card button{border:0;border-radius:10px;padding:10px 14px;background:#087f70;color:white;font-weight:800;cursor:pointer;margin:5px 4px 0 0}.answer{display:block;width:100%;text-align:right;background:#eaf4f0!important;color:#163a3d!important;border:1px solid #cbded8!important}.answer:hover{background:#d9f2e9!important}.secondary{background:#dfeae6!important;color:#24464a!important}#toast{position:fixed;z-index:6;bottom:140px;left:50%;transform:translateX(-50%);display:none;max-width:85vw;text-align:center;font-size:12px}
+#mapLegend{font-size:10px;color:#c9e7e0;text-align:center;margin-top:3px}
+@media(max-width:520px){#brand{max-width:68vw;top:7px}#brand b{font-size:11px}#stats{font-size:10px;min-width:105px}#minimap{top:78px;right:10px;width:88px;height:88px}#quest{top:174px;width:46vw;font-size:10px}#stamina{top:108px;width:125px}#cameraHint{bottom:137px;max-width:125px}#stick{width:98px;height:98px}#knob{left:26px;top:26px;width:42px;height:42px}#minimap{width:88px;height:88px}#desktophelp{display:none}.avatarArt{height:100px}}
+@media(min-width:800px){#controls{padding:0 24px}#stick{width:100px;height:100px}#knob{left:27px;top:27px;width:42px;height:42px}}
+/* Phone landscape layout: keep the world wide, HUD compact, and controls clear of the safe areas. */
+#rotateNotice{display:none;position:fixed;inset:0;z-index:20;background:linear-gradient(145deg,#082632,#14534f);color:#f4fffb;align-items:center;justify-content:center;text-align:center;padding:24px;}
+#rotateNotice .rotateCard{max-width:360px;background:#ffffff12;border:1px solid #ffffff30;border-radius:22px;padding:24px;box-shadow:0 18px 50px #00151b70}
+#rotateNotice .phoneIcon{font-size:54px;display:block;margin-bottom:12px;animation:turnPhone 1.8s ease-in-out infinite alternate}
+#rotateNotice button{border:0;border-radius:12px;background:#0d8a78;color:white;font-weight:800;padding:12px 18px;margin-top:14px;font-size:15px}
+@keyframes turnPhone{from{transform:rotate(0deg)}to{transform:rotate(-90deg)}}
+@media (max-width:900px) and (orientation:landscape){#brand{top:5px;padding:4px 12px;max-width:48vw}#brand b{font-size:10px}#brand small{font-size:8px}#stats{top:6px;left:7px;padding:5px 8px;font-size:9px;line-height:1.45;min-width:86px}#stamina{top:78px;left:7px;width:112px;padding:5px 8px;font-size:9px}#track{height:6px;margin-top:3px}#minimap{top:6px;right:7px;width:86px;height:86px}#quest{top:98px;right:7px;width:clamp(145px,28vw,240px);font-size:9px;padding:6px 8px}#quest div{font-size:8px!important;margin-top:3px!important;padding-top:3px!important}#cameraHint{right:7px;bottom:93px;font-size:8px;max-width:120px;padding:5px 7px}#controls{bottom:max(6px,env(safe-area-inset-bottom));padding:0 10px}#stick{width:76px;height:76px}#knob{width:34px;height:34px;left:19px;top:19px}#actions{gap:6px}.action{width:48px;height:48px;font-size:10px}#interact{width:58px;height:58px}#desktophelp{display:none}#toast{bottom:74px;font-size:10px}}
+@media (max-width:900px) and (orientation:portrait){body.gameStarted #rotateNotice{display:flex}body.gameStarted #hud,body.gameStarted canvas,body.gameStarted #toast,body.gameStarted #modal{visibility:hidden}body.gameStarted #rotateNotice{visibility:visible}}
+@media (max-height:430px) and (orientation:landscape){#screen .sheet{max-height:98vh;padding:10px 16px}#screen h1{font-size:20px}#screen .sub{font-size:12px;margin-bottom:8px}#avatars{gap:8px}.choice{padding:7px}.avatarArt{height:65px}.primary{margin-top:8px;padding:10px 16px}}
+.previewHair{width:40px!important;height:24px!important;bottom:106px!important;border-radius:50% 50% 25% 25%!important}.choice[data-char=adam] .previewBody{background:#ece6d6!important;border-radius:15px 15px 4px 4px!important}.choice[data-char=adam] .previewHead{background:#c68863!important}.choice[data-char=mariam] .previewHead{background:#f1c9a5!important}#stick{width:136px!important;height:136px!important}#knob{width:60px!important;height:60px!important;left:38px!important;top:38px!important}#actions{gap:10px!important}.action{width:80px!important;height:80px!important;font-size:13px!important}@media (max-height:520px){#stick{width:120px!important;height:120px!important}#knob{width:54px!important;height:54px!important;left:33px!important;top:33px!important}.action{width:68px!important;height:68px!important;font-size:12px!important}}
+#authStatus{font-size:12px;line-height:1.6;color:#46666a;white-space:pre-wrap}
+</style></head>
+<body>
+<div id="hud">
+ <div id="brand" class="panel"><b>COMMUNITY HEALTH NURSING RPG</b><small>العالم المفتوح • نموذج تجريبي</small></div>
+ <div id="stats" class="panel">المستوى <b>1</b><br>الخبرة: <b id="xp">0</b> XP<br>الشخصية: <b id="playerName">آدم</b><br>المهمة: <b id="missionCount">0/5</b></div>
+ <div id="stamina" class="panel"><b>طاقة الجري</b> <span id="staminaText">100%</span><div id="track"><div id="fill"></div></div></div>
+ <div id="quest" class="panel"><strong>المهمة الأساسية | Main Quest</strong><span id="questText">اتجه إلى المنطقة الخضراء</span><button id="comprehensiveExam" type="button" style="pointer-events:auto;margin-top:7px;padding:7px 10px;border-radius:9px;border:1px solid #8be4cc;background:#e5fff5;color:#123b46;font-weight:800;cursor:pointer">الامتحان الشامل | Comprehensive Exam</button><div style="border-top:1px solid #ffffff30;margin-top:6px;padding-top:5px;font-size:10px;color:#b9f4df">مهمات جانبية: عم حسن • سلمى • عمرو | Side quests</div></div>
+ <div id="cameraHint" class="panel">لف الكاميرا بالسحب على العالم. الحركة باتجاه الكاميرا.</div>
+ <div id="controls"><div id="stick" aria-label="عصا الحركة"><div id="knob"></div></div><div id="actions"><button class="action" id="run">جري</button><button class="action" id="interact">تفاعل</button></div></div>
+ <div id="desktophelp">WASD أو الأسهم للحركة • Shift للجري • E للتفاعل • اسحب بزر الماوس الأيسر لتدوير الكاميرا</div>
+ <div id="minimap"><canvas id="mapCanvas" width="224" height="224"></canvas></div>
+</div>
+<div id="rotateNotice" role="status"><div class="rotateCard"><span class="phoneIcon">📱</span><h2 style="margin:0 0 10px">لفّ الموبايل بالعرض</h2><p style="line-height:1.7;margin:0">اللعبة مصممة لوضع الشاشة الأفقي عشان تشوف العالم وتستخدم أزرار الحركة بسهولة. فعّل التدوير التلقائي لو الشاشة ما اتلفتش.</p><button id="rotateTry" type="button">حاول ملء الشاشة والوضع الأفقي</button></div></div>
+<div id="toast" class="panel"></div>
+<div id="screen"><div class="sheet"><h1>Community Health Nursing RPG</h1><p class="sub">استكشف حيًّا مصريًا، وتعلّم محتوى محاضرات صحة المجتمع من الشخصيات والمباني. اختار شخصيتك؛ آدم هو الاختيار الافتراضي.</p><div id="avatars">
+<button class="choice selected" data-char="adam"><div class="avatarArt"><span class="previewHair"></span><span class="previewHead"></span><span class="previewBody"></span><span class="previewLeg" style="left:calc(50% - 13px)"></span><span class="previewLeg" style="left:calc(50% + 1px)"></span></div><b>آدم</b><div class="previewText">ولد حنطي، شعر أسود قصير، جلابية مصرية وشال كتف.</div></button>
+<button class="choice" data-char="mariam"><div class="avatarArt"><span class="previewBody" style="background:#d18da9"></span><span class="previewScarf"></span><span class="previewHead" style="background:#a96e4e;bottom:81px"></span><span class="previewLeg" style="background:#d18da9;left:calc(50% - 13px)"></span><span class="previewLeg" style="background:#d18da9;left:calc(50% + 1px)"></span></div><b>مريم</b><div class="previewText">بنت محجبة بملابس ساترة، اختيار بديل متاح.</div></button>
+</div><button class="primary" id="start" type="button">ابدأ الاستكشاف</button><p id="startError" class="previewText" role="status"></p><p class="previewText">النسخة دي نموذج تطوير قابل للتجربة. اتصال الإنترنت مطلوب لتحميل مكتبة الرسوم ثلاثية الأبعاد.</p></div></div>
+<div id="modal"><div class="card" id="modalContent"></div></div>
+<script>
+// Independent startup watchdog: module imports can fail before module event handlers are registered.
+window.__chnModuleReady = false;
+window.addEventListener('error', function(){
+  var m=document.getElementById('startError');
+  if(m && !window.__chnModuleReady) m.textContent='تعذر تحميل محرك الرسوم ثلاثية الأبعاد. تأكد من اتصال الإنترنت ثم أعد تحميل الصفحة (Ctrl+F5). | 3D engine failed to load; check internet and reload.';
+});
+window.addEventListener('unhandledrejection', function(){
+  var m=document.getElementById('startError');
+  if(m && !window.__chnModuleReady) m.textContent='فشل تحميل أحد مكونات اللعبة. اتصل بالإنترنت وأعد فتح index.html من المجلد الجديد.';
+});
+document.addEventListener('DOMContentLoaded', function(){
+  var b=document.getElementById('start');
+  if(b) b.addEventListener('click', function(){
+    window.setTimeout(function(){
+      var screen=document.getElementById('screen');
+      var m=document.getElementById('startError');
+      if(screen && screen.style.display!=='none' && !window.__chnModuleReady && m && !m.textContent){
+        m.textContent='زر البداية لم يستلم تشغيل اللعبة. غالبًا مكتبة Three.js لم تُحمّل. تأكد من الإنترنت، ثم اضغط Ctrl+F5 وأعد المحاولة. | Game module did not start; check internet and reload.';
+      }
+    }, 900);
+  });
+});
+</script>
+<script type="module">
+import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js';
+// Optional Google Analytics 4. Leave as G-REPLACE_ME to keep analytics disabled.
+const GA4_ID = 'G-REPLACE_ME';
+window.dataLayer = window.dataLayer || [];
+window.gtag = window.gtag || function(){window.dataLayer.push(arguments);};
+if (GA4_ID && GA4_ID !== 'G-REPLACE_ME') {
+ const gaScript=document.createElement('script'); gaScript.async=true;
+ gaScript.src='https://www.googletagmanager.com/gtag/js?id='+encodeURIComponent(GA4_ID);
+ document.head.appendChild(gaScript); window.gtag('js',new Date()); window.gtag('config',GA4_ID);
+}
+function trackEvent(name,params={}) { try { if(GA4_ID && GA4_ID !== 'G-REPLACE_ME') window.gtag('event',name,params); } catch(e){} }
+
+window.__chnModuleReady = true;
+const scene=new THREE.Scene();scene.background=new THREE.Color(0xaed0d2);scene.fog=new THREE.Fog(0xaed0d2,70,245);
+const camera=new THREE.PerspectiveCamera(63,innerWidth/innerHeight,.1,250);
+const renderer=new THREE.WebGLRenderer({antialias:true,powerPreference:'high-performance'});renderer.setPixelRatio(Math.min(devicePixelRatio,1.5));renderer.setSize(innerWidth,innerHeight);renderer.outputColorSpace=THREE.SRGBColorSpace;renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.12;renderer.shadowMap.enabled=false;document.body.appendChild(renderer.domElement);
+scene.add(new THREE.HemisphereLight(0xe9fbff,0x6c7c61,2.0));const sun=new THREE.DirectionalLight(0xfff2d8,2.1);sun.position.set(-18,32,16);scene.add(sun);
+const _mc=new Map();const mat=(c,r=1)=>{const k=c+'_'+r;let m=_mc.get(k);if(!m){m=new THREE.MeshStandardMaterial({color:c,roughness:r});_mc.set(k,m)}return m};
+const materials={grass:mat(0x78a96b),darkGrass:mat(0x528d59),path:mat(0xd5c6a7),road:mat(0x777f7b),cream:mat(0xe7d7bb),wall:mat(0xe4d7c4),blue:mat(0x5d9d9b),roof:mat(0x9b755b),wood:mat(0x684936),glass:mat(0x76b9c3,.35),white:mat(0xf4eee1),green:mat(0x248f69),skin:mat(0x75442f),hair:mat(0x17191c),black:mat(0x272c2d)};
+const ground=new THREE.Mesh(new THREE.PlaneGeometry(280,280),materials.grass);ground.rotation.x=-Math.PI/2;ground.position.y=-.08;scene.add(ground);
+const colliders=[];const doors=[];const npcs=[];const questPoints=[];const animatedParts=[];
+function addBox(w,h,d,color,x,y,z, parent=scene, cast=false){const m=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),typeof color==='number'?mat(color):color);m.position.set(x,y,z);parent.add(m);if(cast)m.castShadow=true;return m}
+function collider(x,z,w,d,kind='wall',door=null){colliders.push({x,z,w,d,kind,door})}
+function addLabel(text,x,y,z,color='#ffffff',width=4){const c=document.createElement('canvas');c.width=512;c.height=128;const cx=c.getContext('2d');cx.fillStyle='rgba(8,36,39,.86)';cx.beginPath();cx.roundRect(8,8,496,112,24);cx.fill();cx.fillStyle=color;cx.font='bold 38px system-ui';cx.textAlign='center';cx.fillText(text,256,77);const t=new THREE.CanvasTexture(c);const s=new THREE.Sprite(new THREE.SpriteMaterial({map:t,transparent:true}));s.scale.set(width,width*.25,1);s.position.set(x,y,z);scene.add(s);return s}
+function addTree(x,z,scale=1){const g=new THREE.Group();addBox(.3*scale,1.8*scale,.3*scale,0x79543a,0,.9*scale,0,g);const crown=new THREE.Mesh(new THREE.IcosahedronGeometry(1.15*scale,1),mat([0x3e794e,0x568e52,0x6c9b55][Math.floor(Math.random()*3)]));crown.position.y=2.2*scale;g.add(crown);g.position.set(x,0,z);scene.add(g);collider(x,z,.8*scale,.8*scale,'tree')}
+const buildings=[];
+function makeBuilding({name,x,z,w=10,d=8,h=4,color=0xe4d7c4,sign=name,mission=null}){
+ const g=new THREE.Group();g.position.set(x,0,z);scene.add(g);
+ const side=!/منزل|سكني/.test(name+' '+sign);const wm=new THREE.MeshStandardMaterial({color,roughness:1}),T=.34,dw=1.9,dh=2.55,sd=2.2,sz=-d*.08,trim=0xe7d5b6,a1=sz-sd/2,a2=sz+sd/2,fw=(w-dw)/2;
+ const B=(a,b,c,col,px,py,pz,p=g)=>addBox(a,b,c,col,px,py,pz,p);
+ B(w,.18,d,0xc6b99e,0,.09,0);B(w-.7,.03,d-.7,0xdcd0b6,0,.19,0);
+ B(w,h,T,wm,0,h/2,-d/2+T/2);B(T,h,d,wm,-w/2+T/2,h/2,0);
+ if(side){B(T,h,a1+d/2,wm,w/2-T/2,h/2,(a1-d/2)/2);B(T,h,d/2-a2,wm,w/2-T/2,h/2,(a2+d/2)/2);B(T,h-2.5,sd,wm,w/2-T/2,2.5+(h-2.5)/2,sz)}else B(T,h,d,wm,w/2-T/2,h/2,0);
+ B(fw,h,T,wm,-(dw+fw)/2,h/2,d/2-T/2);B(fw,h,T,wm,(dw+fw)/2,h/2,d/2-T/2);B(dw,h-dh,T,wm,0,dh+(h-dh)/2,d/2-T/2);
+ for(const sx of [-1,1])for(const sy of [-1,1])B(.5,h+.1,.5,0xd0bea0,sx*(w/2-.05),(h+.1)/2,sy*(d/2-.05));
+ for(const s2 of [-1,1])B(.16,dh,.2,trim,s2*dw/2,dh/2,d/2);B(dw+.32,.18,.24,trim,0,dh+.05,d/2);
+ // MAIN DOOR: hinged leaf with see-through glass, so the interior is visible from outside
+ const door=new THREE.Group();door.position.set(-dw/2+.04,1.175,d/2-.17);g.add(door);
+ const glass=new THREE.MeshStandardMaterial({color:0x9fd6df,transparent:true,opacity:.26,roughness:.1,depthWrite:false});
+ for(const s2 of [.07,1.67])B(.14,2.35,.1,0x684936,s2,0,0,door);
+ B(1.68,.14,.1,0x684936,.87,1.1,0,door);B(1.68,.7,.1,0x684936,.87,-.82,0,door);B(1.4,1.45,.03,glass,.87,.25,0,door);B(.05,.5,.08,0xd8c38a,1.5,-.05,.06,door);
+ // SECOND ENTRANCE: side open arch + accessibility ramp
+ if(side){for(const zz of [a1,a2])B(.2,2.5,.2,trim,w/2,1.25,zz);B(.3,.2,sd+.3,trim,w/2,2.55,sz);
+ const rp=B(2.6,.12,sd,0xb9ab94,w/2+1.4,.1,sz);rp.rotation.z=-.07;
+ for(const zz of [a1-.05,a2+.05])B(2.6,.05,.05,0x6d7b78,w/2+1.4,.8,zz);
+ addLabel('مدخل جانبي ♿',x+w/2+.9,3.4,z+sz,'#e8fff6',1.9)}
+ for(const s2 of [-1,1]){const wx=s2*w*.28;B(1.05,1.35,.12,0xe9ddc7,wx,2.45,d/2+.02);B(.9,1.2,.06,0x78b7c2,wx,2.45,d/2+.09);B(.05,1.2,.04,0xdce9e4,wx,2.45,d/2+.13);B(.9,.05,.04,0xdce9e4,wx,2.45,d/2+.13);B(1.2,.1,.24,0xb5a58c,wx,1.78,d/2+.1)}
+ B(.12,1.2,1.1,0x78b7c2,-w/2-.02,2.4,0);B(.06,1.3,1.2,0xe9ddc7,-w/2-.05,2.4,0);
+ B(2.9,.16,1.05,0x9c7558,0,2.95,d/2+.48);for(const px of [-1.15,1.15])B(.12,.55,.12,0x806347,px,2.66,d/2+.72);
+ B(3.1,.18,.75,0xb9ab94,0,.09,d/2+.48);B(2.6,.04,4,0xd5c6a7,0,.02,d/2+2.6);B(2.7,.12,.48,0xd2c4aa,0,.21,d/2+.62);
+ // roof (hidden while the player is inside) with a parapet on all 4 sides
+ const roof=new THREE.Group();g.add(roof);B(w+.4,.28,d+.4,0x9c7558,0,h+.14,0,roof);
+ for(const s2 of [-1,1]){B(w+.4,.45,.2,0xd2c1a4,0,h+.5,s2*(d/2+.1),roof);B(.2,.45,d+.4,0xd2c1a4,s2*(w/2+.1),h+.5,0,roof)}
+ const fur=new THREE.Group();g.add(fur);const F=(a,b2,c,col,px,py,pz)=>B(a,b2,c,col,px,py,pz,fur);
+ const txt=name+' '+sign,clinic=/رعاية|صحة|عيادة|مركز|صيدلية|إسعاف/.test(txt),school=/مدرسة/.test(txt),lib=/مكتبة/.test(txt),dkw=Math.min(3.1,w*.42);
+ F(dkw,.95,.65,0x8b6c4c,0,.58,-d*.2);F(dkw+.1,.1,.72,0xd9c4a1,0,1.08,-d*.2);collider(x,z-d*.2,dkw,.65);
+ for(const s2 of [-1,1]){F(.34,1.55,.52,lib?0x805638:0xd4c8b4,s2*w*.34,.88,-d*.31);for(let k=0;k<3;k++)F(.38,.055,.56,lib?0x6b452d:0xeee5d5,s2*w*.34,.42+k*.42,-d*.31)}
+ if(clinic){F(1.75,.18,.72,0xe9eee8,-w*.27,.72,d*.12);F(1.75,.12,.72,0x6faaa5,-w*.27,.83,d*.12)}
+ else for(const s2 of [-1,1]){F(1.25,.12,.48,school?0x7b6045:0x9b7957,s2*w*.3,.58,d*.12);F(.12,.55,.42,0x8b8e7c,s2*w*.3,.3,d*.12)}
+ F(1.55,.42,.06,0x2d6f6a,0,2.35,-d/2+.22);
+ collider(x,z-d/2+T/2,w,T);collider(x-w/2+T/2,z,T,d);
+ if(side){collider(x+w/2-T/2,z+(a1-d/2)/2,T,a1+d/2);collider(x+w/2-T/2,z+(a2+d/2)/2,T,d/2-a2)}else collider(x+w/2-T/2,z,T,d);
+ collider(x-(dw+fw)/2,z+d/2-T/2,fw,T);collider(x+(dw+fw)/2,z+d/2-T/2,fw,T);
+ const doorData={name,mesh:door,x,z:z+d/2+.3,open:false,mission,building:g};doors.push(doorData);colliders.push({x,z:z+d/2+.3,w:1.6,d:.28,kind:'door',door:doorData});
+ if(sign){B(Math.min(w*.62,5),.75,.12,0x286b66,0,h*.72,d/2+.17);addLabel(sign,x,h+1.25,z+d/2+.35,'#fff8e8',Math.min(w*.68,5.0))}
+ buildings.push({x,z,w,d,roof,wm,inn:false});
+ return doorData;
+}
+
+// A real visible green district/park with grass, flower patches, benches and a training marker.
+addBox(25,.04,20,materials.darkGrass,-29,0,-21);addBox(23,.05,18,materials.grass,-29,.025,-21);
+for(let i=0;i<28;i++){const x=-39+Math.random()*20,z=-28+Math.random()*14;const f=new THREE.Mesh(new THREE.SphereGeometry(.13,5,4),mat([0xe7c36e,0xe7a8ad,0xf4e8b6][i%3]));f.position.set(x,.12,z);scene.add(f)}
+addLabel('المنطقة الخضراء • Green Park',-29,3,-21,'#dfffe9',6);
+for(const [x,z] of [[-38,-14],[-21,-15],[-39,-29],[-20,-29]])addTree(x,z,.8);
+for(const x of [-34,-27,-20]){addBox(2,.14,.45,0x78533c,x,.55,-21);for(const dx of [-.75,.75])addBox(.12,.5,.12,0x594331,x+dx,.28,-21)}
+// Roads and sidewalks
+addBox(140,.04,6,materials.road,0,.01,0);addBox(140,.06,1,0xe5d8bd,0,.05,3.4);addBox(140,.06,1,0xe5d8bd,0,.05,-3.4);
+addBox(6,.045,110,materials.road,0,.02,0);addBox(1,.06,110,0xe5d8bd,3.4,.05,0);addBox(1,.06,110,0xe5d8bd,-3.4,.05,0);
+for(let x=-65;x<65;x+=8){addBox(2,.02,.12,0xf1e9ce,x,.05,0)}
+// Buildings around street
+const bPHC=makeBuilding({name:'مركز الرعاية الصحية الأولية',x:9,z:-19,w:9.5,d:9,h:5,color:0xe8e2d4,sign:'مركز الرعاية الصحية',mission:'phc'});
+const bSchool=makeBuilding({name:'المدرسة',x:20,z:-9.5,w:12,d:9,h:4.5,color:0xd8c7a5,sign:'المدرسة',mission:'school'});
+const bCommunity=makeBuilding({name:'دار المجتمع',x:-18,z:12,w:12,d:9,h:4.2,color:0xe0d1b7,sign:'دار المجتمع',mission:'community'});
+const bMCH=makeBuilding({name:'مركز صحة الأم والطفل',x:20,z:17,w:12,d:9,h:4.4,color:0xf0d6cc,sign:'صحة الأم والطفل',mission:'mch'});
+const bWomen=makeBuilding({name:'مركز صحة المرأة',x:-12,z:-9,w:9.5,d:8,h:4.1,color:0xe5d7d0,sign:'صحة المرأة',mission:'women'});
+// Homes & small neighborhood props
+for(const [x,z,c] of [[-32,8,0xe3d4b8],[-31,25,0xd8c4a5],[31,9,0xdcccb1],[31,26,0xe5d5b8],[31,-24,0xdcc6a9]])makeBuilding({name:'منزل',x,z,w:7,d:6,h:3.5,color:c,sign:'منزل'});
+for(let i=0;i<36;i++){let x=-48+Math.random()*96,z=-39+Math.random()*78;if(Math.abs(x)<7||Math.abs(z)<7|| (x< -17&&x>-42&&z<-11&&z>-32)||[40,60,80].some(r=>Math.abs(Math.abs(x)-r)<5.5||Math.abs(Math.abs(z)-r)<5.5)||buildings.some(b=>Math.abs(x-b.x)<b.w/2+2&&Math.abs(z-b.z)<b.d/2+2))continue;if(Math.random()<.62)addTree(x,z,.5+Math.random()*.45)}
+
+// Expanded city grid: connected streets continue beyond the first neighborhood instead of ending abruptly.
+const cityRoadMat=mat(0x707875), sidewalkMat=mat(0xd6c9b1), laneMat=mat(0xf0e7cf);
+for(const z of [-80,-60,-40,40,60,80]){
+  addBox(240,.055,7,cityRoadMat,0,.018,z);
+  addBox(240,.07,1.05,sidewalkMat,0,.05,z+4.05);
+  addBox(240,.07,1.05,sidewalkMat,0,.05,z-4.05);
+  for(let x=-112;x<112;x+=10) addBox(3.0,.018,.10,laneMat,x,.06,z);
+}
+for(const x of [-80,-60,-40,40,60,80]){
+  addBox(7,.055,220,cityRoadMat,x,.018,0);
+  addBox(1.05,.07,220,sidewalkMat,x+4.05,.05,0);
+  addBox(1.05,.07,220,sidewalkMat,x-4.05,.05,0);
+  for(let z=-102;z<102;z+=10) addBox(.10,.018,3.0,laneMat,x,.06,z);
+}
+// Add varied urban blocks: shops, apartments and public buildings along the connected grid.
+const urbanBlocks=[
+ {name:'صيدلية الحي',x:48,z:-16,w:8,d:7,h:4.2,color:0xe8e4d7,sign:'صيدلية'},
+ {name:'مخبز الحي',x:48,z:14,w:8,d:7,h:3.8,color:0xd9bd91,sign:'مخبز'},
+ {name:'مكتبة',x:-48,z:-16,w:8,d:7,h:4,color:0xd9d4bf,sign:'مكتبة'},
+ {name:'مبنى سكني',x:-48,z:14,w:9,d:8,h:7,color:0xd6c3a7,sign:'سكني'},
+ {name:'مبنى سكني',x:50,z:-50,w:9,d:8,h:7,color:0xe3d4b9,sign:'سكني'},
+ {name:'سوق الحي',x:-50,z:-50,w:11,d:8,h:4.5,color:0xe0c49e,sign:'السوق'},
+ {name:'مركز خدمات',x:50,z:50,w:10,d:8,h:5,color:0xe5ded0,sign:'خدمات المجتمع'},
+ {name:'مبنى سكني',x:-50,z:50,w:9,d:8,h:6.5,color:0xd7c8b3,sign:'سكني'},
+ {name:'مركز الشباب',x:30,z:50,w:12,d:9,h:5,color:0xd5d9ca,sign:'مركز الشباب'},
+ {name:'وحدة إسعاف',x:-30,z:50,w:11,d:8,h:4.5,color:0xe8dfd0,sign:'الإسعاف'}
+];
+for(const b of urbanBlocks) makeBuilding(b);
+// Tall, opaque perimeter wall: hides the outside world from the camera and gives the map a deliberate boundary.
+// The playable bounds are clamped just inside these walls (x +/-73.5, z -65.5..67.5).
+const boundaryMat=mat(0xc5b9a6), boundaryPanel=mat(0xb9ad9a), boundaryTrim=mat(0x8d8171), boundaryCap=mat(0x756c60);
+const WALL_H=19.5, WALL_Y=WALL_H/2, WALL_T=1.8;
+// Continuous wall faces on all four edges; the height is intentionally above the normal camera view.
+addBox(154,WALL_H,WALL_T,boundaryMat,0,WALL_Y,-68.9);
+addBox(154,WALL_H,WALL_T,boundaryMat,0,WALL_Y,69.5);
+addBox(WALL_T,WALL_H,138,boundaryMat,-75.8,WALL_Y,.3);
+addBox(WALL_T,WALL_H,138,boundaryMat,75.8,WALL_Y,.3);
+// Inner face panels, base plinth and top coping break up the large wall so it reads as architecture, not a grey void.
+addBox(154,.75,2.0,boundaryTrim,0,.38,-68.9);addBox(154,.75,2.0,boundaryTrim,0,.38,69.5);
+addBox(2.0,.75,138,boundaryTrim,-75.8,.38,.3);addBox(2.0,.75,138,boundaryTrim,75.8,.38,.3);
+addBox(154,.45,2.15,boundaryCap,0,WALL_H-.12,-68.9);addBox(154,.45,2.15,boundaryCap,0,WALL_H-.12,69.5);
+addBox(2.15,.45,138,boundaryCap,-75.8,WALL_H-.12,.3);addBox(2.15,.45,138,boundaryCap,75.8,WALL_H-.12,.3);
+for(let x=-68;x<=68;x+=8){
+ addBox(.42,WALL_H+.15,2.05,boundaryPanel,x,WALL_Y,-68.9);addBox(.42,WALL_H+.15,2.05,boundaryPanel,x,WALL_Y,69.5);
+ addBox(.62,.16,2.25,boundaryCap,x,WALL_H-.3,-68.9);addBox(.62,.16,2.25,boundaryCap,x,WALL_H-.3,69.5);
+}
+for(let z=-60;z<=60;z+=8){
+ addBox(2.05,WALL_H+.15,.42,boundaryPanel,-75.8,WALL_Y,z);addBox(2.05,WALL_H+.15,.42,boundaryPanel,75.8,WALL_Y,z);
+ addBox(2.25,.16,.62,boundaryCap,-75.8,WALL_H-.3,z);addBox(2.25,.16,.62,boundaryCap,75.8,WALL_H-.3,z);
+}
+
+// Street lights and planted sidewalks for visual depth
+function addStreetLight(x,z){
+ const pole=addBox(.10,3.2,.10,0x39474a,x,1.6,z);
+ const arm=addBox(.65,.08,.08,0x39474a,x+.28,3.05,z);
+ const lamp=new THREE.Mesh(new THREE.BoxGeometry(.35,.12,.25),mat(0xffe8a8));lamp.position.set(x+.55,3.0,z);scene.add(lamp);
+ collider(x,z,.25,.25,'streetlight');
+}
+for(const z of [-78,-58,-38,-18,22,42,62,82]) for(const x of [-88,-48,-8,32,72]) addStreetLight(x,z);
+for(const [x,z] of [[-44,-45],[-44,45],[44,-45],[44,45],[-84,5],[84,5]]) addTree(x,z,.9);
+// Dense green tree belt beyond the district wall gives the world a natural horizon instead of empty void.
+for(let x=-88;x<=88;x+=5){addTree(x,-78,1.8+(Math.sin(x*.17)+1)*.25);addTree(x,79,1.9+(Math.cos(x*.13)+1)*.25)}
+for(let z=-73;z<=74;z+=5){addTree(-84,z,1.75+(Math.sin(z*.2)+1)*.2);addTree(84,z,1.8+(Math.cos(z*.15)+1)*.2)}
+for(let i=0;i<90;i++){const side=i%4, t=-78+Math.random()*156, x=side===0?-80:side===1?80:t, z=side===2?-74:side===3?74:t;const bush=new THREE.Mesh(new THREE.IcosahedronGeometry(.65+Math.random()*.6,1),mat([0x426f45,0x527c49,0x678b50][i%3]));bush.position.set(x,.55,z);scene.add(bush)}
+
+// Humanoid rig built from tapered shapes, limbs, robe folds and long hair; all parts are animated while walking.
+const sphere=(r,c,seg=12)=>new THREE.Mesh(new THREE.SphereGeometry(r,seg,Math.max(8,seg-2)),typeof c==='number'?mat(c):c);
+const capsule=(r,len,c)=>new THREE.Mesh(new THREE.CapsuleGeometry(r,len,4,8),typeof c==='number'?mat(c):c);
+// ===== Characters (boy in galabeya / girl in khimar) - geometry-based, animated =====
+// ===== 35 characters (15 boys in galabeyas + 20 veiled girls), natural proportions =====
+const SKN=['#E8B896','#D4A373','#C68863','#B87953','#A66A46','#8D5332'],HRC=['#111111','#1A1D20','#2C2C2C','#3D2817','#211A14'],GALC=['#F8F9FA','#E9ECEF','#CFE3EE','#E8E0C8','#D5DDE0','#C9D6DF','#EDE6D3'],ABYC=['#4A5568','#2B4162','#3D5A80','#6D6875','#8a5a6a','#6B5B95','#3A5A40','#5C7C8A','#4A6FA5','#7D5BA6'],HIJC=['#E29578','#FFDDD2','#83C5BE','#4aa3a8','#EDF6F9','#D8E2DC','#FFE5D9','#ADC178','#8fb86a','#F4A261'];
+const SPECS_B=[],SPECS_G=[],FSP=['oval','round','long','square'],ESP=['almond','round','narrow'],BSP=['slim','average','sturdy'];
+(function(){
+ const hsOf=(a,i)=>({child:.74+(i%3)*.03,teen:.92+(i%3)*.025,adult:1+(i%4)*.025})[a],SH=['#343A40','#4a352b','#495057','#2B2D42','#5a4636'],SG=['#8C6D6B','#3d5654','#5a4a73','#5b3f33','#3b536b'];
+ for(let i=0;i<15;i++){const a=i===0?'adult':i<=7?'adult':i<=11?'teen':'child';SPECS_B.push({kind:'boy',age:a,hs:i?hsOf(a,i):1,build:BSP[(i*2+1)%3],skin:i?SKN[(i*5+1)%6]:'#C68863',face:FSP[(i*3+1)%4],eye:ESP[(i+1)%3],nose:.85+(i%3)*.12,brow:.014+(i%3)*.004,mouth:i%2?'neutral':'smile',hair:i?['short_side_part','buzz','wavy_short','curly_short','with_taqiyah'][(i*3)%5]:'short_side_part',hairC:i?HRC[(i*2)%5]:'#17191C',gal:i?GALC[(i*3)%7]:'#F8F9FA',collar:i?['round','mandarin','embroidered'][i%3]:'round',acc:i===0?[]:i%4===1?['glasses_round']:i%5===2?['watch']:i%6===3?['bag']:[],shoe:SH[i%5]})}
+ for(let i=0;i<20;i++){const a=i===0?'adult':i<=8?'adult':i<=14?'teen':'child';SPECS_G.push({kind:'girl',age:a,hs:i?hsOf(a,i):1,build:BSP[(i*2+2)%3],skin:i?SKN[(i*5+2)%6]:'#F1C9A5',face:FSP[(i*3+2)%4],eye:ESP[(i+2)%3],nose:.8+(i%3)*.1,brow:.01+(i%2)*.004,mouth:i%2?'neutral':'smile',style:i?['long','plain','layered'][i%3]:'long',hij:i?HIJC[(i*3)%10]:'#D6A2AD',aba:i?ABYC[(i*7)%10]:'#D6A2AD',trim:i%2===0&&i>0,acc:i===0?['glasses_round']:i%3===1?['glasses_rect']:i%5===2?['bag']:i%7===3?['pin']:[],shoe:SG[i%5]})}
+})();
+function buildChar(S,anim){
+ const T=THREE,boy=S.kind==='boy',M=(c,r=.8,x={})=>new T.MeshStandardMaterial(Object.assign({color:c,roughness:r},x)),R=new T.Group(),bw=S.build==='slim'?.9:S.build==='sturdy'?1.12:1,DS={side:T.DoubleSide};
+ const me=(g,m,x=0,y=0,z=0,sx=1,sy=1,sz=1)=>{const q=new T.Mesh(g,m);q.position.set(x,y,z);q.scale.set(sx,sy,sz);return q};
+ const lathe=(p,m,sx,sz)=>{const q=new T.Mesh(new T.LatheGeometry(p.map(a=>new T.Vector2(a[0],a[1])),28),m);q.scale.set(sx,1,sz);return q};
+ const lg=(h,f)=>'#'+[1,3,5].map(i=>{const c=parseInt(h.substr(i,2),16);return Math.min(255,Math.round(c+(255-c)*f)).toString(16).padStart(2,'0')}).join('');
+ const sk=M(S.skin,.7),cl=M(boy?S.gal:S.aba,.85,DS),hjm=M(boy?S.gal:S.hij,.85,DS),hairC=boy?S.hairC:'#222',hm=M(hairC,.45),BX=(a,b,c)=>new T.BoxGeometry(a,b,c),SP=(r,a=10,b=8)=>new T.SphereGeometry(r,a,b);
+ R.add(lathe(boy?[[0,.06],[.34,.06],[.31,.35],[.26,.7],[.205,.95],[.215,1.15],[.2,1.3],[.12,1.38],[.075,1.42]]:[[0,.06],[.4,.06],[.34,.4],[.26,.8],[.2,1.0],[.21,1.18],[.2,1.3],[.11,1.38],[.075,1.42]],cl,1.15*bw,.85*(bw+1)/2));
+ R.add(me(new T.CylinderGeometry(.062,.07,.16,12),sk,0,1.43,0));
+ if(boy){
+  if(S.collar==='mandarin')R.add(me(new T.CylinderGeometry(.075,.085,.05,16,1,true),cl,0,1.43,0));else{const c=me(new T.TorusGeometry(.085,.02,8,16),cl,0,1.4,0);c.rotation.x=Math.PI/2;R.add(c)}
+  R.add(me(BX(.04,.36,.008),M(S.collar==='embroidered'?'#b08d57':'#e9e4d6'),0,1.07,.185));
+  for(let i=0;i<4;i++)R.add(me(SP(.014,8,6),M('#9AA0A6',.4),0,1.22-i*.1,.19));
+  for(const s of [-1,1]){const pk=me(BX(.09,.1,.01),M('#e9e4d6'),s*.15*bw,.72,.18);pk.rotation.y=s*.55;R.add(pk)}
+  if(S.acc.includes('bag')){R.add(me(BX(.3,.38,.12),M('#3b5d8c'),0,1.0,-.2));for(const s of [-1,1])R.add(me(BX(.035,.45,.012),M('#2c4467'),s*.1,1.1,.17))}
+ } else {
+  const st=S.style;R.add(lathe(st==='plain'?[[.08,1.4],[.16,1.37],[.26,1.31],[.3,1.2],[.31,1.12]]:[[.08,1.4],[.16,1.37],[.27,1.32],[.33,1.2],[.36,1.05],[.35,.8]],hjm,1.15*bw,.85));
+  if(st==='layered')R.add(lathe([[.1,1.41],[.2,1.35],[.31,1.25],[.34,1.12]],M(lg(S.hij,.12),.9,DS),1.17*bw,.88));
+  if(S.trim){const t=me(new T.TorusGeometry(.4,.014,6,28),M(lg(S.aba,.35)),0,.08,0,1.15*bw,.85,1);t.rotation.x=Math.PI/2;R.add(t)}
+  if(S.acc.includes('pin'))R.add(me(SP(.03,8,6),M('#e8c96a',.3),.1,1.2,.3));
+  if(S.acc.includes('bag')){R.add(me(BX(.28,.34,.11),M('#7a5c8a'),0,.95,-.22))}
+ }
+ const hd=new T.Group();hd.position.set(0,1.62,0);if(S.age==='child')hd.scale.setScalar(1.12);
+ const F={oval:[.9,1,.95,.85,.95,.85],round:[.96,.95,.97,.95,.95,.93],long:[.85,1.1,.93,.8,1,.82],square:[.92,.97,.95,1,.85,.9]}[S.face],E={almond:[1.15,.7],round:[1,.9],narrow:[1.2,.55]}[S.eye];
+ hd.add(me(SP(.2,24,18),sk,0,.05,0,F[0],F[1],F[2]),me(SP(.15,20,16),sk,0,-.1,.02,F[3],F[4],F[5]));
+ for(const s of [-1,1]){
+  const e=new T.Group();e.add(me(SP(.036,14,12),M(0xffffff,.4),0,0,0,E[0],E[1],.5),me(SP(.02,12,10),M('#2a1a12',.3),0,0,.012,1,1,.5));e.position.set(s*.072,.04,.17);hd.add(e);anim.bl.push(e);
+  hd.add(me(BX(.085,boy?.008:.012,.01),M(boy?hairC:'#2b1b14'),s*.072,.068,.18),me(BX(boy?.085:.075,S.brow,.012),boy?hm:M('#4a3426'),s*.075,.095,.178));
+  if(boy)hd.add(me(SP(.035),sk,s*.17,0,0,.5,1,.7));
+  if(S.acc.includes('glasses_round')||S.acc.includes('glasses_rect')){const gm=M('#3b2f2f',.4),ln=M('#cfe9f2',.1,{transparent:true,opacity:.14,side:T.DoubleSide}),x=s*.075;
+   if(S.acc.includes('glasses_round'))hd.add(me(new T.TorusGeometry(.055,.0045,8,24),gm,x,.04,.19),me(new T.CircleGeometry(.052,20),ln,x,.04,.19));
+   else hd.add(me(BX(.11,.006,.006),gm,x,.078,.19),me(BX(.11,.006,.006),gm,x,.002,.19),me(BX(.006,.08,.006),gm,x-.055,.04,.19),me(BX(.006,.08,.006),gm,x+.055,.04,.19),me(new T.PlaneGeometry(.104,.074),ln,x,.04,.19));
+   hd.add(me(BX(.005,.005,.15),gm,s*.135,.045,.115))}}
+ if(S.acc.includes('glasses_round')||S.acc.includes('glasses_rect'))hd.add(me(BX(.03,.006,.006),M('#3b2f2f'),0,.05,.192));
+ const nz=me(new T.CapsuleGeometry(.014*S.nose,.04,4,8),sk,0,-.015,.185);nz.rotation.x=.2;hd.add(nz,me(SP(.022*S.nose),sk,0,-.04,.178,1.2,.7,.8));
+ if(S.mouth==='smile'){const m=me(new T.TorusGeometry(.03,.005,6,14,Math.PI),M('#9a4a45',.6),0,-.075,.158,1,.6,1);m.rotation.z=Math.PI;hd.add(m)}else hd.add(me(BX(.055,.01,.01),M('#9a4a45',.6),0,-.1,.158));
+ const hc=(tl,r=.211)=>me(new T.SphereGeometry(r,24,14,0,Math.PI*2,0,Math.PI*tl),hm,0,.05,-.005,F[0],F[1],F[2]),hb=(r=.211)=>me(new T.SphereGeometry(r,24,14,Math.PI,Math.PI,0,Math.PI*.64),hm,0,.05,-.005,F[0],F[1],F[2]);
+ if(boy){const h=S.hair;
+  if(h==='buzz')hd.add(hc(.38,.205),hb(.205));else hd.add(hc(h==='with_taqiyah'?.36:.4),hb());
+  if(h==='short_side_part'){const f=me(BX(.14,.035,.03),hm,.04,.105,.17);f.rotation.z=-.2;hd.add(f)}
+  if(h==='wavy_short')for(let k=0;k<5;k++){const a=k/5*6.283;hd.add(me(SP(.05,8,6),hm,Math.sin(a)*.11,.25,Math.cos(a)*.08-.02))}
+  if(h==='curly_short')for(let k=0;k<10;k++){const a=k/10*6.283;hd.add(me(SP(.045,8,6),hm,Math.sin(a)*.13,.22,Math.cos(a)*.12-.02))}
+  if(h==='with_taqiyah')hd.add(me(new T.SphereGeometry(.215,20,10,0,Math.PI*2,0,Math.PI*.34),M('#F4F1E8'),0,.058,-.005,F[0],F[1],F[2]));
+ } else {const sc=[F[0]+.05,F[1]*1.1+.02,1];
+  hd.add(me(new T.SphereGeometry(.235,24,16,Math.PI*.88,Math.PI*1.24),hjm,0,.04,-.01,...sc),me(new T.SphereGeometry(.235,24,8,0,Math.PI*2,0,Math.PI*.42),hjm,0,.04,-.01,...sc),me(new T.TorusGeometry(.19,.03,8,34),hjm,0,0,.1,.9,1.3,.8))}
+ R.add(hd);
+ for(const s of [1,-1]){const a=new T.Group();a.position.set(s*.26*bw,1.36,0);a.add(me(new T.CylinderGeometry(.058,.074,.54,14),cl,0,-.27,0),me(SP(.04),sk,0,-.6,.005,.85,1.3,.7));if(S.acc.includes('watch')&&s===1)a.add(me(new T.CylinderGeometry(.062,.062,.03,12),M('#222'),0,-.5,0));anim.arms.push(a);R.add(a)}
+ const sh=M(S.shoe,.55);
+ for(const s of [1,-1]){const l=new T.Group();l.position.set(s*.1*bw,.5,0);l.add(me(new T.CylinderGeometry(.06,.05,.5,10),cl,0,-.25,0),me(BX(.1,.06,.22),sh,0,-.49,.05),me(SP(.05,8,6),sh,0,-.48,.14,1,.7,1));anim.legs.push(l);R.add(l)}
+ return R;
+}
+const _cnt={};
+function createHumanoid(kind='adam',npc=false,v=0){
+ const male=kind==='adam'||kind==='npcMale',young=v>=10,root=new THREE.Group(),rig=new THREE.Group(),sc=new THREE.Group();let S;
+ if(kind==='adam')S=SPECS_B[0];else if(kind==='mariam'&&!npc)S=SPECS_G[0];
+ else{const L=(male?SPECS_B:SPECS_G).slice(1).filter(s=>young?(s.age==='child'||s.age==='teen'):s.age==='adult'),key=(male?'b':'g')+(young?'y':'a');_cnt[key]=(_cnt[key]||0)+1;S=L[_cnt[key]%L.length]}
+ root.add(rig);rig.add(sc);sc.scale.setScalar(1.25*S.hs);
+ const anim={root,rig,arms:[],legs:[],bl:[],phase:Math.random()*6.28,kind,age:S.age,homeY:0},ch=buildChar(S,anim);ch.position.y=.04;sc.add(ch);
+ animatedParts.push(anim);root.userData.anim=anim;return root;
+}
+let chosen='adam';const player=createHumanoid('adam');scene.add(player);player.position.set(0,0,10);
+document.querySelectorAll('.choice').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('.choice').forEach(x=>x.classList.remove('selected'));b.classList.add('selected');chosen=b.dataset.char}));
+const SAVE_KEY='chn_rpg_progress_v1';
+function readSavedProgress(){try{const raw=localStorage.getItem(SAVE_KEY);return raw?JSON.parse(raw):null}catch(e){return null}}
+function saveProgress(){
+ const data={xp:game.xp,completed:[...game.completed],passedMissions:[...passedMissions],sideDone:[...sideDone],missionIndex,badges:[...earnedBadges],met:[...metNpcs],tasks:[...tasksDone],errs:errandStep,efin:[...errandFin],inv:[...inv],chosen,pos:game.started&&game.player?[game.player.position.x,game.player.position.z]:null};
+ try{localStorage.setItem(SAVE_KEY,JSON.stringify(data))}catch(e){console.warn('تعذر حفظ التقدم محليًا',e)}
+}
+const game={player,started:false,xp:0,stamina:100,completed:new Set(),activeMission:'community',running:false,camYaw:0,camPitch:.24,interacting:false,openDoor:null};
+// Install the start action immediately so later optional lesson/UI code cannot leave the button inert.
+document.getElementById('start').addEventListener('click',async()=>{
+ try { if(game.started)return; if(chosen==='mariam' && game.player===player){scene.remove(player);game.player=createHumanoid('mariam');game.player.position.set(0,0,10);scene.add(game.player);document.getElementById('playerName').textContent='مريم';} game.started=true;document.body.classList.add('gameStarted');try{const sv=readSavedProgress();if(sv&&sv.pos&&!game.restored){game.player.position.set(sv.pos[0],0,sv.pos[1]);game.restored=true}}catch(e){}document.getElementById('screen').style.display='none';await requestLandscapeMode();showToast('بدأ الاستكشاف! اقترب من شخصية عليها اسم ودور، اضغط E، تعلّم ثم اجتز 4 من 5 أسئلة لفتح المهمة التالية. المهمات الجانبية متاحة في أي وقت.');trackEvent('game_started',{character:chosen}); }
+ catch(err){ console.error('Start error:',err); const screen=document.getElementById('screen');screen.style.display='flex';const msg=document.getElementById('startError');if(msg)msg.textContent='حصل خطأ أثناء التشغيل. أعد فتح الملف وتأكد من اتصال الإنترنت.'; }
+});
+
+async function requestLandscapeMode(){
+  // Browsers only allow orientation locking in supported fullscreen contexts; gracefully fall back to rotate guidance.
+  try { if(document.documentElement.requestFullscreen && !document.fullscreenElement) await document.documentElement.requestFullscreen(); } catch(e) { /* fullscreen may be unavailable for local files */ }
+  try { if(screen.orientation && screen.orientation.lock) await screen.orientation.lock('landscape'); } catch(e) { /* user can rotate device manually */ }
+  updatePortraitNotice();
+}
+function updatePortraitNotice(){
+  const mobile=matchMedia('(max-width: 900px)').matches;
+  const portrait=matchMedia('(orientation: portrait)').matches;
+  document.getElementById('rotateNotice').style.display=(game.started && mobile && portrait)?'flex':'none';
+}
+document.getElementById('rotateTry').addEventListener('click',requestLandscapeMode);
+addEventListener('orientationchange',()=>setTimeout(updatePortraitNotice,150));
+addEventListener('resize',updatePortraitNotice);
+function createNPC(name,kind,x,z,role,quest){const npc=createHumanoid(kind,true,/طالب|طفل/.test(role)?10:1);npc.userData.anim.npc=true;npc.position.set(x,0,z);scene.add(npc);addLabel(name,x,3,z,'#fef4d8',2.8);npcs.push({name,kind,root:npc,role,quest,x,z});return npc}
+createNPC('د. سليم','npcMale',11.8,-12.6,'طبيب','phc');createNPC('الممرضة نور','mariam',-12,-3.8,'ممرضة صحة المرأة','women');createNPC('ياسين','npcMale',-16,7,'متطوع الحي','story:yassin');createNPC('فريدة','mariam',17,-3.9,'طالبة','school');createNPC('الحاجة أمينة','mariam',-25,3,'من أهل الحي','community');createNPC('الأم هناء','mariam',17,23.5,'من أهل المجتمع','mch');
+createNPC('عم حسن • إسعافات','npcMale',-9,27,'متطوع إسعافات أولية','side:firstaid');createNPC('سلمى • تثقيف صحي','mariam',31,3,'مثقفة صحية','side:education');createNPC('عمرو • البيئة','npcMale',-35,-4,'مسؤول البيئة','side:environment');
+const walkers=[];
+function addWalker(kind,v,pts){const r=createHumanoid(kind,true,v);r.position.set(pts[0][0],0,pts[0][1]);scene.add(r);walkers.push({r,pts,i:1,sp:1+Math.random()*.5,a:r.userData.anim})}
+addWalker('npcMale',2,[[4.7,-34],[4.7,34]]);addWalker('mariam',3,[[-4.7,34],[-4.7,-34]]);addWalker('npcMale',4,[[-34,4.7],[34,4.7]]);addWalker('mariam',1,[[34,-4.7],[-34,-4.7]]);addWalker('npcMale',13,[[27,-3.4],[13,-3.4]]);addWalker('mariam',14,[[13,-3.9],[27,-3.9]]);
+for(const [sx,sz,k,v] of [[9,-21.8,'mariam',2],[20,-12.1,'npcMale',1],[-18,9.4,'mariam',4],[20,14.4,'mariam',3],[-12,-11.4,'mariam',1]]){const r=createHumanoid(k,true,v);r.position.set(sx,0,sz);scene.add(r)}
+const cars=[];
+function addCar(col,x,z,axis,dir){const g=new THREE.Group();const A=(a,b,c,k,px,py,pz)=>addBox(a,b,c,k,px,py,pz,g);A(1.5,.7,2.4,col,0,.65,0);A(1.3,.55,1.2,0x8fc3cf,0,1.2,-.1);A(1.4,.1,1.4,0x2d2d2d,0,1.55,-.1);for(const sx of [-.7,.7]){A(.2,.5,.5,0x1c1c1c,sx,.28,.8);A(.2,.5,.5,0x1c1c1c,sx,.28,-.8)}g.position.set(x,0,z);g.rotation.y=axis==='z'?(dir>0?0:Math.PI):(dir>0?Math.PI/2:-Math.PI/2);scene.add(g);cars.push({g,axis,dir,sp:4+Math.random()*2})}
+addCar(0xe8b923,1.6,-40,'z',1);addCar(0x2f8f6b,-1.6,30,'z',-1);addCar(0xd9534f,-30,1.6,'x',1);addCar(0xe8b923,35,-1.6,'x',-1);
+function questMarker(x,z,color=0x52e0a8){const g=new THREE.Group();const ring=new THREE.Mesh(new THREE.TorusGeometry(.85,.09,7,24),mat(color));ring.rotation.x=Math.PI/2;ring.position.y=.13;g.add(ring);const gem=new THREE.Mesh(new THREE.OctahedronGeometry(.28),new THREE.MeshStandardMaterial({color,emissive:color,emissiveIntensity:.35}));gem.position.y=1.25;g.add(gem);g.position.set(x,0,z);scene.add(g);questPoints.push(g);return g}
+const greenMarker=questMarker(-29,-21);addLabel('نقطة الاستكشاف',-29,2.4,-21,'#e7fff0',3.4);
+const questDefs=[
+ {id:'community',name:'التعرّف على المجتمع',npc:'الحاجة أمينة',zone:'دار المجتمع',brief:'قابل الحاجة أمينة وتعرّف إلى معنى المجتمع ووظائف تمريض صحة المجتمع كما وردت في محاضرة Community Overview.',q:'أي اختيار يصف المجتمع بصورة أدق وفق موضوع المحاضرة؟',answers:['مجموعة من الناس يعيشون أو يتفاعلون ضمن إطار مجتمعي مشترك','مبنى المستشفى فقط','فريق طبي داخل غرفة العمليات فقط'],correct:0,explain:'المهمة مرتبطة بموضوع تعريف المجتمع وخصائصه وأدوار تمريض صحة المجتمع. راجع نص محاضرتك للتعريف الكامل.',x:-25,z:3},
+ {id:'school',name:'بيئة مدرسية صحية',npc:'فريدة',zone:'المدرسة',brief:'ساعد فريدة في تحديد مكوّنات برنامج الصحة المدرسية.',q:'أي مجموعة تتوافق مع المكوّنات المذكورة في محاضرة School Health؟',answers:['الخدمات الصحية والتثقيف الصحي والبيئة الصحية','المباني والامتحانات فقط','العلاج الدوائي فقط'],correct:0,explain:'تذكر المحاضرة الخدمات الصحية والتثقيف الصحي والبيئة الصحية ضمن مكونات البرنامج.',x:17,z:-2},
+ {id:'phc',name:'بوابة الرعاية الصحية الأولية',npc:'د. سليم',zone:'مركز الرعاية الصحية',brief:'تحدث مع د. سليم حول مبادئ الرعاية الصحية الأولية.',q:'أي اختيار يتفق مع خصائص الرعاية الصحية الأولية المذكورة في المحاضرة؟',answers:['مشاركة المجتمع واستخدام التكنولوجيا المناسبة واستمرارية الرعاية','العلاج بالمستشفى فقط دون وقاية','استبعاد التثقيف الصحي'],correct:0,explain:'المحاضرة تذكر مشاركة المجتمع والتكنولوجيا المناسبة واستمرارية الرعاية والتثقيف والوقاية.',x:2,z:-12},
+ {id:'mch',name:'دعم صحة الأم والطفل',npc:'الأم هناء',zone:'مركز صحة الأم والطفل',brief:'تعرّف إلى موضوعات خدمات صحة الأم والطفل التي تناولتها المحاضرة.',q:'أي مجموعة من الموضوعات مذكورة في محاضرة MCH؟',answers:['رعاية ما قبل الحمل والحمل والولادة وما بعد الولادة وصحة الطفل','الصيانة المدرسية فقط','إدارة مخازن الأدوية فقط'],correct:0,explain:'المحاضرة تشمل رعاية ما قبل الحمل، وما قبل الولادة، وأثناء الولادة، وما بعدها، وخدمات صحة الطفل.',x:17,z:14},
+ {id:'women',name:'جولة صحة المرأة',npc:'الممرضة نور',zone:'مركز صحة المرأة',brief:'ناقش مع الممرضة نور العوامل المؤثرة في صحة المرأة عبر مراحل الحياة.',q:'أي عامل من التالي ورد ضمن العوامل المؤثرة في صحة المرأة في المحاضرة؟',answers:['التعليم والوضع الاقتصادي والمعتقدات الثقافية والتغذية','لون المبنى فقط','نوع الهاتف فقط'],correct:0,explain:'تذكر المحاضرة التعليم والوضع الاقتصادي والمعتقدات الثقافية والتغذية ونمط الحياة وعوامل أخرى.',x:-19,z:-10}
+];
+let activeMission=0;const missionOrder=['community','school','phc','mch','women'];let missionIndex=0;const passedMissions=new Set();const sideDone=new Set();
+const savedProgress=readSavedProgress();
+if(savedProgress){game.xp=Number(savedProgress.xp)||0;(savedProgress.completed||[]).forEach(id=>game.completed.add(id));(savedProgress.passedMissions||[]).forEach(id=>passedMissions.add(id));(savedProgress.sideDone||[]).forEach(id=>sideDone.add(id));missionIndex=Math.max(0,Math.min(missionOrder.length,Number(savedProgress.missionIndex)||0));const xpNode=document.getElementById('xp');if(xpNode)xpNode.textContent=game.xp;}
+function updateQuest(){const def=questDefs.find(q=>q.id===missionOrder[missionIndex]);document.getElementById('questText').textContent=def?`${def.name} — ${def.npc} | Learn, then pass the quiz`:'أنهيت المهمات الأساسية! يمكنك التجول وتنفيذ المهمات الجانبية. | Main missions complete — explore side quests.';document.getElementById('missionCount').textContent=`${Math.min(missionIndex+1,missionOrder.length)}/${missionOrder.length}`;}
+function showToast(msg){const el=document.getElementById('toast');el.textContent=msg;el.style.display='block';clearTimeout(showToast.timer);showToast.timer=setTimeout(()=>el.style.display='none',2200)}
+function openModal(title,body,buttons){const modal=document.getElementById('modal'),c=document.getElementById('modalContent');c.innerHTML='';const h=document.createElement('h2');h.textContent=title;c.append(h);const p=document.createElement('p');p.textContent=body;c.append(p);buttons.forEach(b=>{const btn=document.createElement('button');btn.textContent=b.label;btn.className=b.className||'';btn.onclick=()=>{if(b.action)b.action();};c.append(btn)});modal.style.display='flex';speakNpc(title,body)}
+document.getElementById('modal').addEventListener('pointerdown',e=>{if(e.target.id==='modal')e.target.style.display='none'});
+const lessonContent = {
+ community:{title:'Community Overview — نظرة عامة على المجتمع',sections:[
+ ['أهداف المحاضرة | Learning objectives','بنهاية المحاضرة يُتوقع أن تشرح التطور التاريخي لتمريض صحة المجتمع، وتعرّف المصطلحات الأساسية، وتفرّق بين تمريض صحة المجتمع وتمريض الصحة العامة، وتذكر خصائص المجتمع ووظائفه وخصائص التخصص والعوامل المؤثرة في نموه وأدوار ممرضة صحة المجتمع.'],
+ ['تعريف الصحة والمجتمع','تعرّف المحاضرة الصحة بأنها حالة من اكتمال السلامة البدنية والعقلية والاجتماعية، وليست مجرد غياب المرض أو العجز. وتعرض أيضًا الصحة كحالة إيجابية من الرفاه البدني والعقلي والاجتماعي والروحي. المجتمع مجموعة من الناس يعيشون في منطقة أو تجمع معين ويتشاركون مصالح مشتركة ويتفاعلون معًا؛ وقد تقوم الرابطة على المكان أو الاهتمام أو الحقوق والقوانين المشتركة.'],
+ ['المجتمع والسكان وصحة المجتمع','Population أو السكان: مجموعة إحصائية أو مجموعة فرعية لها خصائص متشابهة أو متطابقة، وقد يتفاعل أفرادها معًا أو لا يتفاعلون. Community Health تتناول الحالة الصحية لأفراد المجتمع والمشكلات التي تؤثر في صحتهم وفي مقدمي الرعاية الصحية داخل المجتمع. لا تخلط بين «السكان» كمجموعة ذات خصائص مشتركة و«المجتمع» الذي يتضمن عادةً روابط أو مصالح أو مكانًا مشتركًا.'],
+ ['الصحة العامة ووظائفها الأساسية','تصف المحاضرة Public Health بأنها علم وفن الوقاية من المرض وإطالة الحياة وتعزيز الصحة من خلال جهود المجتمع المنظمة والاختيارات المستنيرة. الوظائف الأساسية ثلاث: Assessment (التقييم)، Policy Development (تطوير السياسات)، Assurance (ضمان توافر الخدمات وجودتها).'],
+ ['التقييم Assessment','يشمل جمع المعلومات عن الحالة الصحية والمخاطر والموارد بصورة منتظمة، ومراقبة الحالة الصحية لاكتشاف المشكلات، وتشخيص المشكلات والمخاطر الصحية والتحقيق فيها، والبحث عن رؤى وحلول مبتكرة. مثال داخل اللعبة: جمع ملاحظات السكان قبل اقتراح نشاط صحي، بدل افتراض احتياجاتهم.'],
+ ['تطوير السياسات Policy Development','استخدام نتائج التقييم لصنع السياسات وتوجيه الموارد. تشمل الأنشطة المذكورة في المحاضرة إعلام الناس وتثقيفهم وتمكينهم بشأن القضايا الصحية، وحشد الشراكات المجتمعية لحل المشكلات، ووضع سياسات وخطط تدعم صحة الفرد والمجتمع.'],
+ ['ضمان الخدمات Assurance','يركز على توافر الخدمات الصحية اللازمة في المجتمع. ويشمل إنفاذ القوانين واللوائح التي تحمي الصحة والسلامة، وربط الناس بالخدمات المطلوبة، وضمان وجود قوة عاملة مؤهلة، وتقييم الفاعلية وإمكانية الوصول والجودة.'],
+ ['التطور التاريخي','تذكر المحاضرة أربع مراحل عامة: الرعاية التمريضية المنزلية المبكرة؛ تمريض المناطق District Nursing (1860–1900)؛ تمريض الصحة العامة Public Health Nursing (1900–1970)؛ ثم تمريض صحة المجتمع Community Health Nursing من 1970 حتى الوقت الحاضر. احفظ اسم المرحلة والفترة كما وردا في محاضرتك.'],
+ ['تطبيق عملي ودور الممرضة','في السيناريو: لاحظت الممرضة زيادة مشكلة صحية، فجمعت معلومات أولًا (Assessment)، ثم تعاونت مع المجتمع لوضع خطة (Policy Development)، وبعدها تابعت وصول الناس للخدمات وتقييم جودتها (Assurance). هذا التسلسل يربط المفاهيم بالعمل الميداني. المحاضرة تتناول أيضًا خصائص تمريض صحة المجتمع، والعوامل المؤثرة في نموه، والاختلاف بين تمريض المجتمع والتمريض الحاد، وأدوار الممرضة؛ راجع بقية شرائح المصدر لهذه القوائم التفصيلية.']
+ ]},
+ school:{title:'School Health — الصحة المدرسية',sections:[
+ ['لماذا الصحة المدرسية؟','يقضي الأطفال وقتًا طويلًا في المدرسة، ولذلك تعد ممرضة المدرسة مصدرًا مهمًا للتعرف على المشكلات الصحية وإدارتها. الأطفال في مرحلة نمو وتطور مستمرين، وهم فئة تحتاج إلى برنامج صحي مدرسي خاص يدعم الصحة والتعلم والسلامة.'],
+ ['تعريف School Nursing','تصف المحاضرة تمريض المدرسة بأنه ممارسة تمريضية متخصصة تحافظ على رفاه الطلاب ونجاحهم الأكاديمي وإنجازهم على مدى الحياة. وتساعد الممرضة الطلاب على الاستجابة الإيجابية للتطور الطبيعي، وتعزز الصحة والسلامة، وتتدخل عند وجود مشكلات صحية فعلية أو محتملة.'],
+ ['برنامج الصحة المدرسية والفريق','برنامج الصحة المدرسية مكوّن مهم من صحة المجتمع، مع بقاء الأسرة مسؤولة عن صحة الطفل إلى جانب المدرسة والمجتمع. يشمل الفريق تمثيلًا من الإدارة، وخدمات الطعام، والصيانة، والأخصائيين الاجتماعيين، والمعلمين، والطاقم الطبي، وبالأخص ممرضة المدرسة وطبيب المدرسة.'],
+ ['الخدمات الصحية المدرسية','الخدمات قد يقدمها الأطباء والممرضون وأطباء الأسنان ومثقفو الصحة والأخصائيون الاجتماعيون والمعلمون، بهدف حماية صحة الطلاب والعاملين وتعزيزها. من أمثلة العمل التمريضي: الملاحظة اليومية، واكتشاف المشكلة مبكرًا، والإسعافات الأولية، والتثقيف، والإحالة عند الحاجة.'],
+ ['المكوّنات الثلاثة للبرنامج','1) Health Services الخدمات الصحية. 2) Health Education التثقيف الصحي. 3) Healthy Environment البيئة الصحية. احفظها كثلاثة أعمدة مترابطة؛ فلا يكفي علاج الطالب إذا كانت البيئة غير آمنة أو كان التثقيف غائبًا.'],
+ ['احتياجات التغذية والوقاية من العدوى','تذكر المحاضرة احتياجات غذائية للسن المدرسي، ومنها غذاء متوازن يحتوي على البروتين والدهون والكربوهيدرات والفيتامينات والمعادن والماء، وتشير إلى أن الوجبات الخفيفة قد تكون مصدرًا مهمًا للعناصر الغذائية. كما تذكر جرعات التطعيم المعززة، والبيئة الصحية، والملاحظة اليومية، وفحص بعض الأمراض المعدية مثل الأمراض الجلدية والجرب، والوقاية من الأمراض السارية.'],
+ ['البيئة المدرسية الصحية','تشمل عناصر السلامة والوقاية من الحوادث، وتجنب الضوضاء، وتوفير أماكن مناسبة للترفيه، والتهوية الجيدة، والإضاءة الطبيعية والصناعية الكافية، ومياه آمنة، ودورات مياه نظيفة، ومكافحة الحشرات. تقسم المحاضرة البيئة المادية إلى بيئة خارجية وبيئة داخلية.'],
+ ['الفئات العمرية والمشكلات','تقسم المحاضرة الفئات التي تناقشها إلى الأطفال الأصغر سنًا 6–12 سنة والمراهقين 13–19 سنة، وتتناول احتياجاتهم والمشكلات الصحية الشائعة وأسباب المراضة والوفيات. عند دراسة هذه النقطة، اربط التقييم بعمر الطالب ومرحلة نموه، ولا تفترض أن احتياجات كل الأعمار متطابقة.'],
+ ['دور الممرضة في سيناريو','لاحظت الممرضة طفحًا جلديًا لدى طالب: تقيّم الحالة وفق إجراءات المدرسة، وتساعد في تقليل انتقال العدوى، وتبلغ المسؤول المناسب وتحيل الطالب عند الحاجة، وتدعم التثقيف الصحي والبيئة الآمنة. هذا تطبيق تعليمي وليس بديلًا عن سياسة المدرسة أو البروتوكول المحلي.']
+ ]},
+ phc:{title:'Primary Health Care — الرعاية الصحية الأولية',sections:[
+ ['الفكرة والتحول في الرعاية','تؤكد المحاضرة الحاجة إلى توزيع متوازن للموارد على امتداد منظومة الرعاية، مع تركيز أكبر على الرعاية الصحية الأولية وتعزيز العافية بدلًا من التركيز السابق على المرض والعلاج فقط.'],
+ ['تعريف الرعاية الصحية الأولية','تهدف PHC إلى توسيع المستوى الأول من النظام الصحي من مجرد رعاية المرض إلى تنمية الصحة. وتحاول حماية صحة المجتمعات المحددة وتعزيزها، والتعامل مع مشكلات صحة الفرد والسكان في مرحلة مبكرة.'],
+ ['استمرارية الرعاية ونطاقها','تتضمن خدمات PHC استمرارية الرعاية، وتعزيز الصحة والتثقيف، ودمج الوقاية مع رعاية المرض، والاهتمام بصحة السكان والفرد معًا، ومشاركة المجتمع، واستخدام التكنولوجيا المناسبة. ليست PHC مجرد زيارة واحدة أو علاج حالة بعد ظهور المرض.'],
+ ['فريق الرعاية الصحية الأولية','تسرد المحاضرة الأطباء العامين وأطباء الصحة العامة، والممرضين، وأطباء الأسنان، والصيادلة، وأخصائيي البصريات، وأخصائيي التغذية، والعاملين في الوصول المجتمعي، ومستشاري الصحة النفسية وغيرهم من المهن الصحية المساندة. ويُعد أفراد المجتمع أنفسهم جزءًا من الفريق.'],
+ ['عناصر PHC','تشمل التثقيف حول المشكلات الصحية السائدة وطرق الوقاية والسيطرة عليها؛ تعزيز إمدادات الغذاء والتغذية السليمة؛ المياه الآمنة والصرف الصحي الأساسي؛ صحة الأم والطفل بما في ذلك تنظيم الأسرة؛ التحصين ضد الأمراض المعدية الرئيسية؛ الوقاية من الأمراض المتوطنة محليًا والسيطرة عليها؛ والعلاج المناسب للأمراض والإصابات الشائعة.'],
+ ['القطاعات والتنسيق','تذكر المحاضرة قطاعات تتعاون مع الصحة، منها التعليم والصناعة والمياه والتخلص الصحي من المخلفات والأشغال العامة والاتصالات والزراعة ووسائل الإعلام. لا يستطيع القطاع الصحي وحده حل جميع مشكلات صحة المجتمع؛ لذلك يلزم التنسيق بين القطاعات.'],
+ ['المبادئ الرئيسية','المبادئ الواردة تشمل التوزيع العادل للخدمات، ومشاركة المجتمع، والتنسيق بين القطاعات، والتركيز على الوقاية، واستخدام التكنولوجيا المناسبة. مشاركة المجتمع الفعالة تراعي اللغة والثقافة والمعتقدات والعادات المحلية.'],
+ ['الوظائف والعوائق ودور التمريض','تعد PHC جزءًا من النظام الصحي والتنمية الاجتماعية والاقتصادية، وتقدم خدمات تعزيزية ووقائية وعلاجية. تتناول المحاضرة عوائق اجتماعية وثقافية واقتصادية ونفسية وبيئية وموقفية وإدارية وتقنية، إضافة إلى العاملين ومشاركة المجتمع. دور الممرضة يشمل التواصل والتعاون، وتحديد الاحتياجات، والتثقيف، وصحة الأم والطفل، والوقاية من الأمراض المعدية، والتغذية والزيارات المنزلية.']
+ ]},
+ mch:{title:'Maternal & Child Health — صحة الأم والطفل',sections:[
+ ['نطاق المحاضرة وأهميتها','تغطي المحاضرة أهمية صحة الأم والطفل وأهداف الرعاية وتعريفاتها، وفريق مركز صحة الأم والطفل ووظائف المركز، ثم رعاية الأم وصحة الطفل. الفكرة الأساسية هي تنظيم الرعاية عبر مراحل متتابعة بدل حصرها في زيارة واحدة.'],
+ ['أهداف رعاية صحة الأم والطفل','تتضمن أهداف الرعاية تحسين صحة الأم والطفل، وتلبية الاحتياجات الصحية خلال مراحل الرعاية، ودعم الأسرة بالتثقيف والخدمات المناسبة. راجع الصياغة التفصيلية للأهداف في شرائح المحاضرة لأن هذه الفقرة تلخص المحور ولا تستبدل القائمة الأصلية.'],
+ ['فريق مركز MCH ووظائفه','تتناول المحاضرة فريق المركز ووظائفه. في التطبيق، تعمل الممرضة ضمن الفريق وتنسق التثقيف والمتابعة والإحالة بحسب احتياج الأم أو الطفل وخدمات المركز المتاحة، بدل التعامل مع كل احتياج بمعزل عن بقية الخدمات.'],
+ ['تنظيم الأسرة والرعاية الاجتماعية','تضم موضوعات رعاية الأم تنظيم الأسرة والرعاية الاجتماعية والتثقيف الصحي. تنظيم الأسرة جزء من خدمات صحة الأم والطفل في المحاضرة؛ وينبغي تقديم المعلومات باحترام ووفق احتياجات الأسرة وخدمات المنشأة وسياساتها.'],
+ ['الرعاية قبل الحمل Preconception','تبدأ رعاية الأم قبل حدوث الحمل ضمن المراحل المذكورة بالمحاضرة. يركز هذا الجزء على تهيئة المرأة ورفع الوعي بالاحتياجات الصحية قبل الحمل والتعرف إلى ما يحتاج متابعة أو إحالة من خلال الخدمات المختصة.'],
+ ['رعاية الحمل والولادة وبعدها','تذكر المحاضرة Antenatal care (رعاية ما قبل الولادة/أثناء الحمل)، وIntranatal care (الرعاية أثناء الولادة)، وPostnatal care (الرعاية بعد الولادة). تمييز المراحل مهم لأن احتياجات الأم والتثقيف والمتابعة تختلف باختلاف المرحلة.'],
+ ['صحة الطفل وحديث الولادة','تشمل المحاضرة صحة الطفل ومبادئ رعاية حديث الولادة، ومؤشرات مثل وفيات الرضع. في التطبيق، تراعي الممرضة مرحلة العمر، وتقدم التثقيف للأهل، وتدعم المتابعة والإحالة وفق بروتوكولات المركز.'],
+ ['وفيات الأمهات والرضع ودور التمريض','تتناول المحاضرة وفيات الأمهات ووفيات الرضع ضمن موضوعات صحة الأم والطفل. دور التمريض التعليمي يشمل التثقيف والمتابعة ودعم الأسرة والتنسيق مع الفريق وتوجيه المستفيدين إلى الخدمات المناسبة. لا تستنتج أرقامًا أو حدودًا معيارية غير مذكورة في المصدر.']
+ ]},
+ women:{title:'Women’s Health — صحة المرأة',sections:[
+ ['مقدمة وتعريف صحة المرأة','توضح المحاضرة أن المرأة تؤثر في الأسرة والمجتمع، وأن رعايتها الصحية تمتد عبر مراحل الحياة. صحة المرأة ليست مقتصرة على الحمل والولادة؛ بل تتناول الاحتياجات الصحية عبر المراحل والظروف المختلفة.'],
+ ['مراحل الحياة Life Stages','تضع المحاضرة مراحل حياة المرأة ضمن محاورها الأساسية. تختلف الاحتياجات والمشكلات الصحية المحتملة باختلاف المرحلة؛ لذلك يجب على الممرضة تقييم الحالة والمرحلة والسياق بدل استخدام رسالة واحدة لكل النساء.'],
+ ['الفوارق الصحية والفئات ذات الاحتياجات الخاصة','تتضمن المحاضرة Health disparities among special groups of women واحتياجات النساء. يساعد فهم الفوارق في ملاحظة أن الوصول إلى الرعاية والاحتياجات قد يتأثران بظروف اجتماعية واقتصادية وثقافية مختلفة.'],
+ ['التعليم والاقتصاد والثقافة','تذكر المحاضرة التعليم والوضع الاقتصادي والمعتقدات الثقافية ضمن العوامل المؤثرة في صحة المرأة. قد تؤثر هذه العوامل في المعرفة الصحية، والقدرة على الوصول للخدمات، وطريقة فهم الرسائل الصحية أو اتخاذ القرارات.'],
+ ['العنف والعوامل الوراثية ونمط الحياة','من العوامل الواردة أيضًا العنف أو الإساءة، والعوامل الوراثية، وتعاطي المواد، والتغذية، ونمط الحياة، وعدد مرات الحمل، والضغط النفسي والدعم الاجتماعي. هذه عوامل مختلفة وليست قائمة تشخيصية؛ ويجب التعامل مع الإفصاح عن الإساءة بسرية واحترام ووفق إجراءات الحماية المحلية.'],
+ ['المشكلات الصحية الشائعة','تتضمن المحاضرة أكثر المشكلات الصحية شيوعًا لدى النساء، وتربط دراستها بمراحل الحياة والعوامل المؤثرة. عند استخدام هذه القائمة في الممارسة، ارجع إلى الشرائح الأصلية لكل مرحلة ولا تفترض أن كل مشكلة تنطبق على كل امرأة.'],
+ ['احتياجات المرأة والتواصل','يحتاج التقييم إلى الاستماع باحترام، وفهم احتياجات المرأة وسياقها، وتوضيح المعلومات بلغة مناسبة، وتسهيل الوصول إلى الخدمات عند الحاجة. ينبغي تجنب اللوم أو الأحكام المسبقة، خصوصًا عند مناقشة العنف أو الظروف الاجتماعية الحساسة.'],
+ ['دور ممرضة صحة المجتمع','تتناول المحاضرة دور ممرضة صحة المجتمع في تحسين صحة المرأة. يشمل التطبيق التثقيف الصحي، والتعرف على الاحتياجات بحسب مرحلة الحياة، ودعم الوصول إلى الخدمات، والتعاون مع الفريق، واحترام الخصوصية. هذه مبادئ تعليمية؛ تفاصيل الفحص والعلاج تُتبع فيها بروتوكولات المنشأة.']
+ ]}
+};
+const lessonEnglish = {
+ community:[
+ ['Learning objectives','By the end of the lecture, students should explain the historical development of community health nursing, define key terms, distinguish community and public health nursing, describe community features and functions, and identify nursing characteristics, growth factors, and roles.'],
+ ['Health and community','The lecture defines health as complete physical, mental, and social well-being, not merely the absence of disease or infirmity. It also presents health as positive well-being physically, mentally, socially, and spiritually. A community is a group sharing a locality or common interests and interacting with one another; ties may also arise from shared rights or laws.'],
+ ['Community, population, and community health','A population is a statistical aggregate or subgroup with similar or identical characteristics; members may or may not interact. Community health concerns the health status of community members and problems affecting their health and health-care providers. Do not confuse a statistical population with a community that commonly shares place, interests, or social ties.'],
+ ['Public health functions','The lecture describes public health as the science and art of preventing disease, prolonging life, and promoting health through organized societal efforts and informed choices. Its three core functions are Assessment, Policy Development, and Assurance.'],
+ ['Assessment','Assessment includes regular collection, analysis, and sharing of information about community health conditions, risks, and resources. Activities include monitoring health status, diagnosing and investigating problems and hazards, and researching innovative solutions. In the game, gather community observations before proposing an intervention.'],
+ ['Policy development','Assessment findings inform policies and resource allocation. The lecture includes informing, educating, and empowering people; mobilizing community partnerships; and developing policies and plans that support individual and community health.'],
+ ['Assurance','Assurance focuses on availability of necessary health services. It includes enforcing health and safety laws, linking people to needed services, ensuring a competent workforce, and evaluating effectiveness, access, and quality.'],
+ ['Historical development','The lecture lists four stages: early home-care nursing; district nursing (1860–1900); public health nursing (1900–1970); and community health nursing from 1970 to the present. Learn the names and periods as written in your course material.'],
+ ['Applied nursing scenario','A nurse notices a growing health concern, gathers information (Assessment), collaborates with the community on a plan (Policy Development), then follows access to services and evaluates quality (Assurance). The lecture also outlines nursing characteristics, growth factors, differences from acute nursing, and nursing roles; consult the remaining source slides for the full detailed lists.']],
+ school:[
+ ['Why school health matters','Children spend substantial time at school, making the school nurse an important resource for recognizing and managing health problems. School-age children are growing and developing and need a dedicated program that supports health, learning, and safety.'],
+ ['Definition of school nursing','The lecture defines school nursing as specialized professional nursing practice that maintains student well-being, academic success, and lifelong achievement. Nurses facilitate responses to normal development, promote health and safety, and intervene in actual or potential health problems.'],
+ ['Program and team','The school health program is part of community health. Families remain important to school-age children’s health. The team should represent administration, food services, maintenance, social workers, teachers, and medical personnel, especially the school nurse and physician.'],
+ ['School health services','Services may be provided by physicians, nurses, dentists, health educators, social workers, and teachers to protect and promote the health of students and school personnel. Nursing activities can include observation, early recognition, first aid, education, and referral.'],
+ ['Three program components','The lecture identifies Health Services, Health Education, and a Healthy Environment. These components work together: treating a student alone is insufficient if the environment is unsafe or education is missing.'],
+ ['Nutrition and infection prevention','The lecture discusses balanced nutrition including protein, fat, carbohydrates, vitamins, minerals, and water, and notes snacks can be an important nutrient source. Infection-prevention topics include booster immunization, a healthful environment, daily observation, screening for some infectious conditions such as skin disease and scabies, and prevention of communicable disease.'],
+ ['Healthy school environment','Items include accident prevention, avoiding excessive noise, adequate recreation, good classroom ventilation, adequate natural and artificial lighting, safe water, clean toilets, and insect control. The physical school environment is classified as external and internal.'],
+ ['Age groups and problems','The lecture discusses younger school-age children (6–12 years) and adolescents (13–19 years), their needs and common health problems, and major causes of morbidity and mortality. Assessment should consider age and developmental stage rather than assume identical needs.'],
+ ['Nursing scenario','If a student has a skin rash, the nurse follows school procedures to assess, reduce transmission risk, notify appropriate staff, and refer when needed, while supporting education and a safe environment. This is an educational scenario, not a substitute for local policy.']],
+ phc:[
+ ['The shift toward PHC','The lecture calls for balanced allocation of resources across the continuum of care and greater emphasis on Primary Health Care and wellness promotion rather than focusing only on illness and treatment.'],
+ ['Definition','PHC seeks to extend the first level of the health system from sick care to health development. It protects and promotes the health of defined communities and addresses individual and population health problems early.'],
+ ['Continuity and scope','PHC includes continuity of care, health promotion and education, integration of prevention with sick care, concern for individual and population health, community involvement, and appropriate technology. It is not merely a one-time visit after illness appears.'],
+ ['PHC team','The lecture lists general and public health physicians, nurses, dentists, pharmacists, optometrists, nutritionists, community outreach workers, mental health counselors, allied health professionals, and community members as team members.'],
+ ['Elements of PHC','Elements include education about prevailing health problems and prevention/control; food supply and proper nutrition; safe water and basic sanitation; maternal and child health including family planning; immunization against major infectious diseases; prevention and control of locally endemic disease; and appropriate treatment of common diseases and injuries.'],
+ ['Sectors and coordination','The lecture mentions education, industry, water and sanitary disposal, public works and communication, agriculture, and mass media. The health sector cannot solve all community health problems alone; coordination across sectors is needed.'],
+ ['Principles','Principles listed include equitable distribution, community participation, intersectoral coordination, focus on prevention, and appropriate technology. Participation is more effective when language, culture, beliefs, and customs are considered.'],
+ ['Functions, barriers, and nursing role','PHC is part of the country’s health system and community social/economic development, providing promotive, preventive, and curative services. The lecture discusses social, cultural, economic, psychological, environmental, situational, administrative, technology, personnel, and community-participation barriers. Nurses communicate, cooperate, assess needs, educate, support MCH, prevent communicable disease, promote nutrition, and conduct home visits.']],
+ mch:[
+ ['Scope and importance','The lecture covers the importance and aims/objectives of maternal and child health, definitions, the MCH-center team and functions, maternal care, and child health. Care is organized across stages rather than limited to one visit.'],
+ ['Aims and objectives','MCH objectives focus on improving maternal and child health, meeting health needs across care stages, and supporting families with appropriate services and education. Consult the source slides for the full original objective wording; this section is a learning summary.'],
+ ['MCH center team and functions','The lecture includes the center team and its functions. In practice, nurses coordinate follow-up, education, and referral according to the mother’s or child’s needs and the center’s available services.'],
+ ['Family planning and social care','Maternal-care topics include family planning, social care, and health education. Family planning is presented as part of MCH services; information should be respectful and consistent with the person’s needs and the facility’s policies.'],
+ ['Preconception care','Preconception care is one of the stages identified in the lecture. It addresses health needs before pregnancy and helps identify issues requiring follow-up or referral through appropriate services.'],
+ ['Antenatal, intranatal, and postnatal care','The lecture lists antenatal care (during pregnancy), intranatal care (during childbirth), and postnatal care (after childbirth). Distinguishing these stages matters because follow-up and education needs differ across them.'],
+ ['Child and newborn health','The lecture covers child health, newborn-care principles, and indicators such as infant mortality. Nursing education and follow-up should be appropriate to the child’s age and family needs and follow facility protocols.'],
+ ['Maternal/infant mortality and nursing role','Maternal mortality and infant mortality are included in the lecture. Nursing roles include education, follow-up, family support, team coordination, and directing clients to appropriate services. Do not infer numeric thresholds absent from the source.']],
+ women:[
+ ['Introduction and definition','The lecture emphasizes women’s importance in family and community life and addresses health needs across the life span. Women’s health is not limited to pregnancy and childbirth.'],
+ ['Life stages','Life stages are a core lecture topic. Potential health needs and problems vary by stage, so nurses should assess the person’s stage and context instead of using one message for everyone.'],
+ ['Disparities and special groups','The lecture includes health disparities among special groups of women and women’s needs. Social, economic, and cultural circumstances may affect access to care and health needs.'],
+ ['Education, economics, and culture','Education, economic status, and cultural beliefs are listed factors affecting women’s health. They may influence health knowledge, access to services, and how health information is understood.'],
+ ['Abuse, genetics, lifestyle, and support','Other factors listed include abuse, genetics, substance abuse, nutrition, lifestyle, pregnancy frequency, stress, and social support. These are contextual factors, not a diagnostic checklist. Disclosures of abuse require respectful, confidential handling under local safeguarding procedures.'],
+ ['Common health problems','The lecture covers common women’s health problems and relates them to life stages and influencing factors. Consult the original slides for the specific problems listed for each stage; do not assume every problem applies to every woman.'],
+ ['Needs and communication','Assessment involves respectful listening, understanding the woman’s context, explaining information clearly, and supporting access to care. Avoid blame or assumptions, especially when discussing abuse or sensitive social circumstances.'],
+ ['Community health nurse role','The lecture addresses the community health nurse’s role in improving women’s health. Application includes health education, stage-appropriate assessment, supporting access to services, teamwork, and respecting privacy. Screening and treatment follow facility protocols.']]
+};
+
+const quizBank={
+ community:[
+ ['What is health according to the lecture? | ما تعريف الصحة وفق المحاضرة؟',['Complete physical, mental and social well-being | اكتمال السلامة البدنية والعقلية والاجتماعية','Absence of fever only | غياب الحمى فقط','Being physically strong only | القوة البدنية فقط'],0],
+ ['Which best describes a community? | ما الوصف الأقرب للمجتمع؟',['People sharing a locality/interests and interacting | أناس يتشاركون مكانًا أو مصالح ويتفاعلون','Any people counted in a spreadsheet only | أي أشخاص في جدول إحصائي فقط','Patients in one operating room | مرضى غرفة عمليات واحدة'],0],
+ ['Population members… | أفراد السكان…',['May or may not interact | قد يتفاعلون أو لا يتفاعلون','Must all be relatives | يجب أن يكونوا أقارب','Must live in one hospital | يجب أن يعيشوا في مستشفى'],0],
+ ['Which is a core public health function? | أي مما يلي وظيفة أساسية للصحة العامة؟',['Assessment | التقييم','Selling medication | بيع الدواء','Building houses only | بناء المنازل فقط'],0],
+ ['Policy development uses… | يعتمد تطوير السياسات على…',['Assessment information to guide plans/resources | معلومات التقييم لتوجيه الخطط والموارد','Guesswork without data | التخمين دون بيانات','Only individual preferences | التفضيلات الفردية فقط'],0],
+ ['Assurance focuses on… | يركز ضمان الخدمات على…',['Availability and quality of needed services | توافر الخدمات المطلوبة وجودتها','Replacing all nurses | استبدال كل الممرضين','Avoiding evaluation | تجنب التقييم'],0],
+ ['District nursing stage in the lecture is… | مرحلة تمريض المناطق هي…',['1860–1900 | 1860–1900','1900–1970 | 1900–1970','1970–present | 1970 حتى الآن'],0],
+ ['Public health nursing stage is listed as… | مرحلة تمريض الصحة العامة…',['1900–1970 | 1900–1970','1860–1900 | 1860–1900','Only after 2020 | بعد 2020 فقط'],0],
+ ['Monitoring community health status belongs to… | مراقبة الحالة الصحية للمجتمع تتبع…',['Assessment | التقييم','Assurance only | ضمان الخدمات فقط','Family planning only | تنظيم الأسرة فقط'],0],
+ ['Mobilizing community partnerships is part of… | حشد الشراكات المجتمعية جزء من…',['Policy development | تطوير السياسات','Door-to-door sales | البيع المنزلي','Laboratory diagnosis only | التشخيص المخبري فقط'],0]],
+ school:[
+ ['The lecture defines school nursing as… | كيف تعرف المحاضرة تمريض المدرسة؟',['Specialized nursing supporting well-being and academic success | تمريض متخصص يدعم الرفاه والنجاح الدراسي','School building maintenance only | صيانة مبنى المدرسة فقط','Exam supervision only | مراقبة الامتحانات فقط'],0],
+ ['Which is a school health program component? | أي مما يلي مكوّن للبرنامج؟',['Health services | الخدمات الصحية','School uniforms only | الزي المدرسي فقط','Examinations only | الامتحانات فقط'],0],
+ ['Which is also a program component? | ما المكوّن الآخر؟',['Health education | التثقيف الصحي','Punishment | العقاب','Homework grading | تصحيح الواجبات'],0],
+ ['Which is the third core component? | ما المكوّن الأساسي الثالث؟',['Healthy environment | البيئة الصحية','School fees | المصروفات الدراسية','Sports trophies | الجوائز الرياضية'],0],
+ ['Who should be represented on the school health team? | من يجب تمثيله في الفريق؟',['Teachers, administration, support and medical staff | المعلمون والإدارة والدعم والطاقم الطبي','Only students | الطلاب فقط','Only maintenance workers | عمال الصيانة فقط'],0],
+ ['The lecture groups younger school-age children as… | فئة الأطفال الأصغر في المحاضرة…',['6–12 years | 6–12 سنة','1–5 years | 1–5 سنوات','20–25 years | 20–25 سنة'],0],
+ ['Adolescents are grouped as… | فئة المراهقين…',['13–19 years | 13–19 سنة','6–12 years | 6–12 سنة','30–40 years | 30–40 سنة'],0],
+ ['Which supports a healthy school environment? | ما الذي يدعم البيئة المدرسية الصحية؟',['Safe water and clean toilets | مياه آمنة ودورات مياه نظيفة','Poor ventilation | تهوية سيئة','Unsafe lighting | إضاءة غير آمنة'],0],
+ ['Which helps prevent infection in school? | ما الذي يساعد في الوقاية من العدوى؟',['Daily observation and appropriate screening | الملاحظة اليومية والفحص المناسب','Ignoring skin symptoms | تجاهل الأعراض الجلدية','Sharing personal items without care | مشاركة الأدوات الشخصية بلا احتياطات'],0],
+ ['What should a school nurse do when referral is needed? | ماذا تفعل الممرضة عند الحاجة للإحالة؟',['Refer through the appropriate process | تحيل عبر الإجراء المناسب','Hide the concern | تخفي المشكلة','Diagnose every condition alone | تشخص كل حالة بمفردها'],0]],
+ phc:[
+ ['PHC shifts focus toward… | تتجه الرعاية الأولية نحو…',['Health development and wellness promotion | تنمية الصحة وتعزيز العافية','Hospital treatment only | علاج المستشفى فقط','Emergency care only | الطوارئ فقط'],0],
+ ['Which is a PHC principle in the lecture? | أي مبدأ وارد في المحاضرة؟',['Equitable distribution | التوزيع العادل','Services only in cities | الخدمات في المدن فقط','No community involvement | عدم مشاركة المجتمع'],0],
+ ['Who is considered part of the PHC team? | من يُعد جزءًا من الفريق؟',['Community members | أفراد المجتمع','Only physicians | الأطباء فقط','Only pharmacists | الصيادلة فقط'],0],
+ ['Which is an element of PHC? | أي عنصر من عناصر PHC؟',['Safe water and basic sanitation | مياه آمنة وصرف صحي أساسي','No health education | عدم التثقيف الصحي','Stopping immunization | إيقاف التحصين'],0],
+ ['Family planning appears under… | يظهر تنظيم الأسرة ضمن…',['Maternal and child health care | صحة الأم والطفل','Road construction | إنشاء الطرق','School grading | تقييم المدارس'],0],
+ ['Which principle requires other sectors to work together? | أي مبدأ يتطلب تعاون القطاعات؟',['Intersectoral coordination | التنسيق بين القطاعات','Isolation | العزل','Treatment-only approach | العلاج فقط'],0],
+ ['Community participation is strengthened by considering… | تتحسن مشاركة المجتمع بمراعاة…',['Language, culture, beliefs and customs | اللغة والثقافة والمعتقدات والعادات','Only the nurse’s preferences | تفضيلات الممرضة فقط','No local context | تجاهل السياق المحلي'],0],
+ ['PHC functions include… | تشمل وظائف PHC…',['Promotive, preventive and curative services | خدمات تعزيزية ووقائية وعلاجية','Only curative services | علاجية فقط','Only record keeping | تسجيل البيانات فقط'],0],
+ ['Which can be a barrier to PHC? | أي مما يلي قد يعيق PHC؟',['Economic or administrative factors | عوامل اقتصادية أو إدارية','Clear communication always | التواصل الواضح دائمًا','Community partnership | الشراكة المجتمعية'],0],
+ ['Appropriate technology is… | التكنولوجيا المناسبة…',['A principle named in the lecture | مبدأ مذكور في المحاضرة','A replacement for all staff | بديل عن كل العاملين','The only PHC element | العنصر الوحيد للرعاية الأولية'],0]],
+ mch:[
+ ['Which is a topic in the MCH lecture? | أي موضوع ضمن محاضرة MCH؟',['MCH center team and functions | فريق مركز صحة الأم والطفل ووظائفه','Road traffic management | إدارة المرور','School building design only | تصميم مبنى المدرسة فقط'],0],
+ ['Family planning is included under… | يندرج تنظيم الأسرة ضمن…',['Maternal care topics | موضوعات رعاية الأم','Infection control in schools only | مكافحة عدوى المدارس فقط','Hospital accounting | حسابات المستشفى'],0],
+ ['Preconception care occurs… | رعاية ما قبل الحمل تكون…',['Before pregnancy | قبل الحمل','Only during childbirth | أثناء الولادة فقط','Only after delivery | بعد الولادة فقط'],0],
+ ['Antenatal care refers to care… | تشير Antenatal care إلى…',['During pregnancy | أثناء الحمل','Before conception only | قبل الحمل فقط','After birth only | بعد الولادة فقط'],0],
+ ['Intranatal care is associated with… | ترتبط Intranatal care بـ…',['Childbirth/labour | الولادة','School health | الصحة المدرسية','Menopause only | انقطاع الطمث فقط'],0],
+ ['Postnatal care refers to… | تشير Postnatal care إلى…',['After childbirth | بعد الولادة','Before pregnancy | قبل الحمل','Before school entry | قبل دخول المدرسة'],0],
+ ['Which indicator is discussed in the lecture? | أي مؤشر تناقشه المحاضرة؟',['Infant mortality | وفيات الرضع','School attendance only | الحضور المدرسي فقط','Road injuries only | إصابات الطرق فقط'],0],
+ ['Newborn care is… | رعاية حديث الولادة…',['A topic included in the lecture | موضوع وارد في المحاضرة','Outside MCH entirely | خارج صحة الأم والطفل تمامًا','Only a school service | خدمة مدرسية فقط'],0],
+ ['Which supports MCH care? | ما الذي يدعم رعاية MCH؟',['Education and coordinated follow-up | التثقيف والمتابعة المنسقة','No family communication | عدم التواصل مع الأسرة','One visit for every need | زيارة واحدة لكل الاحتياجات'],0],
+ ['The MCH lecture includes… | تشمل محاضرة MCH…',['Maternal, newborn and child health topics | موضوعات صحة الأم وحديث الولادة والطفل','Only hospital finance | مالية المستشفى فقط','Only school nutrition | تغذية المدرسة فقط'],0]],
+ women:[
+ ['Women’s health in the lecture is… | صحة المرأة في المحاضرة…',['Across life stages, not pregnancy alone | عبر مراحل الحياة وليست الحمل فقط','Only pregnancy and birth | الحمل والولادة فقط','Only emergency care | الطوارئ فقط'],0],
+ ['Which factor is listed as affecting women’s health? | أي عامل وارد؟',['Education | التعليم','Building color | لون المبنى','Uniform size | مقاس الزي'],0],
+ ['Which economic factor is listed? | أي عامل اقتصادي وارد؟',['Economic status | الوضع الاقتصادي','Road width | عرض الطريق','Weather forecast only | توقعات الطقس فقط'],0],
+ ['Which social factor is listed? | أي عامل اجتماعي وارد؟',['Social support | الدعم الاجتماعي','Classroom lighting | إضاءة الفصل','Parking availability | أماكن الانتظار'],0],
+ ['Which sensitive issue is named in the lecture? | أي قضية حساسة مذكورة؟',['Abuse | الإساءة أو العنف','School homework | الواجب المدرسي','Traffic fines | مخالفات المرور'],0],
+ ['Which lifestyle-related factor is listed? | أي عامل مرتبط بنمط الحياة؟',['Nutrition | التغذية','Building height | ارتفاع المبنى','Exam schedule | جدول الامتحانات'],0],
+ ['Which is another factor affecting women’s health? | ما العامل الآخر؟',['Stress | الضغط النفسي','Classroom size | مساحة الفصل','Clinic paint | طلاء العيادة'],0],
+ ['Why consider life stages? | لماذا نراعي مراحل الحياة؟',['Needs and problems may differ by stage | قد تختلف الاحتياجات والمشكلات حسب المرحلة','All women have identical needs | كل النساء لهن الاحتياجات نفسها','It replaces assessment | لأنه يلغي التقييم'],0],
+ ['How should nurses approach sensitive disclosures? | كيف تتعامل الممرضة مع الإفصاحات الحساسة؟',['Respectfully and confidentially under local procedures | باحترام وسرية ووفق الإجراءات المحلية','With blame | باللوم','By sharing publicly | بنشرها علنًا'],0],
+ ['Which is part of the community nurse role? | ما الذي يدخل في دور الممرضة المجتمعية؟',['Health education and supporting access to care | التثقيف الصحي ودعم الوصول للرعاية','Making assumptions about every patient | افتراض الشيء نفسه عن الجميع','Avoiding communication | تجنب التواصل'],0]]
+};
+
+// ===== More questions (first option = correct; engine shuffles). Format: [question, correct, wrong1, wrong2, explanation] =====
+function addQ(id,rows){rows.forEach(r=>quizBank[id].push([r[0],[r[1],r[2],r[3]],0,r[4]||undefined]))}
+addQ('community',[
+['كم عدد الوظائف الأساسية للصحة العامة في المحاضرة؟','ثلاث: Assessment وPolicy Development وAssurance','وظيفة واحدة فقط','سبع وظائف'],
+['جمع ملاحظات السكان قبل اقتراح نشاط صحي يمثل…','Assessment (التقييم)','Assurance فقط','بيع الخدمات'],
+['إنفاذ القوانين التي تحمي الصحة والسلامة يتبع…','Assurance (ضمان الخدمات)','Assessment','Policy Development فقط'],
+['ضمان وجود قوة عاملة مؤهلة يتبع…','Assurance','Assessment','الصحة الشخصية فقط'],
+['إعلام الناس وتثقيفهم وتمكينهم بشأن القضايا الصحية يتبع…','Policy Development','Assurance فقط','التشخيص المخبري'],
+['تشخيص المشكلات الصحية والتحقيق فيها يتبع…','Assessment','Policy Development فقط','Assurance فقط'],
+['ما البعد الذي يضيفه التعريف الإيجابي للصحة إلى البدني والعقلي والاجتماعي؟','البعد الروحي','البعد المالي فقط','البعد السياسي فقط'],
+['كم مرحلة تاريخية عامة تذكرها المحاضرة لتطور تمريض صحة المجتمع؟','أربع مراحل','مرحلة واحدة','عشر مراحل'],
+['أولى المراحل التاريخية هي…','الرعاية التمريضية المنزلية المبكرة','تمريض صحة المجتمع الحديث','تمريض الطوارئ فقط'],
+['الفرق الأدق بين السكان Population والمجتمع Community…','السكان مجموعة بخصائص متشابهة قد لا تتفاعل، والمجتمع يتضمن روابط ومصالح أو مكانًا مشتركًا','لا فرق إطلاقًا','المجتمع دائمًا أكبر من السكان']]);
+addQ('school',[
+['الاحتياج اليومي من السعرات للطفل في سن المدرسة وفق المحاضرة…','حوالي 2000 سعر حراري','حوالي 200 سعر','حوالي 9000 سعر'],
+['ما المشروبان المستثنيان من الغذاء العائلي لطفل المدرسة؟','الشاي والقهوة','الحليب والماء','العصير الطازج'],
+['من مشكلات الأطفال 6–12 سنة…','الحوادث والأمراض التنفسية وأمراض الأسنان وسوء التغذية ورهاب المدرسة','انقطاع الطمث','مشكلات الشيخوخة'],
+['من مشكلات المراهقين 13–19 سنة…','المشكلات النفسية والانفعالية واضطرابات الحيض والأمراض المنقولة جنسيًا','فقط نزلات البرد','لا توجد مشكلات صحية'],
+['ماذا تفعل الممرضة في الجولة اليومية على الفصول؟','تتأكد من التهوية والإضاءة الجيدة','تراجع درجات الامتحانات','تصلح الأثاث بنفسها'],
+['أين تدوّن الممرضة تقريرها عن حالة المبنى؟','في سجل خاص وتعرضه على المدير والطبيب','تحتفظ به لنفسها','لا تدونه'],
+['وفق المحاضرة، عدد مداخل المدرسة للطلاب…','أكثر من مدخل واحد','مدخل واحد فقط دائمًا','لا مداخل جانبية إطلاقًا'],
+['تصميم المدرسة الصحي يراعي…','احتياجات الطلاب والعاملين ذوي الإعاقة','الطلاب الأصحاء فقط','المظهر دون الاستخدام'],
+['من أهداف التثقيف الصحي المدرسي…','استخدام الطلاب كرسل لنقل الصحة إلى أسرهم','منع الطلاب من السؤال','تجنب الحديث عن الوقاية'],
+['عمال تقديم الغذاء في المدرسة يجب أن…','يخضعوا لفحص طبي ولديهم شهادة صحية','يعملوا دون أي فحص','يكونوا من الطلاب فقط'],
+['أي مما يلي من إجراءات الممرضة في التقييم الصحي للطلاب؟','قياس الوزن والطول وفحص النظر والسمع','تصحيح الواجبات','إدارة حافلة المدرسة']]);
+addQ('phc',[
+['أي قطاع ضمن القطاعات المتعاونة مع الرعاية الصحية الأولية؟','الزراعة والتعليم ووسائل الإعلام والصناعة','الصحة وحدها','لا قطاع على الإطلاق'],
+['الأمية ونقص الوعي الصحي تُصنَّف ضمن العوائق…','الاجتماعية','المناخية فقط','الجغرافية فقط'],
+['نقص المياه وسوء الصرف وتراكم القمامة تُصنَّف ضمن العوائق…','البيئية','النفسية','التقنية'],
+['القدَرية (الإيمان بالقدر واليأس) تُصنَّف ضمن العوامل…','النفسية','الاقتصادية','الإدارية'],
+['لماذا يُفضَّل اختيار العاملين من نفس المنطقة؟','لتقليل مشكلات اللغة والثقافة والمعتقدات والعادات','لأنهم أرخص أجرًا فقط','لتجنب مشاركة المجتمع'],
+['عند التخطيط للتغيير تطلب الممرضة مساهمة…','قيادات المجتمع والشخصيات المؤثرة ورجال الدين','من لا علاقة لهم بالمجتمع','لا أحد'],
+['يعتمد نجاح الرعاية الصحية الأولية على…','استمرار استخدام الناس لها (تغيير سلوك)','بناء مبنى فاخر فقط','عدد الأجهزة فقط'],
+['من الواجبات العامة للممرضة في الرعاية الأولية…','التعامل اللطيف والالتزام بالمواعيد والمظهر المهني والنظافة','التأخر عن العمل','تجاهل الاحتياجات'],
+['من أدوار الممرضة في الأمراض المعدية…','الوقاية الأولية والثانوية والثالثة','العلاج بلا وقاية','لا دور لها'],
+['من مظاهر العوائق الموقفية…','بعد المركز الصحي وصعوبة المواصلات','وجود فريق متكامل','تثقيف صحي جيد']]);
+addQ('mch',[
+['متى يُجرى تقييم Apgar للمولود؟','في الدقيقة الأولى والخامسة بعد الولادة','بعد أسبوع من الولادة','قبل الولادة'],
+['درجة Apgar من 7 إلى 10 تعني…','حالة طبيعية','يحتاج إنعاشًا','اكتئابًا شديدًا'],
+['درجة Apgar من 0 إلى 3 تعني…','اكتئابًا شديدًا ويحتاج إنعاشًا فوريًا','حالة طبيعية','نموًا ممتازًا'],
+['السائل النفاسي lochia rubra في الأيام 1–3 يكون…','أحمر زاهيًا دمويًا وقد تظهر جلطات صغيرة','كريميًا مصفرًا','شفافًا بلا لون'],
+['السائل النفاسي lochia serosa (5–7 أيام) يكون…','بنيًا وردي اللون بلا جلطات وتقل كميته','أحمر قاتمًا مع جلطات كبيرة','أبيض لبنيًا'],
+['السائل النفاسي lochia alba يكون…','كريميًا إلى مصفر وقد يميل للبني (1–3 أسابيع)','أحمر زاهيًا','أزرق'],
+['تذكر المحاضرة اكتمال انكماش الرحم عند حوالي…','15 يومًا بعد الولادة','3 أيام','6 أشهر'],
+['الفحص الأخير الموصى به بعد الولادة يكون عند…','ستة أسابيع بعد الولادة','يوم واحد','ثلاث سنوات'],
+['أول عنصر في نموذج GATHER للإرشاد…','الترحيب بالزوجين وطمأنتهما إلى السرية','إصدار الأوامر','إنهاء الجلسة'],
+['التحصين المذكور قبل الزواج يشمل…','الحصبة الألمانية والنكاف','السعال الديكي فقط','التيتانوس فقط'],
+['مبادئ رعاية حديث الولادة الأساسية…','الهواء والدفء والغذاء والنظافة والحب','الغذاء فقط','الدفء فقط'],
+['من أسباب وفيات حديثي الولادة…','انخفاض وزن الولادة والخداج وإصابات الولادة والإنتان','الحوادث المنزلية فقط','سوء التغذية بعد السنة الخامسة'],
+['لتحديد موعد الولادة المتوقع نحتاج…','تاريخ آخر دورة شهرية (LMP)','لون عين الأم','عدد غرف المنزل'],
+['من يتولى الولادات المنزلية في المحاضرة؟','القابلة الممرضة (nurse midwife) في مركز MCH','أي شخص بلا تدريب','لا ولادات منزلية']]);
+addQ('women',[
+['عدد مرات الحمل يُعد…','أحد العوامل المؤثرة في صحة المرأة','عاملًا غير مؤثر مطلقًا','يخص الرجال فقط'],
+['الوراثة وتعاطي المواد يُصنَّفان…','عاملين مؤثرين في صحة المرأة','غير مرتبطين بالصحة','خاصين بالأطفال فقط'],
+['عند مناقشة الظروف الاجتماعية الحساسة تتجنب الممرضة…','اللوم والأحكام المسبقة','الاستماع','الخصوصية'],
+['هل تنطبق كل المشكلات الصحية على كل امرأة؟','لا، تُقيَّم حسب المرحلة والسياق','نعم دائمًا','فقط في الشباب'],
+['الفوارق الصحية بين فئات النساء تتأثر بـ…','ظروف اجتماعية واقتصادية وثقافية','لون الملابس فقط','حجم المبنى فقط'],
+['عند إفصاح سيدة عن تعرضها للإساءة…','نستمع باحترام وسرية وبلا لوم ونتبع إجراءات الحماية','ننشر الأمر','نطلب منها الصمت'],
+['تتأثر طريقة فهم الرسائل الصحية بـ…','التعليم والاقتصاد والمعتقدات الثقافية','لون الجدران','عدد الأشجار'],
+['صحة المرأة في المحاضرة تُدرَس عبر…','مراحل الحياة المختلفة','مرحلة الحمل فقط','مرحلة الطفولة فقط']]);
+// ===== Field cases =====
+const fieldCases=[
+['زيارة منزلية — اليوم الخامس','زرتِ أمًّا بعد ولادتها بخمسة أيام: المفرزات بنية وردية بلا جلطات وتقل تدريجيًا. كيف تفسرين ذلك؟','lochia serosa طبيعية في 5–7 أيام مع قياس العلامات الحيوية والعناية بالحبل السري','lochia rubra وتستدعي نقلها فورًا','عدوى مؤكدة تحتاج مضادًا حيويًا دون فحص','lochia serosa (5–7 أيام) بنية وردية بلا جلطات وتقل تدريجيًا.'],
+['غرفة الولادة — Apgar','في الدقيقة الأولى: النبض أقل من 100، تنفس بطيء غير منتظم، حركة خفيفة، تكشيرة عند التنبيه، الجسم وردي والأطراف زرقاء. ما التقدير؟','المجموع 5 (4–6): يحتاج المولود إلى إنعاش','المجموع 9: طبيعي','المجموع 0: لا حاجة لأي إجراء','كل عنصر هنا يأخذ درجة 1 فالمجموع 5، وتُعاد الدرجة عند 5 دقائق.'],
+['المدرسة — حكة جلدية','لاحظتِ حكة وطفحًا عند عدة طلاب ويُشتبه في الجرب. ما التصرف الأنسب؟','ملاحظة يومية وفحص مبكر وإحالة وعزل الحالات وتثقيف الطلاب والأسر وفق بروتوكول المدرسة','تجاهل الأمر حتى نهاية الفصل','معاقبة الطلاب','تذكر المحاضرة الفحص الجلدي والجرب والملاحظة اليومية والاكتشاف المبكر والإحالة والعزل والتثقيف.'],
+['المدرسة — جولة الفصول','في جولتك اليومية وجدتِ فصلًا سيئ التهوية والإضاءة. ماذا تفعلين؟','أدوّن في سجل خاص وأعرض التقرير على المدير والطبيب','أتركه لأنه ليس من اختصاصي','أطلب من الطلاب الغياب','من دور الممرضة التأكد من التهوية والإضاءة وكتابة تقرير وعرضه على المدير والطبيب.'],
+['الرعاية الأولية — قرية بعيدة','سكان قرية بعيدة يفضلون استشارة الأقارب والأصدقاء بدل المركز. ما الأنسب؟','إشراك قيادات المجتمع والمؤثرين واختيار عاملين من المنطقة وتقريب الخدمة','فرض الزيارات بالقوة','إغلاق المركز','التضامن الجماعي والبعد الجغرافي من العوائق؛ الحل بمشاركة المجتمع ومراعاة اللغة والثقافة.'],
+['ما قبل الزواج — GATHER','يأتي خطيبان للاستشارة. ما الخطوة الأولى في نموذج GATHER؟','الترحيب بهما وتعريف نفسك وتأمين جو هادئ وطمأنتهما إلى السرية','قراءة النتائج دون حديث','إعطاء الأوامر','GATHER: Greet ثم Ask ثم Tell ثم Help ثم Explain ثم Return.'],
+['أول زيارة رعاية حمل','أمّ حامل في أول زيارة. ما المعلومة التي تحدد موعد الولادة المتوقع؟','تاريخ آخر دورة شهرية (LMP)','لون عين الأم','عدد غرف المنزل','التاريخ الطمثي يتضمن آخر دورة لتحديد موعد الولادة المتوقع.'],
+['صحة المرأة — إفصاح حساس','سيدة أخبرتك بأنها تتعرض للإساءة في البيت. ما التصرف الأنسب؟','الاستماع باحترام وسرية وبلا لوم وتوجيهها وفق إجراءات الحماية المحلية','إخبار الجيران','لومها','المبدأ: احترام وسرية وعدم لوم مع اتباع إجراءات الحماية.'],
+['صحة المجتمع — Assessment','زادت حالات إسهال بين أطفال الحي. ما الخطوة الأولى؟','جمع المعلومات وتقييم الوضع والمخاطر والموارد','توزيع خطة جاهزة دون بيانات','انتظار تفاقم الحالة','التسلسل: Assessment ثم Policy Development ثم Assurance.'],
+['حديث الولادة — مبادئ الرعاية','طفل وُلد باردًا وبكاؤه ضعيف. أي مبادئ تتذكرينها؟','الهواء والدفء والغذاء والنظافة والحب','الغذاء فقط','الدفء فقط','مجرى هوائي مفتوح، تدفئة، رضاعة مبكرة، نظافة، قرب الأم.']];
+function openFieldCase(){
+ const cs=fieldCases[Math.floor(Math.random()*fieldCases.length)];
+ const opts=[cs[2],cs[3],cs[4]].map((t,i)=>({t,ok:i===0})).sort(()=>Math.random()-.5);
+ const c=document.getElementById('modalContent');c.innerHTML='';
+ const h=document.createElement('h2');h.textContent='🩺 حالة ميدانية: '+cs[0];c.append(h);
+ const p=document.createElement('p');p.textContent=cs[1];p.style.cssText='line-height:1.8;font-weight:700';c.append(p);
+ let done=false;
+ opts.forEach(o=>{const b=document.createElement('button');b.className='answer';b.textContent=o.t;b.onclick=()=>{if(done)return;done=true;
+  const f=document.createElement('p');f.style.cssText='white-space:pre-line;padding:10px;border-radius:10px;line-height:1.7;color:#173a36;background:'+(o.ok?'#d8f3e5':'#fff0d9');f.textContent=(o.ok?'قرار سليم ✅ +15 XP\n':'قرار يحتاج مراجعة ⚠️\n')+cs[5];c.append(f);
+  c.querySelectorAll('button.answer').forEach(x=>x.disabled=true);
+  if(o.ok){game.xp+=15;document.getElementById('xp').textContent=game.xp;saveProgress()}
+  const n=document.createElement('button');n.textContent='حالة تانية';n.onclick=openFieldCase;c.append(n);
+  const x=document.createElement('button');x.textContent='إغلاق';x.className='secondary';x.onclick=()=>document.getElementById('modal').style.display='none';c.append(x)};c.append(b)});
+ document.getElementById('modal').style.display='flex';
+}
+{const cb=document.createElement('button');cb.type='button';cb.textContent='🩺 حالة ميدانية';cb.style.cssText=document.getElementById('comprehensiveExam').style.cssText;cb.onclick=openFieldCase;document.getElementById('quest').append(cb)}
+
+const earnedBadges = new Set((savedProgress && savedProgress.badges) || []);
+// ===== Extra missions (each has a new character, short lesson, quiz) =====
+const extraMissions=[
+{id:'x_nutrition',name:'تغذية وتثقيف صحي للمدرسة',npc:'أ. هدى',kind:'mariam',role:'معلمة علوم',x:24,z:-3.9,zone:'المدرسة',brief:'ساعدي أ. هدى في تجهيز حصة صحية عن التغذية والنشاط.',
+ lesson:[['احتياجات التغذية','يحتاج طفل المدرسة حوالي 2000 سعر حراري يوميًا من غذاء متوازن (بروتين ودهون وكربوهيدرات وفيتامينات ومعادن وماء). يأكل من الغذاء العائلي عدا الشاي والقهوة، وقد تكون الوجبات الخفيفة مصدرًا مهمًا للعناصر الغذائية.'],['التثقيف الصحي المدرسي','أهدافه: تحديد المشكلات والاحتياجات، وتكوين سلوك صحي، والوقاية من الأمراض، وتعريف الطلاب بسلامتهم، واستخدام الطلاب كرسل ينقلون الصحة لأسرهم. موضوعاته: النظافة الشخصية (الفم والعين والأذن والأنف والجلد والشعر والقدم)، الغذاء، العادات الضارة كالتدخين والمخدرات، الإسعافات الأولية، الأمراض المعدية.'],['الراحة والنشاط','يحتاج الطالب إلى راحة ونوم كافيين، وملعب واسع وتمارين بدنية لتحسين الدورة الدموية ومرونة العضلات، وتعليم الجلسة الصحيحة أثناء القراءة والكتابة، واحتياجات نفسية اجتماعية كالأمان والألعاب الجماعية.']],
+ qs:[['من موضوعات التثقيف الصحي المدرسي','النظافة الشخصية والغذاء والإسعافات الأولية والأمراض المعدية','الفلك فقط','قيادة السيارات'],['فائدة التمارين البدنية في المدرسة','تحسين الدورة الدموية ومرونة العضلات','زيادة الضوضاء','تقليل النوم'],['تعليم الجلسة الصحيحة أثناء القراءة والكتابة يدخل ضمن','ميكانيكية الجسم المثالية','الأمراض الجلدية','الأمراض الطفيلية'],['من العادات الضارة التي يتناولها التثقيف','التدخين والكحول والمخدرات','غسل اليدين','النوم الكافي'],['الاحتياج النفسي الاجتماعي لطالب المدرسة','الأمان والتفاعل مع الأقران وألعاب الفريق','العزلة التامة','الحرمان من اللعب']]},
+{id:'x_envschool',name:'مدرسة بيئتها صحية',npc:'أ. كريم',kind:'npcMale',role:'مدير المدرسة',x:29,z:-9,zone:'المدرسة',brief:'اتعلّم مع أ. كريم شروط البيئة المدرسية الصحية ودور الممرضة فيها.',
+ lesson:[['خصائص البيئة المدرسية الصحية','آمنة من المخاطر الفيزيائية والكيميائية والنفسية، ومريحة بمقاعد وإضاءة وتهوية وتدفئة ودورات مياه ومياه شرب مناسبة، مع رعاية طارئة ووسيلة نقل، ومصممة بما يراعي ذوي الإعاقة.'],['الموقع الخارجي','مركزي في الحي، سهل الوصول بوسائل المواصلات، بعيد عن الضوضاء ومصادر التلوث، في منطقة جيدة التهوية، وبشارع مؤدٍّ إليها واسع، ولها أكثر من مدخل للطلاب.'],['دور الممرضة','جولات يومية في الفصول للتأكد من التهوية والإضاءة وفي الحمامات للتأكد من الماء والصرف، وتدوين تقرير في سجل خاص يُعرض على المدير والطبيب، وإشراك المعلمين وأولياء الأمور وتحسين علاقة المعلم بالطالب.']],
+ qs:[['البيئة المدرسية تنقسم إلى','بيئة مادية ونفسية','بيئة ورقية فقط','بيئة ليلية فقط'],['البيئة المادية بدورها تُصنّف إلى','خارجية وداخلية','علوية وسفلية','كبيرة وصغيرة'],['موقع المدرسة المناسب','بعيد عن الضوضاء والتلوث وسهل الوصول','بجوار مصنع صاخب','في مكان لا تصله المواصلات'],['البيئة النفسية للمدرسة تشمل','العلاقات بين الأشخاص داخل المدرسة','الأثاث فقط','لون السبورة فقط'],['تفقد دورات المياه يوميًا يهدف إلى','التأكد من توفر الماء والصرف السليم','عدّ الطلاب','تغيير الطلاء']]},
+{id:'x_phcbarriers',name:'عوائق الرعاية الأولية',npc:'عم عبده',kind:'npcMale',role:'مختار الحي',x:8,z:8,zone:'الحي',brief:'اسمع من عم عبده ليه بعض الناس بيبعدوا عن المراكز الصحية.',
+ lesson:[['عوائق اجتماعية وثقافية','التضامن الجماعي (التوجه للأقارب بدل المراكز)، الأمية وقلة الوعي بالتغذية وصحة الأم والطفل، زواج الأقارب، والحمل في سن مبكرة (16 سنة أو أقل) أو متأخرة (35 فأكثر).'],['عوائق نفسية وبيئية وموقفية','اختلاف تصورات الصحة والمرض، والقدَرية، وحاجز اللغة؛ ونقص المياه وسوء الصرف وانتشار القمامة؛ وبعد المراكز وصعوبة المواصلات.'],['عوائق إدارية وبشرية','نقص تنسيق السياسات والتواصل بين الخدمات والبيروقراطية وضعف الإحالة والإشراف؛ ومعدات ناقصة أو قديمة؛ ونقص الممرضات المؤهلات وبرامج تدريب لا تلبي الاحتياج الفعلي.']],
+ qs:[['زواج الأقارب يُصنَّف ضمن العوائق','الاجتماعية','الجغرافية','التقنية'],['الحمل في سن 16 فأقل أو 35 فأكثر مذكور ضمن','العوائق الاجتماعية','العوائق التقنية','العوائق البيئية'],['ضعف نظام الإحالة والإشراف يُصنّف','إداريًا وتواصليًا','بيئيًا','نفسيًا'],['نقص المعدات والمستلزمات وأدوات التعليم','عائق تقني','عائق ثقافي','عائق نفسي'],['البيروقراطية وقلة التنسيق الحكومي من العوائق','الإدارية','الشخصية','المناخية']]},
+{id:'x_postnatal',name:'زيارات ما بعد الولادة',npc:'أم سارة',kind:'mariam',role:'قابلة ممرضة',x:14,z:24.5,zone:'مركز الأم والطفل',brief:'اتعلمي مع أم سارة جدول زيارات ما بعد الولادة يوم بيوم.',
+ lesson:[['زيارات ما بعد الولادة','اليوم 3: قياس الحرارة وفحص السائل النفاسي (rubra). اليوم 5: العلامات الحيوية والعناية بالحبل السري وlochia serosa. اليوم 7: فحص serosa وسقوط الحبل. اليوم 10: lochia alba. اليوم 15: اكتمال انكماش الرحم. اليوم 21: تثقيف عن تنظيم الأسرة والتحصين.'],['الفحص الموضعي','فحص الثدي (حلمة متشققة أو مقلوبة وإفراز اللبن)، وفحص البطن لارتفاع قاع الرحم (فوق السرة بإصبع ويقل إصبعًا يوميًا)، وفحص العجان والمهبل لوجود تمزقات أو نزيف.'],['الفحص الختامي والتثقيف','فحص بعد 3 أسابيع للتأكد من الخلو من العدوى، وبعد 6 أسابيع للصحة العامة والانكماش وإصلاح التمزقات أو بضع الفرج، مع تثقيف عن التغذية والنظافة ورعاية الطفل وتمارين عضلات البطن.']],
+ qs:[['اليوم الخامس يُفحص فيه','العلامات الحيوية والحبل السري وlochia serosa','رفع قاع الرحم فقط','لا شيء'],['قاع الرحم يوم الولادة يكون','فوق السرة بإصبع وينخفض إصبعًا يوميًا','تحت العانة بعشرة أصابع','لا يمكن تحديده'],['اليوم 21 يتضمن','تثقيفًا عن تنظيم الأسرة والتحصين','فصل الأم عن الطفل','لا زيارة'],['ما الذي تفحصه الممرضة في الثدي؟','حلمة متشققة أو مقلوبة وإفراز اللبن','لون الشعر','حجم الملابس'],['الفحص الأخير بعد 6 أسابيع يشمل','الصحة العامة والانكماش وإصلاح التمزقات','قياس الطول فقط','التسجيل المدرسي']]},
+{id:'x_newborn',name:'تقييم حديث الولادة Apgar',npc:'د. ريم',kind:'mariam',role:'طبيبة أطفال',x:26,z:24.5,zone:'مركز الأم والطفل',brief:'مع د. ريم اتعلمي تقييم المولود الجديد بدقة.',
+ lesson:[['Apgar','يقيّم 5 علامات: النبض (0 غائب، 1 أقل من 100، 2 أكثر من 100)، التنفس (0 غائب، 1 بطيء غير منتظم، 2 جيد مع بكاء)، قوة العضلات (0 مترهل، 1 بعض الثني، 2 حركة نشطة)، الاستجابة (0 لا استجابة، 1 تكشير، 2 سعال أو عطس)، اللون (0 أزرق/شاحب، 1 جسم وردي وأطراف زرقاء، 2 وردي تمامًا). يُجرى عند الدقيقة 1 و5.'],['معنى الدرجة','7–10 طبيعي، 4–6 يحتاج إنعاشًا، 0–3 اكتئاب شديد ويحتاج إنعاشًا فوريًا.'],['رعاية حديث الولادة','تعقيم عند قطع الحبل وتضميده، وتنظيف المجرى الهوائي، ونظافة العين والفم والجسم. المبادئ: الهواء، الدفء، الغذاء، النظافة، الحب. ويحتفظ كل طفل بسجل صحي من الميلاد حتى نهاية ما قبل المدرسة.']],
+ qs:[['في Apgar، جسم وردي وأطراف زرقاء يساوي','1','0','2'],['نبض أكثر من 100 في Apgar يساوي','2','0','1'],['درجة Apgar 5 تعني','يحتاج إنعاشًا','طبيعي','لا شيء'],['سجل الطفل الصحي يغطي','من الميلاد حتى نهاية ما قبل المدرسة','سنة واحدة فقط','لا يوجد'],['عند قطع الحبل السري نراعي','التعقيم وتضميده','عدم التعقيم','تركه مكشوفًا']]},
+{id:'x_premarital',name:'الاستشارة قبل الزواج',npc:'أ. منى',kind:'mariam',role:'أخصائية اجتماعية',x:-14,z:18.5,zone:'دار المجتمع',brief:'اتعلمي مع أ. منى إزاي نجهز الخطيبين صحيًا ونفسيًا.',
+ lesson:[['رعاية ما قبل الزواج','رعاية الأنثى قبل الحمل بهدف الكشف المبكر وإعداد الزوجين للزواج وتربية الأطفال وتنظيم الأسرة والوقاية لهما ولأطفالهما.'],['التقييم والفحوص','تاريخ عائلي ومرضي (خاصة الوراثي)، وفحص بدني شامل، وأشعة للاشتباه في السل، وتحليل دم للزهري وعامل Rh، وبول للألبومين (الكلى والضغط) والجلوكوز (السكري). وتحصين: الحصبة الألمانية والنكاف.'],['نموذج GATHER','Greet الترحيب والسرية، Ask السؤال عن التاريخ والاحتياجات، Tell الإخبار بالمعلومات، Help المساعدة على اتخاذ القرار، Explain التوضيح وتصحيح المفاهيم، Return المتابعة بزيارة لاحقة.']],
+ qs:[['تحليل الدم قبل الزواج يشمل','الزهري وعامل Rh','التيفود فقط','فقر الدم المنجلي فقط'],['تحليل البول يفحص','الألبومين والجلوكوز','الكوليسترول فقط','لا شيء'],['حرف H في GATHER يعني','Help: المساعدة على اتخاذ القرار','Hospital','Home'],['حرف R في GATHER يعني','Return: زيارة متابعة','Run','Reject'],['الأشعة قبل الزواج للاشتباه في','السل','الكسور','الحمل']]}
+];
+for(const m of extraMissions){questDefs.push({id:m.id,name:m.name,npc:m.npc,zone:m.zone,brief:m.brief,q:'',answers:[],correct:0,explain:'',x:m.x,z:m.z});lessonContent[m.id]={title:m.name,sections:m.lesson};quizBank[m.id]=[];addQ(m.id,m.qs);createNPC(m.npc,m.kind,m.x,m.z,m.role,m.id)}
+// ===== Character stories (journal) =====
+const bios={
+'د. سليم':['طبيب الرعاية الأولية في الحي من 12 سنة. بيؤمن إن الوقاية أرخص من العلاج، وبيقضي نص يومه في زيارة الأسر بدل ما يستنى المرضى.','أمام مركز الرعاية الصحية'],
+'الممرضة نور':['ممرضة صحة المرأة، اتربت في الحي ورجعت تخدم أهله. بتسمع للست الأول وبعدين تنصحها، وبتحافظ على الخصوصية.','أمام مركز صحة المرأة'],
+'ياسين':['شاب متطوع عمره 22 سنة، بيمشي في الحارات كل يوم يعرّف الأسر بأماكن الخدمات الصحية.','قرب دار المجتمع'],
+'فريدة':['طالبة إعدادي وعضوة في فريق الصحة المدرسية، بتنقل رسائل الصحة لأسرتها زي ما بتقول المحاضرة عن الطلاب كرسل صحة.','قرب المدرسة'],
+'الحاجة أمينة':['من أقدم أهل الحي وتعرف كل الأسر. بتحكي إزاي اتغير الحي وإيه اللي يخلي الناس تتعاون.','قرب دار المجتمع'],
+'الأم هناء':['أم لطفلين ورضيعة جديدة، بتتابع في مركز الأم والطفل وعندها أسئلة كتير عن التطعيمات والرضاعة.','أمام مركز صحة الأم والطفل'],
+'عم حسن • إسعافات':['متطوع إسعافات أولية، شاف حوادث كتير في الحي وبقى يدرّب الجيران على التصرف الآمن.','جنوب الحي'],
+'سلمى • تثقيف صحي':['مثقفة صحية بتحضّر رسائل توعية بلغة بسيطة وبتجربها على جاراتها قبل نشرها.','شرق الحي'],
+'عمرو • البيئة':['مسؤول البيئة في الحي، مهتم بالتخلص الآمن من المخلفات ونظافة مصادر المياه.','غرب الحي قرب المنطقة الخضراء'],
+'أ. هدى':['معلمة علوم بتدمج الصحة في دروسها، وبتشوف كل وجبة خفيفة فرصة تعليم.','قرب المدرسة'],
+'أ. كريم':['مدير المدرسة، عايز مدرسته تبقى مثال للبيئة الصحية الآمنة.','شرق المدرسة'],
+'عم عبده':['مختار الحي، عارف ظروف كل بيت، وشايف ليه ناس كتير بتبعد عن المراكز الصحية.','وسط الحي شرق الشارع الرئيسي'],
+'أم سارة':['قابلة ممرضة بخبرة 20 سنة، حضرت ولادات كتير في البيوت والمركز.','قرب مركز صحة الأم والطفل'],
+'د. ريم':['طبيبة أطفال، دقيقة جدًا في تقييم المواليد الجدد.','قرب مركز صحة الأم والطفل'],
+'أ. منى':['أخصائية اجتماعية بتجهّز الخطيبين للحياة الأسرية، وبتحب تبدأ الحوار بالترحيب والطمأنة.','قرب دار المجتمع']};
+const metNpcs=new Set((savedProgress&&savedProgress.met)||[]);
+function openJournal(sel){
+ const c=document.getElementById('modalContent');c.innerHTML='';const p=game.player||player;
+ const h=document.createElement('h2');h.textContent='📖 دليل الشخصيات';c.append(h);
+ const close=()=>document.getElementById('modal').style.display='none';
+ if(sel){const n=npcs.find(x=>x.name===sel),b=bios[sel]||['',''];
+  const t=document.createElement('p');t.style.cssText='line-height:1.9;white-space:pre-line';t.textContent=n.name+' — '+n.role+'\n\n'+b[0]+'\n\n📍 المكان: '+b[1]+'\n🚶 تبعد عنك حوالي '+Math.round(p.position.distanceTo(n.root.position))+' متر';c.append(t);
+  const bk=document.createElement('button');bk.textContent='رجوع للقائمة';bk.onclick=()=>openJournal();c.append(bk)}
+ else{const lines=Object.keys(errands).filter(id=>!errandFin.has(id)&&!passedMissions.has(id)&&unlocked(id)).map(id=>{const d=questDefs.find(x=>x.id===id),k=errandStep[id]||0,E=errands[id];return '• '+d.name+': '+(k<E.steps.length?'روح لـ '+E.steps[k][0]:'ارجع لـ '+d.npc)});
+ if(lines.length||inv.size){const pp=document.createElement('p');pp.style.cssText='white-space:pre-line;line-height:1.8';pp.textContent='📌 مهامك الحالية:\n'+lines.join('\n')+(inv.size?'\n🎒 معك: '+[...inv].join('، '):'');c.append(pp)}
+ npcs.forEach(n=>{const b=document.createElement('button');b.className='answer';b.textContent=(metNpcs.has(n.name)?'✅ ':'🔹 ')+n.name+' — '+n.role;b.onclick=()=>openJournal(n.name);c.append(b)})}
+ const x=document.createElement('button');x.textContent='إغلاق';x.className='secondary';x.onclick=close;c.append(x);
+ document.getElementById('modal').style.display='flex';
+}
+{const jb=document.createElement('button');jb.type='button';jb.textContent='📖 الشخصيات';jb.style.cssText=document.getElementById('comprehensiveExam').style.cssText+';margin-left:4px';jb.onclick=()=>openJournal();document.getElementById('quest').append(jb)}
+// ===== Interactive hands-on tasks (learn by doing, then quiz) =====
+const O3=['0','1','2'];
+const tasks={
+x_newborn:{intro:'مولود جديد في غرفة الولادة. قيّمي كل علامة بتطبيق Apgar.',rows:[['النبض 120 في الدقيقة',O3,'2','أكثر من 100 = 2'],['تنفس بطيء غير منتظم',O3,'1','بطيء غير منتظم = 1'],['حركة نشطة',O3,'2','حركة نشطة = 2'],['تكشير فقط عند التنبيه',O3,'1','تكشير = 1'],['جسم وردي وأطراف زرقاء',O3,'1','وردي مع أطراف زرقاء = 1'],['المجموع 7 يعني',['طبيعي','يحتاج إنعاشًا','اكتئاب شديد'],'طبيعي','7–10 طبيعي']]},
+x_postnatal:{intro:'جهزي جدول متابعة الأم بعد الولادة: اختاري الصحيح لكل بند.',rows:[['اليوم 3: لون السائل النفاسي',['rubra','serosa','alba'],'rubra','rubra أحمر زاهٍ'],['اليوم 5',['rubra','serosa','alba'],'serosa','serosa بني وردي'],['اليوم 10',['rubra','serosa','alba'],'alba','alba كريمي مصفر'],['قاع الرحم يوم الولادة',['فوق السرة بإصبع','تحت السرة بإصبعين','عند العانة'],'فوق السرة بإصبع','ينخفض إصبعًا يوميًا'],['اكتمال انكماش الرحم',['15 يومًا','3 أيام','6 أشهر'],'15 يومًا','عند حوالي 15 يومًا']]},
+x_premarital:{intro:'رتّبي خطوات GATHER من 1 إلى 6 بالضغط على رقم كل خطوة.',rows:[['الترحيب وتأمين السرية',['1','2','3','4','5','6'],'1','Greet'],['السؤال عن التاريخ والاحتياجات',['1','2','3','4','5','6'],'2','Ask'],['إخبارهما بالمعلومات',['1','2','3','4','5','6'],'3','Tell'],['مساعدتهما على اتخاذ القرار',['1','2','3','4','5','6'],'4','Help'],['توضيح الخيارات وتصحيح المفاهيم',['1','2','3','4','5','6'],'5','Explain'],['تحديد موعد المتابعة',['1','2','3','4','5','6'],'6','Return']]},
+x_nutrition:{intro:'جهزي يوم صحي لطفل المدرسة: مناسب أم غير مناسب؟',rows:[['وجبة خفيفة: فاكهة وزبادي',['مناسب','غير مناسب'],'مناسب','وجبات خفيفة مفيدة'],['كوب شاي قوي للطفل',['مناسب','غير مناسب'],'غير مناسب','الشاي والقهوة مستثنيان'],['ماء نظيف على مدار اليوم',['مناسب','غير مناسب'],'مناسب','الماء من الاحتياجات'],['لعبة جماعية في الفسحة',['مناسب','غير مناسب'],'مناسب','تمرين وتفاعل مع الأقران'],['سهر طويل قبل المدرسة',['مناسب','غير مناسب'],'غير مناسب','الطالب يحتاج راحة ونومًا كافيين'],['جلسة صحيحة أثناء الكتابة',['مناسب','غير مناسب'],'مناسب','ميكانيكية الجسم المثالية']]},
+x_envschool:{intro:'جولة تفتيش بالمدرسة: أي بند خطر يُبلَّغ عنه؟',rows:[['فصل تهويته سيئة وإضاءته ضعيفة',['خطر يُبلَّغ','سليم'],'خطر يُبلَّغ','يُدوَّن في سجل ويُعرض على المدير والطبيب'],['حمام بلا ماء',['خطر يُبلَّغ','سليم'],'خطر يُبلَّغ','التأكد من الماء والصرف'],['ملعب واسع',['خطر يُبلَّغ','سليم'],'سليم','مطلوب للنشاط'],['مدخلان للطلاب',['خطر يُبلَّغ','سليم'],'سليم','أكثر من مدخل'],['مصنع صاخب بجوار المدرسة',['خطر يُبلَّغ','سليم'],'خطر يُبلَّغ','بعيدة عن الضوضاء والتلوث'],['منحدر لذوي الإعاقة',['خطر يُبلَّغ','سليم'],'سليم','تصميم يراعي ذوي الإعاقة']]},
+x_phcbarriers:{intro:'صنّفي كل عائق: اجتماعي أم بيئي أم إداري؟',rows:[['الأمية',['اجتماعي','بيئي','إداري'],'اجتماعي','قلة وعي'],['نقص مياه الشرب',['اجتماعي','بيئي','إداري'],'بيئي','مياه وصرف وقمامة'],['البيروقراطية',['اجتماعي','بيئي','إداري'],'إداري','إدارة وتنسيق'],['زواج الأقارب',['اجتماعي','بيئي','إداري'],'اجتماعي','عائق اجتماعي'],['تراكم القمامة',['اجتماعي','بيئي','إداري'],'بيئي','عائق بيئي'],['ضعف الإحالة والإشراف',['اجتماعي','بيئي','إداري'],'إداري','إداري']]}};
+const tasksDone=new Set((savedProgress&&savedProgress.tasks)||[]);
+function openTask(def){
+ const t=tasks[def.id],c=document.getElementById('modalContent');c.innerHTML='';const b=bios[def.npc]||['',''];
+ const h=document.createElement('h2');h.textContent='🧩 مهمة تفاعلية: '+def.name;c.append(h);
+ const p=document.createElement('p');p.style.cssText='line-height:1.8;white-space:pre-line';p.textContent=def.npc+': '+b[0]+'\n\n'+t.intro;c.append(p);
+ const picks=t.rows.map(()=>null);
+ t.rows.forEach((r,i)=>{const row=document.createElement('div');row.style.cssText='margin:8px 0;padding:8px;border-radius:10px;background:rgba(0,0,0,.06)';const l=document.createElement('div');l.textContent=r[0];l.style.fontWeight='700';row.append(l);
+  r[1].forEach(o=>{const btn=document.createElement('button');btn.type='button';btn.textContent=o;btn.style.margin='3px';btn.onclick=()=>{picks[i]=o;row.querySelectorAll('button').forEach(x=>x.style.outline='');btn.style.outline='3px solid #2d6f6a'};row.append(btn)});c.append(row)});
+ const res=document.createElement('p');res.style.cssText='white-space:pre-line;line-height:1.8';
+ const go=document.createElement('button');go.textContent='تأكيد الإجابات';
+ go.onclick=()=>{const ok=t.rows.filter((r,i)=>picks[i]===r[2]).length,need=Math.ceil(t.rows.length*.8),wr=t.rows.map((r,i)=>picks[i]===r[2]?'':'• '+r[0]+' ← '+r[2]+' ('+r[3]+')').filter(Boolean);
+  if(ok>=need){let msg='ممتاز ✅ '+ok+'/'+t.rows.length+'\n'+(wr.length?'تصحيح:\n'+wr.join('\n')+'\n\n':'\n')+'🎓 خلاصة اللي اتعلمته:\n'+lessonContent[def.id].sections.map(x=>'• '+x[0]+': '+x[1]).join('\n');
+   if(!tasksDone.has(def.id)){tasksDone.add(def.id);game.xp+=10;document.getElementById('xp').textContent=game.xp;msg='+10 XP\n'+msg;saveProgress()}
+   res.textContent=msg;go.style.display='none';const q=document.createElement('button');q.textContent='ابدأ اختبار المهمة ▶';q.onclick=()=>openMissionQuiz(def);c.append(q)}
+  else{res.textContent='محتاج مراجعة: '+ok+'/'+t.rows.length+' (المطلوب '+need+'). عدّل إجاباتك وجرّب تاني.\n'+wr.slice(0,2).map(x=>x.split(' ← ')[0]).join('\n')}};
+ c.append(go);c.append(res);speak(t.intro,def.npc);
+ const x=document.createElement('button');x.textContent='إغلاق';x.className='secondary';x.onclick=()=>document.getElementById('modal').style.display='none';c.append(x);
+ document.getElementById('modal').style.display='flex';
+}
+// ===== Errands: do something for the character first (talk / fetch / visit a case), then get the lesson =====
+createNPC('عم صابر','npcMale',8,26,'بائع فاكهة','errand:a');createNPC('أم محمود','mariam',-8,24,'جدة من الحي','errand:b');createNPC('أم مروة','mariam',-28,-2,'أم لمولود جديد','errand:c');createNPC('الطفل كريم','npcMale',6,-8,'طفل (حالة)','errand:d');
+Object.assign(bios,{'عم صابر':['بائع فاكهة بيعرف أسر الحي كلها، وبيحب يفتكّر الأطفال بالوجبات الصحية.','الشارع الجنوبي'],'أم محمود':['جدة عندها أحفاد كتير، وبتشتكي إن المركز بعيد والمواعيد بتتنسي.','جنوب غرب الحي'],'أم مروة':['أم لمولود عمره يومين، بتتابعه بحرص وعندها أسئلة كتير.','غرب الحي'],'الطفل كريم':['طفل عمره 8 سنين، سخن وبيكح من يومين وأمه قلقانة.','شمال الحي قرب مركز الرعاية']});
+const errands={
+community:{ask:'قبل ما أشرحلك، روح اسمع أحوال أم محمود وارجعلي بأخبارها.',steps:[['أم محمود','أم محمود بتقولك: "المركز الصحي بعيد، وولادي بينسوا مواعيد التطعيمات".','أخبار أم محمود',['أول خطوة لفهم مشكلة الحي؟','جمع المعلومات وتقييم الاحتياج (Assessment)','تنفيذ حل جاهز دون سؤال']]],done:'سمعت الناس بنفسك، وده أول مبدأ في صحة المجتمع.'},
+school:{ask:'المدير أ. كريم عنده سجل الجولة الصحية. روح هاته لي.',steps:[['أ. كريم','اتفضل سجل الجولة الصحية، سلّمه لفريدة.','سجل الجولة']],done:'تمام السجل ده هيساعدنا نفهم بيئة المدرسة.'},
+phc:{ask:'قبل الدرس: الطفل كريم سخن وبيكح. روح اكشف عليه واعرف الحالة.',steps:[['الطفل كريم','كريم حرارته عالية وبيكح من يومين، وأمه قلقانة والمركز بعيد.','ملاحظات كريم',['الأنسب؟','أطمّن الأم وأعلّمها علامات الخطر وأحيل لو ساءت الحالة','أتجاهل الحالة']]],done:'ملاحظاتك ممتازة، والحالة دي بتوضح ليه الرعاية الأولية أول خط.'},
+mch:{ask:'أنا عطشانة ومش قادرة أسيب الرضيعة... هاتلي كوباية ماية من عم حسن (مش من الدرس بس هتفرق معايا 😅).',steps:[['عم حسن • إسعافات','اتفضل كوباية ماية نضيفة لهناء، وقولها تهتم بنفسها كمان.','كوباية ماية']],done:'تسلم! كده نقدر نركز.'},
+women:{ask:'محتاجة كتيب التوعية من سلمى علشان الجلسة. هاتهولي.',steps:[['سلمى • تثقيف صحي','الكتيب بلغة بسيطة، وبنجرّبه على الجارات الأول.','كتيب التوعية']],done:'الكتيب ده هيخلّي الرسالة واضحة.'},
+x_nutrition:{ask:'عايزة سلة فاكهة للحصة العملية. هاتها من عم صابر.',steps:[['عم صابر','فاكهة طازجة للأطفال، والوجبات الخفيفة الصحية مهمة.','سلة فاكهة']],done:'الفاكهة دي مثال حي للحصة!'},
+x_envschool:{ask:'اسأل عمرو عن تقرير نظافة الحي وهاته لي.',steps:[['عمرو • البيئة','التقرير بيقول إن المياه نضيفة والقمامة بتتجمع الصبح.','تقرير النظافة']],done:'التقرير ده بيربط المدرسة بالبيئة حواليها.'},
+x_phcbarriers:{ask:'روح اسمع شكوى أم محمود وتعالى احكيلي.',steps:[['أم محمود','المركز بعيد والمواصلات صعبة، والأولاد بينسوا المواعيد.','شكوى أم محمود',['ده أي نوع عائق؟','موقفي (بُعد المركز والمواصلات)','نفسي فقط']]],done:'بالظبط ده من العوائق اللي هنتكلم فيها.'},
+x_postnatal:{ask:'محتاجة ميزان حرارة من د. سليم للمتابعة. هاتهولي.',steps:[['د. سليم','اتفضل ميزان الحرارة، متابعة العلامات الحيوية مهمة بعد الولادة.','ميزان حرارة']],done:'كده نبدأ جدول الزيارات.'},
+x_newborn:{ask:'روح شوف أم مروة وطفلها وقولّي ملاحظاتك.',steps:[['أم مروة','طفلها عمره يومين: لونه وردي وبيعيط بصوت عالي وحركته نشطة.','ملاحظات المولود',['تقدير Apgar التقريبي؟','عالٍ (طبيعي 7–10)','منخفض ويحتاج إنعاشًا']]],done:'ملاحظة سليمة! نتعلم دلوقتي إزاي نحسبها.'},
+x_premarital:{ask:'عايزة ورقة موعد الأسرة من ياسين.',steps:[['ياسين','موعد الأسرة الخميس، وعايزين استشارة قبل الزواج.','ورقة الموعد']],done:'تمام! نبدأ بالترحيب والسرية.'}};
+const errandStep=Object.assign({},(savedProgress&&savedProgress.errs)||{}),errandFin=new Set((savedProgress&&savedProgress.efin)||[]),inv=new Set((savedProgress&&savedProgress.inv)||[]);
+const unlocked=id=>{const i=missionOrder.indexOf(id);return i<0||i<=missionIndex},closeM=()=>document.getElementById('modal').style.display='none';
+function errandHook(n){
+ for(const id in errands){if(errandFin.has(id)||passedMissions.has(id)||!unlocked(id))continue;const E=errands[id],k=errandStep[id]||0,st=E.steps[k];
+  if(st&&st[0]===n.name){const adv=()=>{errandStep[id]=k+1;if(st[2]){inv.add(st[2]);showToast('🎒 استلمت: '+st[2])}saveProgress();closeM()};
+   if(st[3])openModal(n.name,st[1]+'\n\n❓ '+st[3][0],[st[3][1],st[3][2]].map((t,i)=>({t,i})).sort(()=>Math.random()-.5).map(o=>({label:o.t,action:()=>o.i===0?adv():showToast('فكّر تاني 🤔')})));
+   else openModal(n.name,st[1],[{label:'تمام ✔',action:adv}]);
+   return true}}
+ const def=questDefs.find(d=>d.id===n.quest),E=def&&errands[def.id];
+ if(E&&!errandFin.has(def.id)&&!passedMissions.has(def.id)&&unlocked(def.id)){const k=errandStep[def.id]||0;
+  if(k>=E.steps.length){errandFin.add(def.id);E.steps.forEach(s=>s[2]&&inv.delete(s[2]));saveProgress();openModal(def.npc,'✅ '+E.done,[{label:'يلا نكمل ▶',action:()=>{closeM();missionDialogue(def)}}]);return true}
+  const st=E.steps[k],b=bios[st[0]]||['',''],tn=npcs.find(x=>x.name===st[0]);
+  openModal(def.npc,E.ask+'\n\n📍 روح لـ '+st[0]+' — '+b[1]+(tn?' (حوالي '+Math.round((game.player||player).position.distanceTo(tn.root.position))+' متر)':'')+(inv.size?'\n🎒 معك: '+[...inv].join('، '):''),[{label:'حاضر 👍',action:closeM}]);return true}
+ if(String(n.quest).startsWith('errand:')){openModal(n.name,(bios[n.name]||[''])[0],[{label:'تمام',action:closeM}]);return true}
+ return false}
+// ===== Speech: characters talk (Web Speech API, Arabic voice) =====
+let voiceOn=true;try{voiceOn=localStorage.getItem('chn_voice')!=='off'}catch(e){}
+function speak(text,npcName){
+ if(!voiceOn||!('speechSynthesis' in window)||!window.SpeechSynthesisUtterance)return;
+ speechSynthesis.cancel();
+ const clean=String(text).replace(/[^\u0600-\u06FFA-Za-z0-9\s.,،؟?!:()\-]/g,' ').replace(/\s+/g,' ').trim();if(!clean)return;
+ const n=npcs.find(x=>x.name===npcName),an=n&&n.root.userData.anim,male=!an||an.kind==='npcMale'||an.kind==='adam',young=an&&(an.age==='child'||an.age==='teen');
+ const u=new SpeechSynthesisUtterance(clean),vs=speechSynthesis.getVoices();u.lang='ar-EG';
+ const vo=vs.find(v=>/ar[-_]EG/i.test(v.lang))||vs.find(v=>/^ar/i.test(v.lang));if(vo)u.voice=vo;
+ u.rate=.95;u.pitch=(male?.75:1.1)+(young?.3:0);
+ if(an)an.talking=true;u.onend=u.onerror=()=>{if(an)an.talking=false};
+ speechSynthesis.speak(u);
+}
+function speakNpc(title,body){if(npcs.some(n=>n.name===title))speak(body,title)}
+{const md=document.getElementById('modal');
+ const sb=document.createElement('button');sb.type='button';sb.textContent='🔊 اسمع';sb.style.cssText='position:absolute;top:12px;left:12px;z-index:5;font-size:16px;padding:10px 16px;border-radius:14px';
+ sb.onclick=e=>{e.stopPropagation();const cc=document.getElementById('modalContent').cloneNode(true);cc.querySelectorAll('button').forEach(x=>x.remove());const h=cc.querySelector('h2');speak(cc.textContent,h?h.textContent.split(' — ')[0]:'')};md.append(sb);
+ if(typeof MutationObserver!=='undefined')new MutationObserver(()=>{if(md.style.display==='none'){speechSynthesis.cancel();npcs.forEach(n=>{n.root.userData.anim.talking=false})}}).observe(md,{attributes:true,attributeFilter:['style']});
+ const vb=document.createElement('button');vb.type='button';vb.textContent=voiceOn?'🔊 الصوت':'🔇 الصوت';vb.style.cssText=document.getElementById('comprehensiveExam').style.cssText+';margin-left:4px';
+ vb.onclick=()=>{voiceOn=!voiceOn;try{localStorage.setItem('chn_voice',voiceOn?'on':'off')}catch(e){}vb.textContent=voiceOn?'🔊 الصوت':'🔇 الصوت';if(!voiceOn&&window.speechSynthesis)speechSynthesis.cancel()};document.getElementById('quest').append(vb)}
+setInterval(()=>{if(game.started)saveProgress()},4000);
+if(savedProgress&&savedProgress.chosen){const sb=document.querySelector('.choice[data-char="'+savedProgress.chosen+'"]');if(sb)sb.click()}
+function awardMissionBadge(id){
+ if(earnedBadges.has(id)) return;
+ trackEvent('mission_badge_earned',{mission_id:id});
+ earnedBadges.add(id);
+ game.xp += 25;
+ document.getElementById('xp').textContent=game.xp;
+ saveProgress();
+ showToast('🏅 حصلت على شارة إتقان المهمة | Mission mastery badge earned');
+}
+function openMissionQuiz(def){
+ const bank=quizBank[def.id]||[];
+ // Use the complete topic bank; wrong answers are queued and repeated at the end until mastered.
+ const questions=[...bank].sort(()=>Math.random()-.5).map((item,originalIndex)=>{
+   const opts=item[1].map((text,i)=>({text,correct:i===item[2]})).sort(()=>Math.random()-.5);
+   return {prompt:item[0],options:opts.map(o=>o.text),correct:opts.findIndex(o=>o.correct),explain:item[3]||`راجع الجزء المرتبط بالسؤال في درس ${def.name}. | Review the related section in ${def.name}.`,originalIndex};
+ });
+ let index=0,score=0,firstTryCorrect=0,answered=false;
+ const missed=[];
+ function render(){
+  const c=document.getElementById('modalContent');c.innerHTML='';
+  const h=document.createElement('h2');h.textContent='اختبار إتقان المهمة | Mission Mastery';c.append(h);
+  const prog=document.createElement('p');
+  prog.textContent=`السؤال ${Math.min(index+1,questions.length)} من ${questions.length} | أول محاولة صحيحة: ${firstTryCorrect}/${questions.length} | Wrong answers are repeated at the end`;
+  c.append(prog);
+  const q=document.createElement('p');q.textContent=questions[index].prompt;
+  q.style.cssText='font-size:16px;font-weight:750;line-height:1.7';c.append(q);
+  questions[index].options.forEach((a,i)=>{
+   const b=document.createElement('button');b.className='answer';b.textContent=String.fromCharCode(65+i)+'. '+a;
+   b.onclick=()=>{
+    if(answered)return;answered=true;
+    const item=questions[index],good=i===item.correct;
+    if(good){score++;if(!item.everWrong){firstTryCorrect++;}}
+    else if(!item.everWrong){item.everWrong=true;missed.push(item);}
+    const feedback=document.createElement('div');
+    feedback.style.cssText=`margin:12px 0;padding:12px;border-radius:12px;background:${good?'#d8f3e5':'#fff0d9'};color:#173a36;line-height:1.6`;
+    const verdict=document.createElement('strong');verdict.textContent=good?'إجابة صحيحة | Correct':'إجابة غير صحيحة | Incorrect';feedback.append(verdict);
+    const explanation=document.createElement('p');explanation.textContent=item.explain;explanation.style.margin='6px 0 0';feedback.append(explanation);c.append(feedback);
+    Array.from(c.querySelectorAll('button.answer')).forEach((x,j)=>{x.disabled=true;if(j===item.correct)x.style.border='2px solid #18856f'});
+    const next=document.createElement('button');next.textContent=index===questions.length-1?'متابعة للأخطاء / النتيجة | Continue':'السؤال التالي | Next question';
+    next.onclick=()=>{
+     if(index<questions.length-1){index++;answered=false;render();}
+     else if(missed.length){runRetryRound();}
+     else result();
+    };c.append(next);
+   };c.append(b);
+  });
+  document.getElementById('modal').style.display='flex';
+ }
+ function runRetryRound(){
+  let queue=[...missed],round=1;
+  function askRetry(){
+   if(!queue.length){result();return;}
+   const item=queue.shift();const c=document.getElementById('modalContent');c.innerHTML='';
+   const h=document.createElement('h2');h.textContent=`مراجعة الأخطاء | Retry round ${round}`;c.append(h);
+   const p=document.createElement('p');p.textContent='هنرجع للأسئلة اللي اتجاوبت غلط في نهاية الاختبار. لازم تجاوبها صح قبل ما تحصل على شارة الإتقان.';c.append(p);
+   const q=document.createElement('p');q.textContent=item.prompt;q.style.cssText='font-size:16px;font-weight:750;line-height:1.7';c.append(q);
+   item.options.forEach((a,i)=>{
+    const b=document.createElement('button');b.className='answer';b.textContent=String.fromCharCode(65+i)+'. '+a;
+    b.onclick=()=>{
+     const good=i===item.correct;
+     const feedback=document.createElement('p');feedback.textContent=good?'صحيح، أتقنت السؤال. | Correct, mastered.':`لسه محتاج مراجعة. | Review again. ${item.explain}`;
+     feedback.style.cssText=`padding:10px;border-radius:10px;background:${good?'#d8f3e5':'#fff0d9'};color:#173a36;line-height:1.6`;c.append(feedback);
+     Array.from(c.querySelectorAll('button.answer')).forEach(x=>x.disabled=true);
+     if(!good)queue.push(item);
+     const next=document.createElement('button');next.textContent='متابعة | Continue';
+     next.onclick=()=>{if(queue.length===0)result();else{if(!good&&queue[0]===item)round++;askRetry();}};c.append(next);
+    };c.append(b);
+   });
+  }
+  askRetry();
+ }
+ function result(){
+  const c=document.getElementById('modalContent');c.innerHTML='';
+  const h=document.createElement('h2');h.textContent='تم إتقان جميع الأسئلة! | Topic mastered';c.append(h);
+  const p=document.createElement('p');p.textContent=`جاوبت صح على جميع أسئلة بنك المهمة (${questions.length}/${questions.length}) بعد مراجعة الأخطاء. شارة الإتقان تُمنح الآن. | All ${questions.length} questions have been answered correctly.`;c.append(p);
+  awardMissionBadge(def.id);
+  const pass=score>=Math.min(4,questions.length);
+  if(pass&&!passedMissions.has(def.id)){
+   passedMissions.add(def.id);game.completed.add(def.id);game.xp+=50;document.getElementById('xp').textContent=game.xp;
+   const idx=missionOrder.indexOf(def.id);if(idx===missionIndex)missionIndex=Math.min(missionOrder.length,missionIndex+1);
+   updateQuest();saveProgress();
+  }
+  const badge=document.createElement('p');badge.textContent='🏅 شارة إتقان | Mastery Badge';badge.style.cssText='font-size:18px;font-weight:800;color:#13735f';c.append(badge);
+  const b=document.createElement('button');b.textContent='متابعة | Continue';b.onclick=()=>document.getElementById('modal').style.display='none';c.append(b);
+ }
+ render();
+}
+
+
+function openComprehensiveExam(){
+ const all=[];
+ for(const id of missionOrder){(quizBank[id]||[]).forEach((item,idx)=>all.push({prompt:item[0],raw:item,topic:id,idx}));}
+ const questions=all.sort(()=>Math.random()-.5).map(item=>{
+  const opts=item.raw[1].map((text,i)=>({text,correct:i===item.raw[2]})).sort(()=>Math.random()-.5);
+  return {prompt:item.prompt,options:opts.map(o=>o.text),correct:opts.findIndex(o=>o.correct),everWrong:false,explain:`راجع درس ${item.topic} في المنهج قبل إعادة المحاولة. | Review the ${item.topic} lesson.`};
+ });
+ let i=0,firstCorrect=0,answered=false;const missed=[];
+ function render(){
+  const c=document.getElementById('modalContent');c.innerHTML='';
+  const h=document.createElement('h2');h.textContent='الامتحان الشامل | Comprehensive Exam';c.append(h);
+  const p=document.createElement('p');p.textContent=`السؤال ${i+1}/${questions.length} • الدرجة الأولية ${firstCorrect}/${questions.length} • المطلوب للشارة 90%`;c.append(p);
+  const q=document.createElement('p');q.textContent=questions[i].prompt;q.style.cssText='font-size:16px;font-weight:750;line-height:1.7';c.append(q);
+  questions[i].options.forEach((a,j)=>{
+   const b=document.createElement('button');b.className='answer';b.textContent=String.fromCharCode(65+j)+'. '+a;
+   b.onclick=()=>{
+    if(answered)return;answered=true;const item=questions[i],good=j===item.correct;
+    if(good)firstCorrect++;else {item.everWrong=true;missed.push(item);}
+    const f=document.createElement('p');f.textContent=good?'صحيح | Correct':'غير صحيح — سيُعاد السؤال في نهاية الامتحان | Incorrect — this question will return at the end';
+    f.style.cssText=`padding:10px;border-radius:10px;background:${good?'#d8f3e5':'#fff0d9'};color:#173a36`;c.append(f);
+    Array.from(c.querySelectorAll('button.answer')).forEach((x,k)=>{x.disabled=true;if(k===item.correct)x.style.border='2px solid #18856f'});
+    const n=document.createElement('button');n.textContent=i===questions.length-1?'مراجعة الأسئلة الخاطئة | Review missed':'السؤال التالي | Next';n.onclick=()=>{if(i<questions.length-1){i++;answered=false;render()}else retryMissed()};c.append(n);
+   };c.append(b);
+  });
+  document.getElementById('modal').style.display='flex';
+ }
+ function retryMissed(){
+  let queue=[...new Set(missed)],round=1;
+  function next(){
+   const c=document.getElementById('modalContent');c.innerHTML='';
+   if(!queue.length){finish();return}
+   const item=queue.shift();
+   const h=document.createElement('h2');h.textContent=`مراجعة الأخطاء | Review missed answers (${round})`;c.append(h);
+   const q=document.createElement('p');q.textContent=item.prompt;c.append(q);
+   item.options.forEach((a,j)=>{
+    const b=document.createElement('button');b.className='answer';b.textContent=String.fromCharCode(65+j)+'. '+a;
+    b.onclick=()=>{const good=j===item.correct;const f=document.createElement('p');f.textContent=good?'إجابة صحيحة | Correct':`حاول مرة أخرى. ${item.explain}`;c.append(f);Array.from(c.querySelectorAll('button.answer')).forEach(x=>x.disabled=true);if(!good)queue.push(item);const n=document.createElement('button');n.textContent='التالي | Next';n.onclick=()=>{if(!queue.length)finish();else{if(!good)round++;next()}};c.append(n)};c.append(b);
+   });
+  }
+  next();
+ }
+ function finish(){
+  const pct=Math.round(firstCorrect/questions.length*100),passed=pct>=90;
+  const c=document.getElementById('modalContent');c.innerHTML='';
+  const h=document.createElement('h2');h.textContent=passed?'🏅 شارة الامتحان الشامل | Comprehensive Badge':'انتهى الامتحان | Exam complete';c.append(h);
+  const p=document.createElement('p');p.textContent=`نتيجتك في المحاولة الأولى: ${firstCorrect}/${questions.length} (${pct}%). ${passed?'حققت شرط الشارة: 90% أو أكثر.':'الشارة تتطلب 90% على الأقل في المحاولة الأولى. راجع الدروس وأعد الامتحان.'}`;c.append(p);
+  if(passed){if(!earnedBadges.has('comprehensive')){earnedBadges.add('comprehensive');game.xp+=100;document.getElementById('xp').textContent=game.xp;saveProgress();}const b=document.createElement('p');b.textContent='🏆 Comprehensive Mastery — 90%+';b.style.cssText='font-size:18px;font-weight:900;color:#13735f';c.append(b)}
+  const close=document.createElement('button');close.textContent='إغلاق | Close';close.onclick=()=>document.getElementById('modal').style.display='none';c.append(close);
+ }
+ render();
+}
+document.getElementById('comprehensiveExam').addEventListener('click',openComprehensiveExam);
+
+const sideMissions=[
+ {id:'firstaid',name:'مساعدة في الإسعافات الأولية | First-aid helper',npc:'عمّ حسن',brief:'مهمة جانبية: ساعد عم حسن في ترتيب خطوات الاستجابة الأولية وطلب المساعدة. | Side quest: help Hassan review basic first-aid response and seeking help.',q:'ما الخطوة الآمنة عند مواجهة حالة طارئة خطيرة؟',answers:['تأمين المكان وطلب المساعدة المناسبة','تحريك المصاب دائمًا بسرعة','تجاهل الوعي والتنفس'],correct:0,explain:'هذه معلومة توعوية عامة؛ اتبع تدريبك وبروتوكول المؤسسة في الحالات الحقيقية.'},
+ {id:'education',name:'التثقيف الصحي | Health education',npc:'سلمى',brief:'مهمة جانبية: ساعد سلمى على إعداد رسالة توعوية واضحة ومناسبة للمجتمع. | Side quest: help Salma prepare clear, audience-appropriate health education.',q:'ما الذي يساعد على نجاح التثقيف الصحي؟',answers:['لغة واضحة ومناسبة للجمهور مع التأكد من الفهم','مصطلحات معقدة دون شرح','تجاهل احتياجات الجمهور'],correct:0,explain:'تتسق الرسائل الواضحة والتواصل المناسب مع دور التثقيف الصحي في محاضرات صحة المجتمع.'},
+ {id:'environment',name:'البيئة الصحية | Healthy environment',npc:'عمرو',brief:'مهمة جانبية: لاحظ عوامل البيئة الصحية في الحي وساعد عمرو على اختيار إجراء مناسب. | Side quest: identify a healthy-environment action with Amr.',q:'أي إجراء يدعم بيئة مجتمعية صحية؟',answers:['التخلص الآمن من المخلفات وتقليل مصادر الخطر','ترك المخلفات قرب مصادر المياه','إغلاق ممرات المشاة'],correct:0,explain:'هذه نقطة عامة للتثقيف البيئي، وليست بديلًا عن تعليمات الصحة العامة المحلية.'}
+];
+function sideMissionDialogue(side){if(sideDone.has(side.id)){openModal(side.name,'أنجزت هذه المهمة الجانبية بالفعل. | You have already completed this side quest.',[{label:'إغلاق | Close',action:()=>document.getElementById('modal').style.display='none'}]);return}openModal(side.name,side.brief,[{label:'ابدأ المهمة | Start',action:()=>{const c=document.getElementById('modalContent');c.innerHTML='';const h=document.createElement('h2');h.textContent=side.name;c.append(h);const q=document.createElement('p');q.textContent=side.q;c.append(q);const qe=document.createElement('p');qe.dir='ltr';qe.style.textAlign='left';qe.textContent='Choose the best answer.';c.append(qe);side.answers.forEach((a,i)=>{const b=document.createElement('button');b.className='answer';b.textContent=a;b.onclick=()=>{if(i===side.correct){sideDone.add(side.id);game.xp+=20;document.getElementById('xp').textContent=game.xp;openModal('أحسنت! | Well done!',side.explain,[{label:'متابعة',action:()=>document.getElementById('modal').style.display='none'}]);}else openModal('حاول مرة أخرى | Try again','راجع الاختيارات وحاول مرة أخرى.',[{label:'إعادة المحاولة',action:()=>sideMissionDialogue(side)}]);};c.append(b)});document.getElementById('modal').style.display='flex'}},{label:'إغلاق | Close',className:'secondary',action:()=>document.getElementById('modal').style.display='none'}]);}
+
+function openLesson(def, sectionIndex=0){
+ const data=lessonContent[def.id];
+ if(!data){openModal(def.name,def.brief,[{label:'إغلاق',action:()=>document.getElementById('modal').style.display='none'}]);return}
+ const modal=document.getElementById('modal'),c=document.getElementById('modalContent');c.innerHTML='';
+ const h=document.createElement('h2');h.textContent=data.title;c.append(h);
+ const progress=document.createElement('p');progress.style.cssText='font-size:12px;color:#547176;margin:0 0 12px';progress.textContent=`جزء ${sectionIndex+1} من ${data.sections.length}`;c.append(progress);
+ const title=document.createElement('h3');title.textContent=data.sections[sectionIndex][0];title.style.margin='10px 0 4px';c.append(title);
+ const arLabel=document.createElement('p');arLabel.textContent='الشرح بالعربي | Arabic explanation';arLabel.style.cssText='font-weight:800;color:#087f70;margin:8px 0 2px';c.append(arLabel);
+ const p=document.createElement('p');p.textContent=data.sections[sectionIndex][1];p.style.cssText='line-height:1.85;margin-top:0';c.append(p);
+ const en=lessonEnglish[def.id]?.[sectionIndex];if(en){const enTitle=document.createElement('h3');enTitle.textContent=en[0]+' | English';enTitle.style.cssText='margin:14px 0 4px;border-top:1px solid #d5e4df;padding-top:12px';c.append(enTitle);const ep=document.createElement('p');ep.textContent=en[1];ep.lang='en';ep.dir='ltr';ep.style.cssText='line-height:1.75;text-align:left;margin-top:0;color:#304b4d';c.append(ep)}
+ const nav=document.createElement('div');nav.style.cssText='display:flex;gap:6px;flex-wrap:wrap;margin-top:14px';
+ if(sectionIndex>0){const prev=document.createElement('button');prev.textContent='السابق';prev.className='secondary';prev.onclick=()=>openLesson(def,sectionIndex-1);nav.append(prev)}
+ if(sectionIndex<data.sections.length-1){const next=document.createElement('button');next.textContent='الجزء التالي';next.onclick=()=>openLesson(def,sectionIndex+1);nav.append(next)}
+ else {const done=document.createElement('button');done.textContent='انتقل للاختبار | Take mission quiz';done.onclick=()=>openMissionQuiz(def);nav.append(done)}
+ const close=document.createElement('button');close.textContent='إغلاق';close.className='secondary';close.onclick=()=>document.getElementById('modal').style.display='none';nav.append(close);c.append(nav);modal.style.display='flex';
+}
+function missionDialogue(def){
+ const data=lessonContent[def.id];const idx=missionOrder.indexOf(def.id);
+ if(def.id.startsWith('x_')&&!passedMissions.has(def.id)){openTask(def);return}
+ if(passedMissions.has(def.id)){openModal(def.name,`${def.npc}: أنهيت هذه المهمة بالفعل. يمكنك مراجعة الدرس أو متابعة المهمات الجانبية. | Mission complete. You can review the lesson or do side quests.`,[{label:'مراجعة الدرس | Review',action:()=>openLesson(def,0)},{label:'إعادة الاختبار | Retake quiz',action:()=>openMissionQuiz(def)},...(def.id.startsWith('x_')?[{label:'🧩 إعادة المهمة التفاعلية',action:()=>openTask(def)}]:[]),{label:'إغلاق',className:'secondary',action:()=>document.getElementById('modal').style.display='none'}]);return}
+ if(idx>missionIndex){openModal('المهمة لم تُفتح بعد | Mission locked',`أكمل المهمة الأساسية السابقة واجتز اختبارها أولًا. | Complete the previous main mission and pass its quiz first.`,[{label:'حسنًا | OK',action:()=>document.getElementById('modal').style.display='none'}]);return}
+ openModal(data?data.title:def.name,`${def.npc}: ${def.brief}
+
+دور الشخصية: ${def.npc} يشرح لك الموضوع ثم يطلب منك اجتياز اختبار قصير لفتح المهمة التالية. | Role: learn the topic, then pass a short quiz to unlock the next main mission.`,[{label:'ابدأ التعلّم | Start lesson',action:()=>openLesson(def,0)},{label:'إغلاق | Close',className:'secondary',action:()=>document.getElementById('modal').style.display='none'}]);
+}
+function interact(){
+ const p=game.player||player;let nearest=null,dist=4.1;
+ for(const n of npcs){const d=p.position.distanceTo(n.root.position);if(d<dist){nearest=n;dist=d}}
+ if(nearest){metNpcs.add(nearest.name);saveProgress();if(errandHook(nearest))return;if(nearest.quest==='story:yassin'){
+   openModal('ياسين — متطوع الحي | Yassin — Community Volunteer',
+    'أنا ياسين، متطوع مع فريق الحي. لاحظت إن بعض الأسر مش عارفة أقرب مكان للحصول على التثقيف الصحي. مهمتي إني أساعدك تكتشف نقاط الخدمة وتتعلم إزاي نربط السكان بالخدمات المناسبة.\n\nI am Yassin, a community volunteer. Some families do not know where to find health education. I help connect residents with appropriate services. تحدث معي بعد إنهاء مهمة المجتمع لتفتح نشاط الاستكشاف الجانبي.',
+    [{label:'فهمت | Got it',action:()=>document.getElementById('modal').style.display='none'}]);return}
+   if(nearest.quest&&nearest.quest.startsWith('side:')){const side=sideMissions.find(x=>x.id===nearest.quest.split(':')[1]);if(side){sideMissionDialogue(side);return}}const def=questDefs.find(q=>q.id===nearest.quest);if(def){missionDialogue(def);return}openModal(nearest.name,`أهلًا! أنا ${nearest.name}. استكشف الحي وتحدث مع فريق صحة المجتمع.`,[{label:'تمام',action:()=>document.getElementById('modal').style.display='none'}]);return}
+ let nearDoor=null,dd=3.3;for(const d of doors){const dx=p.position.x-d.x,dz=p.position.z-d.z,dist2=Math.hypot(dx,dz);if(dist2<dd){nearDoor=d;dd=dist2}}
+ if(nearDoor){nearDoor.open=!nearDoor.open;nearDoor.mesh.rotation.y=nearDoor.open?Math.PI/2:0;const col=colliders.find(c=>c.door===nearDoor);if(col)col.open=nearDoor.open;showToast(nearDoor.open?`فُتح باب ${nearDoor.name}. تقدر تدخل.`:`اتقفل باب ${nearDoor.name}.`);return}
+ if(p.position.distanceTo(greenMarker.position)<4){openModal('المنطقة الخضراء','دي مساحة استراحة واستكشاف في الحي. تقدر تمشي حول الأشجار والمقاعد، ثم تابع المهام التعليمية عند الشخصيات ذات علامات المهمات.',[{label:'استمرار',action:()=>document.getElementById('modal').style.display='none'}]);return}
+ showToast('اقترب من شخصية أو باب أو علامة تفاعل عشان تبدأ.');
+}
+document.getElementById('interact').addEventListener('click',interact);
+const keys={};
+const movementKeys=new Set(['w','a','s','d','arrowup','arrowdown','arrowleft','arrowright','shift',' ']);
+addEventListener('keydown',e=>{const k=e.key.toLowerCase();keys[k]=true;if(movementKeys.has(k))e.preventDefault();if(k==='e'&&!e.repeat){e.preventDefault();interact()}},{passive:false});
+addEventListener('keyup',e=>{keys[e.key.toLowerCase()]=false});
+addEventListener('blur',()=>{for(const k of Object.keys(keys))keys[k]=false;runTouch=false;joyEnd?.()});
+let joyX=0,joyY=0,joyActive=false,runTouch=false;const stick=document.getElementById('stick'),knob=document.getElementById('knob');
+function joyStart(e){joyActive=true;stick.setPointerCapture?.(e.pointerId);joyMove(e)}function joyMove(e){if(!joyActive)return;const r=stick.getBoundingClientRect(),cx=r.left+r.width/2,cy=r.top+r.height/2;let dx=e.clientX-cx,dy=e.clientY-cy,max=r.width*.31,l=Math.hypot(dx,dy);if(l>max){dx=dx/l*max;dy=dy/l*max}joyX=dx/max;joyY=dy/max;knob.style.transform=`translate(${dx}px,${dy}px)`}function joyEnd(){joyActive=false;joyX=joyY=0;knob.style.transform='translate(0,0)'}
+stick.addEventListener('pointerdown',joyStart);stick.addEventListener('pointermove',joyMove);stick.addEventListener('pointerup',joyEnd);stick.addEventListener('pointercancel',joyEnd);
+const runBtn=document.getElementById('run');runBtn.addEventListener('pointerdown',e=>{e.preventDefault();runTouch=true;runBtn.setPointerCapture?.(e.pointerId)});['pointerup','pointercancel','pointerleave','lostpointercapture'].forEach(ev=>runBtn.addEventListener(ev,()=>runTouch=false));
+let camYaw=0,camPitch=.25,dragging=false,lastX=0,lastY=0;
+renderer.domElement.addEventListener('pointerdown',e=>{if(e.button!==0)return;dragging=true;lastX=e.clientX;lastY=e.clientY;renderer.domElement.setPointerCapture?.(e.pointerId)});
+renderer.domElement.addEventListener('pointermove',e=>{if(!dragging)return;const dx=e.clientX-lastX,dy=e.clientY-lastY;lastX=e.clientX;lastY=e.clientY;camYaw-=dx*.006;camPitch=THREE.MathUtils.clamp(camPitch+dy*.003,-.04,.75)});
+['pointerup','pointercancel','lostpointercapture'].forEach(ev=>renderer.domElement.addEventListener(ev,()=>dragging=false));
+let camDist=7.5;const zc=v=>THREE.MathUtils.clamp(v,2.8,16),cv=renderer.domElement,pts=new Map();let pinch=0;cv.style.touchAction='none';
+cv.addEventListener('wheel',e=>{e.preventDefault();camDist=zc(camDist+e.deltaY*.01)},{passive:false});
+cv.addEventListener('pointerdown',e=>{pts.set(e.pointerId,[e.clientX,e.clientY]);if(pts.size===2){dragging=false;const a=[...pts.values()];pinch=Math.hypot(a[0][0]-a[1][0],a[0][1]-a[1][1])}});
+cv.addEventListener('pointermove',e=>{if(!pts.has(e.pointerId))return;pts.set(e.pointerId,[e.clientX,e.clientY]);if(pts.size===2){dragging=false;const a=[...pts.values()],d=Math.hypot(a[0][0]-a[1][0],a[0][1]-a[1][1]);if(pinch>0&&d>0)camDist=zc(camDist*pinch/d);pinch=d}});
+['pointerup','pointercancel','lostpointercapture'].forEach(ev=>cv.addEventListener(ev,e=>{pts.delete(e.pointerId);pinch=0}));
+{const bx=document.createElement('div');bx.style.cssText='position:fixed;right:14px;top:38%;z-index:20;display:flex;flex-direction:column;gap:10px';
+ [['＋',-1.2],['－',1.2]].forEach(([t,d])=>{const b=document.createElement('button');b.type='button';b.textContent=t;b.style.cssText='width:54px;height:54px;border-radius:50%;font-size:28px;line-height:1;border:2px solid #fff;background:#0e3b3acc;color:#fff;touch-action:manipulation';b.addEventListener('pointerdown',e=>{e.stopPropagation()});b.onclick=()=>{camDist=zc(camDist+d)};bx.append(b)});document.body.append(bx)}
+const playerRadius=.48;
+function collides(nx,nz){
+ // Keep the playable district compact; the connected streets lead to meaningful places rather than an endless empty plane.
+ if(nx < -74 || nx > 74 || nz < -66 || nz > 68) return true;
+ for(const c of colliders){
+  if(c.kind==='door'&&c.door?.open)continue;
+  const insideX=Math.abs(nx-c.x)<c.w/2+playerRadius,insideZ=Math.abs(nz-c.z)<c.d/2+playerRadius;
+  if(insideX&&insideZ){
+   // doors have a narrow opening, and building collision boxes leave a central doorway gap
+   return true;
+  }
+ }
+ return false;
+}
+function movePlayer(p,dx,dz){const nx=p.position.x+dx,nz=p.position.z+dz;if(!collides(nx,p.position.z))p.position.x=nx;if(!collides(p.position.x,nz))p.position.z=nz;p.position.x=THREE.MathUtils.clamp(p.position.x,-73.5,73.5);p.position.z=THREE.MathUtils.clamp(p.position.z,-65.5,67.5)}
+const clock=new THREE.Clock();function animate(){
+ requestAnimationFrame(animate);const dt=Math.min(clock.getDelta(),.04);const p=game.player||player;
+ if(game.started){
+ const f=(keys.w||keys.arrowup?1:0)-(keys.s||keys.arrowdown?1:0)-joyY,s=(keys.d||keys.arrowright?1:0)-(keys.a||keys.arrowleft?1:0)+joyX,moving=Math.abs(f)+Math.abs(s)>.08;
+ const wantsRun=(runTouch||keys.shift)&&moving&&game.stamina>.2;
+ if(wantsRun)game.stamina=Math.max(0,game.stamina-27*dt);else game.stamina=Math.min(100,game.stamina+18*dt);
+ const fill=document.getElementById('fill');fill.style.width=game.stamina+'%';document.getElementById('staminaText').textContent=Math.round(game.stamina)+'%';fill.style.background=game.stamina<22?'#ef806b':game.stamina<50?'#e6c65a':'#68dfa7';
+ if(moving){const fx=-Math.sin(camYaw),fz=-Math.cos(camYaw),rx=Math.cos(camYaw),rz=-Math.sin(camYaw);const dx=rx*s+fx*f,dz=rz*s+fz*f,len=Math.hypot(dx,dz)||1, speed=wantsRun?7:3.8;movePlayer(p,dx/len*speed*dt,dz/len*speed*dt);p.rotation.y=Math.atan2(dx,dz)}
+ for(const a of animatedParts){const isP=a.root===p,vel=(isP&&moving)||a.walk?1:0;a.phase+=dt*(wantsRun?12:8)*vel;const swing=Math.sin(a.phase)*.62*vel;a.arms[0].rotation.x=swing;a.arms[1].rotation.x=-swing;a.arms[0].rotation.z=-.08*vel;a.arms[1].rotation.z=.08*vel;a.legs[0].rotation.x=-swing*.78;a.legs[1].rotation.x=swing*.78;a.rig.rotation.z=vel?Math.sin(a.phase)*.025:0;a.rig.position.y=vel?Math.abs(Math.sin(a.phase*2))*.055:0}
+ // NPCs turn subtly toward player when nearby
+ for(const n of npcs){const d=n.root.position.distanceTo(p.position);if(d<7)n.root.rotation.y=Math.atan2(p.position.x-n.root.position.x,p.position.z-n.root.position.z)}
+ }
+ const dist=camDist,h=Math.cos(camPitch)*dist,v=1.8+Math.sin(camPitch)*dist;const target=new THREE.Vector3(p.position.x+Math.sin(camYaw)*h,p.position.y+v,p.position.z+Math.cos(camYaw)*h);camera.position.lerp(target,1-Math.pow(.001,dt));camera.lookAt(p.position.x,1.2,p.position.z);
+ for(const q of questPoints){q.rotation.y+=dt*.6;q.children[1].position.y=1.25+Math.sin(performance.now()*.002+q.position.x)*.12}
+ for(const a of animatedParts){const t=performance.now()/1000+a.phase;a.rig.scale.y=1+Math.sin(t*2.2)*.008;const cl=(t%4)<.12;for(const e of a.bl||[]){if(e.userData.sy===undefined)e.userData.sy=e.scale.y;e.scale.y=cl?.05:e.userData.sy}if(a.talking||(a.npc&&a.root.position.distanceTo(p.position)<7)){a.arms[1].rotation.x=-2.5+Math.sin(t*6)*.25;a.rig.rotation.z=Math.sin(t*1.3)*.02;a.rig.rotation.x=a.talking?Math.sin(t*9)*.04:0}}
+  for(const c of cars){const L=c.axis==='z'?'z':'x';c.g.position[L]+=c.dir*c.sp*dt;if(Math.abs(c.g.position[L])>60)c.g.position[L]=-c.dir*60}
+  for(const b of buildings){const inn=Math.abs(p.position.x-b.x)<b.w/2+.2&&Math.abs(p.position.z-b.z)<b.d/2+.2;if(inn!==b.inn){b.inn=inn;b.roof.visible=!inn;b.wm.transparent=inn;b.wm.opacity=inn?.2:1;b.wm.needsUpdate=true}}
+  for(const wk of walkers){const t=wk.pts[wk.i],dx=t[0]-wk.r.position.x,dz=t[1]-wk.r.position.z,l=Math.hypot(dx,dz);if(l<.4){wk.pts.reverse();wk.i=1}else{wk.r.position.x+=dx/l*wk.sp*dt;wk.r.position.z+=dz/l*wk.sp*dt;wk.r.rotation.y=Math.atan2(dx,dz)}wk.a.walk=true}
+  if(((window.__f=(window.__f||0)+1)%6)===0)drawMap(p);renderer.render(scene,camera)
+
+}
+function drawMap(p){const c=document.getElementById('mapCanvas'),ctx=c.getContext('2d'),w=c.width,h=c.height;ctx.clearRect(0,0,w,h);ctx.fillStyle='#7da86b';ctx.fillRect(0,0,w,h);ctx.fillStyle='#747c78';ctx.fillRect(0,h*.45,w,h*.12);ctx.fillRect(w*.45,0,w*.12,h);for(let i=0.12;i<0.9;i+=0.13){ctx.fillRect(0,h*i,w,h*.025);ctx.fillRect(w*i,0,w*.025,h);}ctx.fillStyle='#c4b89e';ctx.fillRect(w*.08,h*.08,w*.18,h*.12);ctx.fillRect(w*.63,h*.15,w*.22,h*.15);ctx.fillRect(w*.12,h*.68,w*.23,h*.16);ctx.fillRect(w*.64,h*.67,w*.23,h*.17);ctx.fillStyle='#2b965f';ctx.fillRect(w*.02,h*.04,w*.22,h*.21);ctx.fillStyle='#fff';ctx.font='bold 13px sans-serif';ctx.fillText('GREEN',w*.04,h*.12);const px=(p.position.x+120)/240*w,pz=(p.position.z+110)/220*h;ctx.fillStyle='#ffdf65';ctx.beginPath();ctx.arc(px,pz,7,0,Math.PI*2);ctx.fill();ctx.strokeStyle='#1c2926';ctx.lineWidth=2;ctx.stroke()}
+
+// Optional published content override. Upload content.json beside index.html to update lessons/quizzes without editing game code.
+async function loadPublishedContent(){
+ try{const r=await fetch('./content.json?updated='+Date.now(),{cache:'no-store'});if(!r.ok)return;const pack=await r.json();
+  if(pack.lessons&&typeof pack.lessons==='object')for(const [id,data] of Object.entries(pack.lessons)){if(lessonContent[id]&&Array.isArray(data.sections))lessonContent[id]={title:String(data.title||lessonContent[id].title),sections:data.sections.filter(x=>Array.isArray(x)&&x.length>=2).map(x=>[String(x[0]),String(x[1])])};}
+  if(pack.quizzes&&typeof pack.quizzes==='object')for(const [id,rows] of Object.entries(pack.quizzes)){if(Array.isArray(quizBank[id]))quizBank[id]=rows.filter(q=>Array.isArray(q)&&q.length>=3&&Array.isArray(q[1])&&Number.isInteger(q[2])&&q[2]>=0&&q[2]<q[1].length).map(q=>[String(q[0]),q[1].map(String),q[2],q[3]?String(q[3]):undefined]);}
+  console.info('Published lesson content loaded');
+ }catch(e){/* content.json is optional; bundled lessons remain available */}
+}
+loadPublishedContent();
+
+updateQuest();
+
+addEventListener('resize',()=>{camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();renderer.setPixelRatio(Math.min(devicePixelRatio,1.5));renderer.setSize(innerWidth,innerHeight);updatePortraitNotice()});
+animate();
+</script></body></html>
