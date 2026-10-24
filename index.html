@@ -1,6 +1,16 @@
 <!doctype html>
 <html lang="ar" dir="rtl">
 <head>
+<!-- Google Analytics 4 -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-XV404W2HM9"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-XV404W2HM9');
+</script>
+<!-- End Google Analytics 4 -->
+
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
 <meta name="theme-color" content="#123b46"><title>Community Health Nursing RPG — Open World Prototype — Start Fix</title>
 <style>
@@ -39,15 +49,7 @@ h1{margin:0 0 8px;font-size:clamp(22px,4vw,34px)}.sub{color:#547176;line-height:
 @media (max-width:900px) and (orientation:landscape){#brand{top:5px;padding:4px 12px;max-width:48vw}#brand b{font-size:10px}#brand small{font-size:8px}#stats{top:6px;left:7px;padding:5px 8px;font-size:9px;line-height:1.45;min-width:86px}#stamina{top:78px;left:7px;width:112px;padding:5px 8px;font-size:9px}#track{height:6px;margin-top:3px}#minimap{top:6px;right:7px;width:86px;height:86px}#quest{top:98px;right:7px;width:clamp(145px,28vw,240px);font-size:9px;padding:6px 8px}#quest div{font-size:8px!important;margin-top:3px!important;padding-top:3px!important}#cameraHint{right:7px;bottom:93px;font-size:8px;max-width:120px;padding:5px 7px}#controls{bottom:max(6px,env(safe-area-inset-bottom));padding:0 10px}#stick{width:76px;height:76px}#knob{width:34px;height:34px;left:19px;top:19px}#actions{gap:6px}.action{width:48px;height:48px;font-size:10px}#interact{width:58px;height:58px}#desktophelp{display:none}#toast{bottom:74px;font-size:10px}}
 @media (max-width:900px) and (orientation:portrait){body.gameStarted #rotateNotice{display:flex}body.gameStarted #hud,body.gameStarted canvas,body.gameStarted #toast,body.gameStarted #modal{visibility:hidden}body.gameStarted #rotateNotice{visibility:visible}}
 @media (max-height:430px) and (orientation:landscape){#screen .sheet{max-height:98vh;padding:10px 16px}#screen h1{font-size:20px}#screen .sub{font-size:12px;margin-bottom:8px}#avatars{gap:8px}.choice{padding:7px}.avatarArt{height:65px}.primary{margin-top:8px;padding:10px 16px}}
-.previewHair{width:40px!important;height:24px!important;bottom:106px!important;border-radius:50% 50% 25% 25%!important}.choice[data-char=adam] .previewBody{background:#ece6d6!important;border-radius:15px 15px 4px 4px!important}.choice[data-char=adam] .previewHead{background:#c68863!important}.choice[data-char=mariam] .previewHead{background:#f1c9a5!important}#stick{width:136px!important;height:136px!important}#knob{width:60px!important;height:60px!important;left:38px!important;top:38px!important}#actions{gap:10px!important}.action{width:80px!important;height:80px!important;font-size:13px!important}@media (max-height:520px){#stick{width:120px!important;height:120px!important}#knob{width:54px!important;height:54px!important;left:33px!important;top:33px!important}.action{width:68px!important;height:68px!important;font-size:12px!important}}.avatarArt{height:150px!important}.choice{padding:10px!important}.avatarArt canvas{position:absolute;inset:0;width:100%;height:100%}@media (max-height:520px){.avatarArt{height:104px!important}}</style><!-- Google Analytics 4: Community Health Nursing RPG -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-XV404W2HM9"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-  gtag('config', 'G-XV404W2HM9');
-</script>
-</head>
+.previewHair{width:40px!important;height:24px!important;bottom:106px!important;border-radius:50% 50% 25% 25%!important}.choice[data-char=adam] .previewBody{background:#ece6d6!important;border-radius:15px 15px 4px 4px!important}.choice[data-char=adam] .previewHead{background:#c68863!important}.choice[data-char=mariam] .previewHead{background:#f1c9a5!important}#stick{width:136px!important;height:136px!important}#knob{width:60px!important;height:60px!important;left:38px!important;top:38px!important}#actions{gap:10px!important}.action{width:80px!important;height:80px!important;font-size:13px!important}@media (max-height:520px){#stick{width:120px!important;height:120px!important}#knob{width:54px!important;height:54px!important;left:33px!important;top:33px!important}.action{width:68px!important;height:68px!important;font-size:12px!important}}.avatarArt{height:150px!important}.choice{padding:10px!important}.avatarArt canvas{position:absolute;inset:0;width:100%;height:100%}@media (max-height:520px){.avatarArt{height:104px!important}}</style></head>
 <body>
 <div id="hud">
  <div id="brand" class="panel"><b>COMMUNITY HEALTH NURSING RPG</b><small>العالم المفتوح • نموذج تجريبي</small></div>
@@ -100,7 +102,7 @@ const TR=[["الحاجة أمينة","Hajja Amina"],["د. سليم","Dr. Salim"]
 ["أخبار أم محمود","Umm Mahmoud's news"],["سجل الجولة","Round record"],["ملاحظات كريم","Karim's notes"],["كوباية ماية","Glass of water"],["كتيب التوعية","Awareness booklet"],["سلة فاكهة","Fruit basket"],["تقرير النظافة","Cleanliness report"],["شكوى أم محمود","Umm Mahmoud's complaint"],["ميزان حرارة","Thermometer"],["ملاحظات المولود","Newborn notes"],["ورقة الموعد","Appointment slip"],
 ["WASD أو الأسهم للحركة • Shift للجري • E للتفاعل • اسحب بزر الماوس الأيسر لتدوير الكاميرا","WASD or arrows to move • Shift to run • E to interact • Drag with the left mouse button to rotate the camera"],["ابدأ الاستكشاف","Start exploring"],["اتجه إلى المنطقة الخضراء","Head to the green park"],["استكشف حيًّا مصريًا، وتعلّم محتوى محاضرات صحة المجتمع من الشخصيات والمباني. اختار شخصيتك؛ آدم هو الاختيار الافتراضي.","Explore an Egyptian neighborhood and learn community health lectures from the characters and buildings. Choose your character; Adam is the default."],["الخبرة: ","XP: "],["الشخصية: ","Character: "],["العالم المفتوح • نموذج تجريبي","Open World • Prototype"],["اللعبة مصممة لوضع الشاشة الأفقي عشان تشوف العالم وتستخدم أزرار الحركة بسهولة. فعّل التدوير التلقائي لو الشاشة ما اتلفتش.","The game is designed for landscape mode so you can see the world and use the movement buttons easily. Enable auto-rotate if the screen did not turn."],["المستوى ","Level "],["المهمة: ","Mission: "],["النسخة دي نموذج تطوير قابل للتجربة. اتصال الإنترنت مطلوب لتحميل مكتبة الرسوم ثلاثية الأبعاد.","This is a playable prototype. An internet connection is required to load the 3D library."],["بنت محجبة بملابس ساترة، اختيار بديل متاح.","A veiled girl in modest clothing, an alternative choice."],["تفاعل","Interact"],["جري","Run"],["حاول ملء الشاشة والوضع الأفقي","Try fullscreen and landscape mode"],["طاقة الجري","Run energy"],["لف الكاميرا بالسحب على العالم. الحركة باتجاه الكاميرا.","Drag the world to rotate the camera. Movement follows the camera direction."],["لفّ الموبايل بالعرض","Rotate your phone to landscape"],["ولد حنطي، شعر أسود قصير، جلابية مصرية وشال كتف.","A wheat-skinned boy, short black hair, an Egyptian galabeya."],["مهمات جانبية:","Side quests:"],
 ["📖 دليل الشخصيات","📖 Character Guide"],["📖 الشخصيات","📖 Characters"],["🩺 حالة ميدانية","🩺 Field case"],["🔊 اسمع","🔊 Listen"],["الصوت","Voice"],["📌 مهامك الحالية:","📌 Your current tasks:"],["ارجع لـ ","Return to "],["روح لـ ","Go to "],["🎒 معك: ","🎒 You have: "],["🎒 استلمت: ","🎒 Received: "],["📍 المكان: ","📍 Location: "],["🚶 تبعد عنك حوالي ","🚶 About "],[" متر تقريبًا"," m away"],[" (حوالي "," (about "],[" متر)"," m)"],["رجوع للقائمة","Back to list"],["إغلاق","Close"],["حاضر 👍","Okay 👍"],["تمام ✔","Done ✔"],["يلا نكمل ▶","Let's continue ▶"],["فكّر تاني 🤔","Think again 🤔"],["السابق","Previous"],["الجزء التالي","Next part"],["💾 التقدم","💾 Progress"],["تمام","OK"]];
-TR.sort((a,b)=>b[0].length-a[0].length);let paused=false;
+TR.sort((a,b)=>b[0].length-a[0].length);let paused=false,trackId=null;
 function trs(v){if(lang!=='en'||!v||!AR.test(v))return v;for(const [a,e] of TR)if(v.indexOf(a)>=0)v=v.split(a).join(e);return v}
 window.__chnModuleReady = true;
 const scene=new THREE.Scene();scene.background=new THREE.Color(0xaed0d2);scene.fog=new THREE.Fog(0xaed0d2,70,245);
@@ -319,7 +321,7 @@ let chosen='adam';const player=createHumanoid('adam');scene.add(player);player.p
 document.querySelectorAll('.choice').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('.choice').forEach(x=>x.classList.remove('selected'));b.classList.add('selected');chosen=b.dataset.char}));
 const SAVE_KEY='chn_rpg_progress_v1';
 function readSavedProgress(){try{const raw=localStorage.getItem(SAVE_KEY);return raw?JSON.parse(raw):null}catch(e){return null}}
-function saveProgress(){try{localStorage.setItem(SAVE_KEY,JSON.stringify({xp:game.xp,completed:[...game.completed],passedMissions:[...passedMissions],sideDone:[...sideDone],missionIndex,badges:[...earnedBadges],met:[...metNpcs],tasks:[...tasksDone],errs:errandStep,efin:[...errandFin],inv:[...inv],chosen,pos:game.started&&game.player?[game.player.position.x,game.player.position.z]:null}))}catch(e){/* current-session play still works if storage is unavailable */}}
+function saveProgress(){try{localStorage.setItem(SAVE_KEY,JSON.stringify({xp:game.xp,completed:[...game.completed],passedMissions:[...passedMissions],sideDone:[...sideDone],missionIndex,badges:[...earnedBadges],met:[...metNpcs],track:trackId,easked:[...errandAsk],tasks:[...tasksDone],errs:errandStep,efin:[...errandFin],inv:[...inv],chosen,pos:game.started&&game.player?[game.player.position.x,game.player.position.z]:null}))}catch(e){/* current-session play still works if storage is unavailable */}}
 const game={player,started:false,xp:0,stamina:100,completed:new Set(),activeMission:'community',running:false,camYaw:0,camPitch:.24,interacting:false,openDoor:null};
 // Install the start action immediately so later optional lesson/UI code cannot leave the button inert.
 document.getElementById('start').addEventListener('click',async()=>{
@@ -698,18 +700,18 @@ x_phcbarriers:{ask:'روح اسمع شكوى أم محمود وتعالى احك
 x_postnatal:{ask:'محتاجة ميزان حرارة من د. سليم للمتابعة. هاتهولي.',steps:[['د. سليم','اتفضل ميزان الحرارة، متابعة العلامات الحيوية مهمة بعد الولادة.','ميزان حرارة']],done:'كده نبدأ جدول الزيارات.'},
 x_newborn:{ask:'روح شوف أم مروة وطفلها وقولّي ملاحظاتك.',steps:[['أم مروة','طفلها عمره يومين: لونه وردي وبيعيط بصوت عالي وحركته نشطة.','ملاحظات المولود',['تقدير Apgar التقريبي؟','عالٍ (طبيعي 7–10)','منخفض ويحتاج إنعاشًا']]],done:'ملاحظة سليمة! نتعلم دلوقتي إزاي نحسبها.'},
 x_premarital:{ask:'عايزة ورقة موعد الأسرة من ياسين.',steps:[['ياسين','موعد الأسرة الخميس، وعايزين استشارة قبل الزواج.','ورقة الموعد']],done:'تمام! نبدأ بالترحيب والسرية.'}};
-const errandStep=Object.assign({},(savedProgress&&savedProgress.errs)||{}),errandFin=new Set((savedProgress&&savedProgress.efin)||[]),inv=new Set((savedProgress&&savedProgress.inv)||[]);
-const unlocked=id=>{const i=missionOrder.indexOf(id);return i<0||i<=missionIndex},closeM=()=>document.getElementById('modal').style.display='none';
+const errandStep=Object.assign({},(savedProgress&&savedProgress.errs)||{}),errandFin=new Set((savedProgress&&savedProgress.efin)||[]),inv=new Set((savedProgress&&savedProgress.inv)||[]),errandAsk=new Set((savedProgress&&savedProgress.easked)||[]);
+const askedE=id=>errandAsk.has(id)||(errandStep[id]||0)>0||errandFin.has(id),unlocked=id=>{const i=missionOrder.indexOf(id);return i<0||i<=missionIndex},closeM=()=>document.getElementById('modal').style.display='none';
 function errandHook(n){
  for(const id in errands){if(errandFin.has(id)||passedMissions.has(id)||!unlocked(id))continue;const E=errands[id],k=errandStep[id]||0,st=E.steps[k];
-  if(st&&st[0]===n.name){const adv=()=>{errandStep[id]=k+1;if(st[2]){inv.add(st[2]);showToast('🎒 استلمت: '+st[2])}saveProgress();closeM()};
+  if(st&&st[0]===n.name&&askedE(id)){const adv=()=>{errandStep[id]=k+1;if(st[2]){inv.add(st[2]);showToast('🎒 استلمت: '+st[2])}saveProgress();closeM()};
    if(st[3])openModal(n.name,st[1]+'\n\n❓ '+((lang==='en'&&errqEN[id])||st[3])[0],[((lang==='en'&&errqEN[id])||st[3])[1],((lang==='en'&&errqEN[id])||st[3])[2]].map((t,i)=>({t,i})).sort(()=>Math.random()-.5).map(o=>({label:o.t,action:()=>o.i===0?adv():showToast('فكّر تاني 🤔')})));
    else openModal(n.name,st[1],[{label:'تمام ✔',action:adv}]);
    return true}}
  const def=questDefs.find(d=>d.id===n.quest),E=def&&errands[def.id];
  if(E&&!errandFin.has(def.id)&&!passedMissions.has(def.id)&&unlocked(def.id)){const k=errandStep[def.id]||0;
   if(k>=E.steps.length){errandFin.add(def.id);E.steps.forEach(s=>s[2]&&inv.delete(s[2]));saveProgress();openModal(def.npc,'✅ '+E.done,[{label:'يلا نكمل ▶',action:()=>{closeM();missionDialogue(def)}}]);return true}
-  const st=E.steps[k],b=bios[st[0]]||['',''],tn=npcs.find(x=>x.name===st[0]);
+  const st=E.steps[k],b=bios[st[0]]||['',''],tn=npcs.find(x=>x.name===st[0]);errandAsk.add(def.id);saveProgress();
   openModal(def.npc,E.ask+'\n\n📍 روح لـ '+st[0]+' — '+b[1]+(tn?' (حوالي '+Math.round((game.player||player).position.distanceTo(tn.root.position))+' متر)':'')+(inv.size?'\n🎒 معك: '+[...inv].join('، '):''),[{label:'حاضر 👍',action:closeM}]);return true}
  if(String(n.quest).startsWith('errand:')){openModal(n.name,(bios[n.name]||[''])[0],[{label:'تمام',action:closeM}]);return true}
  return false}
@@ -821,13 +823,16 @@ const tools=document.createElement('div');tools.style.display='none';document.bo
 const Wp=name=>{const n=npcs.find(x=>x.name===name),b=bios[name]||['',''],p=(game.player||player).position;return name+' ('+b[1]+(n?', ~'+Math.round(p.distanceTo(n.root.position))+' m':'')+')'};
 function stepFor(id){const def=questDefs.find(d=>d.id===id);if(!def)return null;const E=errands[id],k=errandStep[id]||0;
  if(E&&!errandFin.has(id)&&!passedMissions.has(id)){
+  if(!askedE(id))return tx('كلّم '+Wp(def.npc)+' واعرف المطلوب','Talk to '+Wp(def.npc)+' to get the task');
   if(k<E.steps.length){const st=E.steps[k];return tx('روح عند '+Wp(st[0])+' — '+(st[3]?'اسمعه واتخذ القرار الصح':st[2]?'خد منه: '+st[2]:'اتكلم معاه'),'Go to '+Wp(st[0])+' — '+(st[3]?'listen and make the right decision':st[2]?'get: '+st[2]:'talk to them'))}
   return tx('ارجع لـ '+Wp(def.npc),'Return to '+Wp(def.npc))}
  if(passedMissions.has(id))return null;
  return tx('كلّم '+Wp(def.npc)+' — '+(id.startsWith('x_')?'مهمة تفاعلية ثم اختبار':'الدرس ثم الاختبار'),'Talk to '+Wp(def.npc)+' — '+(id.startsWith('x_')?'interactive task, then the quiz':'lesson, then the quiz'))}
 function nextSteps(){const out=[],mid=missionOrder[missionIndex];
  if(mid){const d=questDefs.find(x=>x.id===mid);out.push('🎯 '+d.name+': '+stepFor(mid))}else out.push(tx('🎉 خلصت المهمات الأساسية! خد الامتحان الشامل أو كمّل المهمات الجانبية.','🎉 Main missions complete! Take the Comprehensive Exam or continue the side missions.'));
- questDefs.forEach(d=>{if(d.id.startsWith('x_')&&!passedMissions.has(d.id)){const s=stepFor(d.id);if(s)out.push('• '+d.name+': '+s)}});return out}
+ questDefs.forEach(d=>{if(d.id.startsWith('x_')&&!passedMissions.has(d.id)){const s=stepFor(d.id);if(s)out.push('• '+d.name+': '+s)}});
+ if(trackId){const m=sideMissions.find(x=>x.id===trackId);if(m&&!sideDone.has(m.id)){const n=npcOf(m.id);out.unshift(tx('📍 مهمة جانبية: ','📍 Side mission: ')+m.name+(n?' → '+Wp(n.name):''))}else{const d=questDefs.find(x=>x.id===trackId);const i=d?out.findIndex(l=>l.indexOf(d.name+': ')>=0):-1;if(i>0){const l=out.splice(i,1)[0];out.unshift('📍 '+l.replace(/^[•🎯] ?/,''))}}}
+ return out}
 const closeP=()=>{document.getElementById('modal').style.display='none'};
 function pmenu(title){const c=document.getElementById('modalContent');c.innerHTML='';const h=document.createElement('h2');h.textContent=title;c.append(h);return c}
 function pbtn(c,label,fn,cls){const b=document.createElement('button');b.type='button';b.textContent=label;if(cls)b.className=cls;b.onclick=fn;b.style.margin='4px';c.append(b);return b}
@@ -842,9 +847,9 @@ function openPause(){paused=true;const c=pmenu(tx('⏸ إيقاف مؤقت','⏸
  pbtn(c,voiceOn?tx('🔊 الصوت: شغال','🔊 Voice: on'):tx('🔇 الصوت: مقفول','🔇 Voice: off'),()=>{document.getElementById('btnVoice').click();openPause()});
  pbtn(c,tx('🌐 English','🌐 عربي'),()=>document.getElementById('btnLang').click());
  document.getElementById('modal').style.display='flex'}
-function openSideList(){const c=pmenu(tx('📋 المهمات الجانبية','📋 Side missions')),p=(game.player||player).position;
- sideMissions.forEach(m=>{const n=npcs.find(x=>x.name.startsWith(String(m.npc).replace('عمّ','عم'))),d=sideDone.has(m.id);const t=document.createElement('p');t.style.cssText='white-space:pre-line;line-height:1.7;margin:6px 0';t.textContent=(d?'✅ ':'🔹 ')+m.name+'\n'+(n?tx('عند: ','At: ')+n.name+' ('+Math.round(p.distanceTo(n.root.position))+' m)':'');c.append(t)});
- questDefs.filter(d=>d.id.startsWith('x_')).forEach(d=>{const t=document.createElement('p');t.style.cssText='white-space:pre-line;line-height:1.7;margin:6px 0';t.textContent=(passedMissions.has(d.id)?'✅ ':'🔹 ')+d.name+'\n'+(passedMissions.has(d.id)?'':stepFor(d.id));c.append(t)});
+function openSideList(){const c=pmenu(tx('📋 المهمات الجانبية','📋 Side missions')),p=(game.player||player).position;pbtn(c,tx('🎯 تتبّع المهمة الأساسية','🎯 Track the main mission')+(!trackId?' ✓':''),()=>{trackId=null;saveProgress();openSideList()});
+ sideMissions.forEach(m=>{const n=npcs.find(x=>x.name.startsWith(String(m.npc).replace('عمّ','عم'))),d=sideDone.has(m.id);const t=document.createElement('p');t.style.cssText='white-space:pre-line;line-height:1.7;margin:6px 0';t.textContent=(d?'✅ ':'🔹 ')+m.name+'\n'+(n?tx('عند: ','At: ')+n.name+' ('+Math.round(p.distanceTo(n.root.position))+' m)':'');c.append(t);if(!d)pbtn(c,tx('📍 تتبّع','📍 Track')+(trackId===m.id?' ✓':''),()=>{trackId=m.id;saveProgress();openSideList()})});
+ questDefs.filter(d=>d.id.startsWith('x_')).forEach(d=>{const t=document.createElement('p');t.style.cssText='white-space:pre-line;line-height:1.7;margin:6px 0';t.textContent=(passedMissions.has(d.id)?'✅ ':'🔹 ')+d.name+'\n'+(passedMissions.has(d.id)?'':stepFor(d.id));c.append(t);if(!passedMissions.has(d.id))pbtn(c,tx('📍 تتبّع','📍 Track')+(trackId===d.id?' ✓':''),()=>{trackId=d.id;saveProgress();openSideList()})});
  pbtn(c,tx('رجوع','Back'),openPause,'secondary');pbtn(c,tx('▶ كمّل اللعب','▶ Resume'),closeP);document.getElementById('modal').style.display='flex'}
 {const pb=document.createElement('button');pb.id='pauseBtn';pb.type='button';pb.textContent='⏸';pb.style.cssText='position:absolute;top:44px;left:50%;transform:translateX(-50%);pointer-events:auto;width:44px;height:36px;border-radius:12px;border:1px solid #ffffff90;background:#0e3b3acc;color:#fff;font-size:16px;z-index:5';pb.onclick=openPause;document.getElementById('hud').append(pb);
  window.addEventListener('keydown',e=>{if((e.key==='p'||e.key==='P'||e.key==='Escape')&&game.started){const md=document.getElementById('modal');if(md.style.display==='flex'){if(paused)closeP()}else openPause()}});
@@ -861,6 +866,19 @@ function setupPreviews(){try{
  const t0=performance.now(),loop=()=>{if(document.body.classList.contains('gameStarted')){rs.forEach(o=>o.r.dispose());return}
   const t=(performance.now()-t0)/1000;rs.forEach(o=>{const w=o.art.clientWidth||150,h=o.art.clientHeight||130;if(o.cv.width!==Math.round(w*o.r.getPixelRatio())){o.r.setSize(w,h,false);o.cam.aspect=w/h;o.cam.updateProjectionMatrix()}o.g.rotation.y=Math.sin(t*.9)*.45;o.r.render(o.sc,o.cam)});requestAnimationFrame(loop)};loop()}catch(e){}}
 setupPreviews();
+// ===== Guide arrow above the player (main mission by default, or the tracked side mission) =====
+trackId=(savedProgress&&savedProgress.track)||null;
+let lastT=null;const arrowG=new THREE.Group(),arrM=new THREE.MeshStandardMaterial({color:0x2bf0c0,emissive:0x12a58a,emissiveIntensity:.9,roughness:.4,depthTest:false});
+{const sh=new THREE.Mesh(new THREE.CylinderGeometry(.08,.08,.7,10),arrM),hd=new THREE.Mesh(new THREE.ConeGeometry(.24,.5,14),arrM);sh.rotation.x=hd.rotation.x=Math.PI/2;sh.position.z=-.1;hd.position.z=.5;sh.renderOrder=hd.renderOrder=999;arrowG.add(sh,hd);arrowG.visible=false;scene.add(arrowG)}
+function npcOf(id){const def=questDefs.find(d=>d.id===id);if(def){const E=errands[id],k=errandStep[id]||0;let nm=def.npc;if(E&&!errandFin.has(id)&&!passedMissions.has(id)&&k<E.steps.length&&askedE(id))nm=E.steps[k][0];return npcs.find(x=>x.name===nm)}
+ const m=sideMissions.find(x=>x.id===id);return m?npcs.find(x=>x.name.startsWith(String(m.npc).replace('عمّ','عم'))):null}
+function curTarget(){if(trackId){const done=sideDone.has(trackId)||passedMissions.has(trackId),n=done?null:npcOf(trackId);if(n)return{n,side:true};trackId=null}
+ const mid=missionOrder[missionIndex],n=mid?npcOf(mid):null;return n?{n,side:false}:null}
+function updateArrow(p){if(!game.started){arrowG.visible=false;return}const t=curTarget();if(!t){arrowG.visible=false;return}
+ const key=t.n.name+(t.side?'s':'m');if(lastT&&lastT!==key)showToast(tx('➡️ السهم اتجه للخطوة الجاية: ','➡️ Arrow now points to: ')+t.n.name);lastT=key;
+ const q=t.n.root.position,dx=q.x-p.position.x,dz=q.z-p.position.z;if(Math.hypot(dx,dz)<3){arrowG.visible=false;return}
+ arrowG.visible=true;arrowG.position.set(p.position.x,3.15+Math.sin(performance.now()/300)*.12,p.position.z);arrowG.rotation.y=Math.atan2(dx,dz);
+ arrM.color.setHex(t.side?0xffa94d:0x2bf0c0);arrM.emissive.setHex(t.side?0xb5651d:0x12a58a)}
 setInterval(()=>{if(game.started)saveProgress()},4000);
 if(savedProgress&&savedProgress.chosen){const sb=document.querySelector('.choice[data-char="'+savedProgress.chosen+'"]');if(sb)sb.click()}
 function awardMissionBadge(id){
@@ -1105,7 +1123,7 @@ const clock=new THREE.Clock();function animate(){
  for(const q of questPoints){q.rotation.y+=dt*.6;q.children[1].position.y=1.25+Math.sin(performance.now()*.002+q.position.x)*.12}
  for(const a of animatedParts){const t=performance.now()/1000+a.phase;a.rig.scale.y=1+Math.sin(t*2.2)*.008;const cl=(t%4)<.12;for(const e of a.bl||[]){if(e.userData.sy===undefined)e.userData.sy=e.scale.y;e.scale.y=cl?.05:e.userData.sy}if(a.talking||(a.npc&&a.root.position.distanceTo(p.position)<7)){a.arms[1].rotation.x=-2.5+Math.sin(t*6)*.25;a.rig.rotation.z=Math.sin(t*1.3)*.02;a.rig.rotation.x=a.talking?Math.sin(t*9)*.04:0}}
   for(const c of cars){const L=c.axis==='z'?'z':'x';c.g.position[L]+=c.dir*c.sp*dt;if(Math.abs(c.g.position[L])>60)c.g.position[L]=-c.dir*60}
-  for(const b of buildings){const inn=Math.abs(p.position.x-b.x)<b.w/2+.2&&Math.abs(p.position.z-b.z)<b.d/2+.2;if(inn!==b.inn){b.inn=inn;b.roof.visible=!inn;b.wm.transparent=inn;b.wm.opacity=inn?.2:1;b.wm.needsUpdate=true}}
+  updateArrow(p);for(const b of buildings){const inn=Math.abs(p.position.x-b.x)<b.w/2+.2&&Math.abs(p.position.z-b.z)<b.d/2+.2;if(inn!==b.inn){b.inn=inn;b.roof.visible=!inn;b.wm.transparent=inn;b.wm.opacity=inn?.2:1;b.wm.needsUpdate=true}}
   for(const wk of walkers){const t=wk.pts[wk.i],dx=t[0]-wk.r.position.x,dz=t[1]-wk.r.position.z,l=Math.hypot(dx,dz);if(l<.4){wk.pts.reverse();wk.i=1}else{wk.r.position.x+=dx/l*wk.sp*dt;wk.r.position.z+=dz/l*wk.sp*dt;wk.r.rotation.y=Math.atan2(dx,dz)}wk.a.walk=true}
   if(((window.__f=(window.__f||0)+1)%6)===0)drawMap(p);renderer.render(scene,camera)
 
