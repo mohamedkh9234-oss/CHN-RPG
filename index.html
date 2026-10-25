@@ -1,16 +1,6 @@
 <!doctype html>
 <html lang="ar" dir="rtl">
 <head>
-<!-- Google Analytics 4 -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-XV404W2HM9"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-  gtag('config', 'G-XV404W2HM9');
-</script>
-<!-- End Google Analytics 4 -->
-
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
 <meta name="theme-color" content="#123b46"><title>Community Health Nursing RPG — Open World Prototype — Start Fix</title>
 <style>
@@ -322,10 +312,14 @@ document.querySelectorAll('.choice').forEach(b=>b.addEventListener('click',()=>{
 const SAVE_KEY='chn_rpg_progress_v1';
 function readSavedProgress(){try{const raw=localStorage.getItem(SAVE_KEY);return raw?JSON.parse(raw):null}catch(e){return null}}
 function saveProgress(){try{localStorage.setItem(SAVE_KEY,JSON.stringify({xp:game.xp,completed:[...game.completed],passedMissions:[...passedMissions],sideDone:[...sideDone],missionIndex,badges:[...earnedBadges],met:[...metNpcs],track:trackId,easked:[...errandAsk],tasks:[...tasksDone],errs:errandStep,efin:[...errandFin],inv:[...inv],chosen,pos:game.started&&game.player?[game.player.position.x,game.player.position.z]:null}))}catch(e){/* current-session play still works if storage is unavailable */}}
+// Keep the same storage key across game updates. Save when the tab is hidden or the page is closed, too.
+addEventListener('pagehide',()=>{try{saveProgress()}catch(e){}});
+document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='hidden'){try{saveProgress()}catch(e){}}});
+
 const game={player,started:false,xp:0,stamina:100,completed:new Set(),activeMission:'community',running:false,camYaw:0,camPitch:.24,interacting:false,openDoor:null};
 // Install the start action immediately so later optional lesson/UI code cannot leave the button inert.
 document.getElementById('start').addEventListener('click',async()=>{
- try { if(game.started)return; if(chosen==='mariam' && game.player===player){scene.remove(player);game.player=createHumanoid('mariam');game.player.position.set(0,0,10);scene.add(game.player);document.getElementById('playerName').textContent='مريم';} game.started=true;document.body.classList.add('gameStarted');try{const sv=readSavedProgress();if(sv&&sv.pos&&!game.restored){game.player.position.set(sv.pos[0],0,sv.pos[1]);game.restored=true}}catch(e){}document.getElementById('screen').style.display='none';await requestLandscapeMode();showToast('بدأ الاستكشاف! اقترب من شخصية عليها اسم ودور، اضغط E، تعلّم ثم اجتز 4 من 5 أسئلة لفتح المهمة التالية. المهمات الجانبية متاحة في أي وقت.'); }
+ try { if(game.started)return; if(chosen==='mariam' && game.player===player){scene.remove(player);game.player=createHumanoid('mariam');game.player.position.set(0,0,10);scene.add(game.player);document.getElementById('playerName').textContent='مريم';} game.started=true;document.body.classList.add('gameStarted');try{const sv=readSavedProgress();if(sv&&sv.pos&&!game.restored){game.player.position.set(sv.pos[0],0,sv.pos[1]);game.restored=true}}catch(e){}document.getElementById('screen').style.display='none';await requestLandscapeMode();showToast('بدأ الاستكشاف! اقترب من شخصية عليها اسم ودور، اضغط E، تعلّم ثم اجتز الأسئلة المطلوبة لفتح المهمة التالية. المهمات الجانبية متاحة في أي وقت.'); }
  catch(err){ console.error('Start error:',err); const screen=document.getElementById('screen');screen.style.display='flex';const msg=document.getElementById('startError');if(msg)msg.textContent='حصل خطأ أثناء التشغيل. أعد فتح الملف وتأكد من اتصال الإنترنت.'; }
 });
 
@@ -360,9 +354,8 @@ const questDefs=[
  {id:'school',name:'بيئة مدرسية صحية',npc:'فريدة',zone:'المدرسة',brief:'ساعد فريدة في تحديد مكوّنات برنامج الصحة المدرسية.',q:'أي مجموعة تتوافق مع المكوّنات المذكورة في محاضرة School Health؟',answers:['الخدمات الصحية والتثقيف الصحي والبيئة الصحية','المباني والامتحانات فقط','العلاج الدوائي فقط'],correct:0,explain:'تذكر المحاضرة الخدمات الصحية والتثقيف الصحي والبيئة الصحية ضمن مكونات البرنامج.',x:17,z:-2},
  {id:'phc',name:'بوابة الرعاية الصحية الأولية',npc:'د. سليم',zone:'مركز الرعاية الصحية',brief:'تحدث مع د. سليم حول مبادئ الرعاية الصحية الأولية.',q:'أي اختيار يتفق مع خصائص الرعاية الصحية الأولية المذكورة في المحاضرة؟',answers:['مشاركة المجتمع واستخدام التكنولوجيا المناسبة واستمرارية الرعاية','العلاج بالمستشفى فقط دون وقاية','استبعاد التثقيف الصحي'],correct:0,explain:'المحاضرة تذكر مشاركة المجتمع والتكنولوجيا المناسبة واستمرارية الرعاية والتثقيف والوقاية.',x:2,z:-12},
  {id:'mch',name:'دعم صحة الأم والطفل',npc:'الأم هناء',zone:'مركز صحة الأم والطفل',brief:'تعرّف إلى موضوعات خدمات صحة الأم والطفل التي تناولتها المحاضرة.',q:'أي مجموعة من الموضوعات مذكورة في محاضرة MCH؟',answers:['رعاية ما قبل الحمل والحمل والولادة وما بعد الولادة وصحة الطفل','الصيانة المدرسية فقط','إدارة مخازن الأدوية فقط'],correct:0,explain:'المحاضرة تشمل رعاية ما قبل الحمل، وما قبل الولادة، وأثناء الولادة، وما بعدها، وخدمات صحة الطفل.',x:17,z:14},
- {id:'women',name:'جولة صحة المرأة',npc:'الممرضة نور',zone:'مركز صحة المرأة',brief:'ناقش مع الممرضة نور العوامل المؤثرة في صحة المرأة عبر مراحل الحياة.',q:'أي عامل من التالي ورد ضمن العوامل المؤثرة في صحة المرأة في المحاضرة؟',answers:['التعليم والوضع الاقتصادي والمعتقدات الثقافية والتغذية','لون المبنى فقط','نوع الهاتف فقط'],correct:0,explain:'تذكر المحاضرة التعليم والوضع الاقتصادي والمعتقدات الثقافية والتغذية ونمط الحياة وعوامل أخرى.',x:-19,z:-10}
-];
-let activeMission=0;const missionOrder=['community','school','phc','mch','women'];let missionIndex=0;const passedMissions=new Set();const sideDone=new Set();
+ {id:'women',name:'جولة صحة المرأة',npc:'الممرضة نور',zone:'مركز صحة المرأة',brief:'ناقش مع الممرضة نور العوامل المؤثرة في صحة المرأة عبر مراحل الحياة.',q:'أي عامل من التالي ورد ضمن العوامل المؤثرة في صحة المرأة في المحاضرة؟',answers:['التعليم والوضع الاقتصادي والمعتقدات الثقافية والتغذية','لون المبنى فقط','نوع الهاتف فقط'],correct:0,explain:'تذكر المحاضرة التعليم والوضع الاقتصادي والمعتقدات الثقافية والتغذية ونمط الحياة وعوامل أخرى.',x:-19,z:-10},
+ {id:'hcds',name:tx('نظام تقديم الرعاية الصحية','Health Care Delivery System'),npc:'د. هالة',zone:tx('مديرية الشؤون الصحية','Health Affairs Directorate'),brief:tx('المهمة الأخيرة في القصة: تعلّم مع د. هالة كيف تتكامل مكونات النظام الصحي ووظائفه وتحدياته، والنظام الصحي في مصر.','Final mission of the story: learn with Dr. Hala how the health system\'s components, functions and challenges fit together, and how the Egyptian health system works.'),q:'',answers:[],correct:0,explain:'',x:12,z:-26} ]; let activeMission=0;const missionOrder=['community','school','phc','mch','women','hcds'];let missionIndex=0;const passedMissions=new Set();const sideDone=new Set();
 const savedProgress=readSavedProgress();
 if(savedProgress){game.xp=Number(savedProgress.xp)||0;(savedProgress.completed||[]).forEach(id=>game.completed.add(id));(savedProgress.passedMissions||[]).forEach(id=>passedMissions.add(id));(savedProgress.sideDone||[]).forEach(id=>sideDone.add(id));missionIndex=Math.max(0,Math.min(missionOrder.length,Number(savedProgress.missionIndex)||0));const xpNode=document.getElementById('xp');if(xpNode)xpNode.textContent=game.xp;}
 function updateQuest(){const def=questDefs.find(q=>q.id===missionOrder[missionIndex]);document.getElementById('questText').textContent=def?`${def.name} — ${def.npc} • Learn, then pass the quiz`:'أنهيت المهمات الأساسية! يمكنك التجول وتنفيذ المهمات الجانبية. | Main missions complete — explore side quests.';document.getElementById('missionCount').textContent=`${Math.min(missionIndex+1,missionOrder.length)}/${missionOrder.length}`;}
@@ -879,6 +872,69 @@ function updateArrow(p){if(!game.started){arrowG.visible=false;return}const t=cu
  const q=t.n.root.position,dx=q.x-p.position.x,dz=q.z-p.position.z;if(Math.hypot(dx,dz)<3){arrowG.visible=false;return}
  arrowG.visible=true;arrowG.position.set(p.position.x,3.15+Math.sin(performance.now()/300)*.12,p.position.z);arrowG.rotation.y=Math.atan2(dx,dz);
  arrM.color.setHex(t.side?0xffa94d:0x2bf0c0);arrM.emissive.setHex(t.side?0xb5651d:0x12a58a)}
+// ===== Final story mission: Health Care Delivery System (lecture added after the women's health mission) =====
+TR.push(['د. هالة','Dr. Hala'],['مديرة الشؤون الصحية','Director of Health Affairs'],['مديرية الشؤون الصحية','Health Affairs Directorate'],['نظام الرعاية الصحية','Health Care System'],['ورقة التحويل','Referral slip']);TR.sort((a,b)=>b[0].length-a[0].length);
+makeBuilding({name:'مديرية الشؤون الصحية',x:12,z:-31,w:11,d:7,h:4.6,color:0xe3dccb,sign:'نظام الرعاية الصحية',mission:'hcds'});
+createNPC('د. هالة','mariam',15.2,-26,'مديرة الشؤون الصحية','hcds');
+bios['د. هالة']=[tx('مديرة الشؤون الصحية بالمحافظة. شافت النظام الصحي من الرعاية الأولية للمستشفيات، وبتحب توضّح للطلبة إزاي حلقاته بتتصل ببعض.','Director of health affairs for the governorate. She has seen the system from primary care to hospitals and loves showing students how its pieces connect.'),tx('مديرية الشؤون الصحية، شمال الحي','Health Affairs Directorate, north of the neighborhood')];
+lessonContent.hcds={title:tx('نظام تقديم الرعاية الصحية','Health Care Delivery System'),sections:[
+['مقدمة وتعريف','نظام تقديم الرعاية الصحية شبكة معقدة من المنظمات والمؤسسات والمهنيين والموارد التي تقدّم الخدمات الصحية. فهم مكوناته وتحدياته يساعد صانعي السياسات ومقدمي الرعاية والمؤمّنين والمرضى على تحسين الوصول والجودة والنتائج.'],
+['وظائف النظام الصحي','1) تقديم الخدمة (وقائية وتعزيزية وعلاجية وتأهيلية) 2) تعزيز الصحة 3) الوقاية من الأمراض (تطعيم وفحص وتثقيف) 4) حماية الصحة 5) التمويل الصحي (تأمين وضرائب ودفع مباشر) 6) الحوكمة (سياسات وتشريعات) 7) المعلومات الصحية 8) تنمية القوى العاملة 9) البحث والابتكار.'],
+['مكونات النظام الصحي','ثمانية مكونات: الرعاية الأولية، الرعاية التخصصية، المستشفيات، مرافق الرعاية طويلة الأمد، التأمين الصحي، خدمات الصحة العامة، تكنولوجيا المعلومات الصحية (HIT)، الأدوية والأجهزة الطبية.'],
+['مستويات الرعاية','الرعاية الأولية نقطة الاتصال الأولى (طبيب عام وطبيب أسرة وممارس تمريض). الرعاية التخصصية يقدمها أخصائيون ويحوّل إليها مقدم الرعاية الأولية. المستشفيات تقدم الرعاية الحادة والطوارئ والجراحات. مرافق الرعاية طويلة الأمد تدعم أنشطة الحياة اليومية لكبار السن والمزمنين وذوي الإعاقة.'],
+['التأمين والصحة العامة والتكنولوجيا','التأمين الصحي يموّل الخدمات ويحمي من العبء المالي. الصحة العامة تحمي المجتمع بالوقاية والتثقيف والتطعيم. تقنية المعلومات تشمل السجلات الإلكترونية والطب عن بُعد. الأدوية والأجهزة الطبية تخضع لاختبار وتنظيم صارم.'],
+['تحديات تقديم الرعاية','الوصول للرعاية (الدخل والجغرافيا)، التكلفة، الجودة والتنسيق، تكامل HIT وخصوصية البيانات، نقص العاملين، إدارة الأمراض المزمنة وتعدد الأمراض (multimorbidity)، والطوارئ الصحية العامة.'],
+['النظام الصحي في مصر: ثلاثة قطاعات','نظام تعددي يُدار ويُموَّل ويُقدَّم عبر ثلاثة قطاعات: الحكومي (وزارة الصحة والسكان MOHP المقدم الرئيسي)، وشبه الحكومي (هيئة التأمين الصحي HIO وهيئة الرعاية العلاجية CCO وهيئة المستشفيات والمعاهد التعليمية THO)، والخاص (ربحي وغير ربحي وجمعيات مسجلة لدى وزارة التضامن MOSA). القطاع الخاص حوالي 16% من أسرّة التنويم.'],
+['مستشفيات وبرامج وزارة الصحة','المتكاملة 20–60 سريرًا وتخدم 10–25 ألف نسمة في الريف، والمراكز 100–200 سرير وتخدم 50–100 ألف، والعامة أكثر من 200 سرير في عواصم المحافظات، والمتخصصة في المدن. البرامج الرأسية: السكان والصحة الإنجابية وتنظيم الأسرة، الإسهال والتهابات الجهاز التنفسي، التحصين الموسع، وصحة الأم.'],
+['مصر: التحديات والمبادرات','التحديات: عدم العدالة في الوصول، ازدحام المرافق، نقص العاملين خاصة بالريف، محدودية الموارد، وعدم الكفاءة الإدارية. المبادرات: مرافق جديدة وعيادات متنقلة، تعزيز الرعاية الأولية والترصد والتثقيف، التمويل والتأمين الأوسع، والشراكة مع القطاع الخاص.']]};
+lessonEnglish.hcds=[
+['Introduction & definition','The healthcare delivery system is complex and involves many stakeholders. It is the network of organizations, institutions, professionals and resources that provide healthcare services. Understanding its components and challenges helps policymakers, providers, insurers and patients improve access, quality and outcomes.'],
+['Functions of a health system','1) Service provision (preventive, promotive, curative, rehabilitative); 2) Health promotion; 3) Disease prevention (vaccination, screening, education); 4) Health protection (safety and quality, protection from threats); 5) Health financing (insurance, taxation, out-of-pocket); 6) Health governance (policies, regulations, strategies); 7) Health information; 8) Health workforce development; 9) Research and innovation.'],
+['Components of the health system','Eight components: primary care, specialty care, hospitals, long-term care facilities, health insurance, public health services, health information technology (HIT), and pharmaceuticals and medical devices.'],
+['Care levels in detail','Primary care is the first point of contact (general practitioners, family physicians, nurse practitioners) offering prevention, education and basic diagnosis and treatment. Specialty care (cardiologists, oncologists, orthopedic surgeons) receives patients referred by primary care providers. Hospitals provide acute care, emergency services, surgeries and specialized treatment. Long-term care facilities support people who need ongoing help with daily activities because of chronic illness, disability or aging.'],
+['Insurance, public health, HIT and products','Health insurance finances services and protects families from financial hardship. Public health services promote and protect community health through prevention, education, vaccination and environmental monitoring. HIT includes electronic health records, telemedicine and information exchange, improving coordination and patient safety. Pharmaceuticals and medical devices undergo rigorous testing and regulation for safety, efficacy and quality.'],
+['Challenges of health care delivery','Access to care (income, geography, race, ethnicity, immigration status; rural areas), cost and affordability, quality and coordination (errors, duplication, fragmented care), HIT integration and data privacy, workforce shortages, chronic disease management and multimorbidity, and public health emergencies (outbreaks, disasters).'],
+['Health system in Egypt: three sectors','Egypt has a highly pluralistic system managed, financed and provided by three sectors. Government: ministries funded through the Ministry of Finance; the MOHP is the major provider of primary, preventive and curative care. Parastatal: quasi-governmental organizations with their own rules and budgets, including the Health Insurance Organization (HIO), the Curative Care Organization (CCO) and the Teaching Hospitals and Institutes Organization (THO). Private: for-profit and nonprofit providers, midwives, pharmacies, private doctors and hospitals, and NGOs registered with the Ministry of Social Affairs (MOSA). It has 2,024 inpatient facilities with about 22,647 beds, around 16% of total bed capacity.'],
+['MOHP hospitals and programs','Integrated hospitals: 20–60 beds in rural areas with surgical theatres, X-ray and laboratories, serving 10,000–25,000 people. District hospitals: 100–200 beds, serving 50,000–100,000 people in an urban district. General hospitals: more than 200 beds with all specialties, in every governorate capital. Specialty hospitals (eye, psychiatric, chest, fever, heart, tumors, obstetrics and gynecology) are in urban areas. Vertical programs: population, reproductive health and family planning; control of diarrheal diseases and acute respiratory infections; expanded program on immunization; maternal health.'],
+['Egypt: challenges and initiatives','Challenges: inequity in access (rural and underserved areas), overburdened public facilities with long waits, workforce shortages especially in rural areas, limited financial resources and infrastructure, and inefficiencies (administrative burden, bureaucracy, fragmented delivery). Initiatives: new and upgraded facilities, mobile clinics to underserved areas, strengthening primary care, disease surveillance, health education, better financing, wider insurance coverage and public–private partnerships.']];
+quizBank.hcds=[];
+addQ('hcds',[
+['نظام تقديم الرعاية الصحية هو…','شبكة المنظمات والمؤسسات والمهنيين والموارد التي تقدم الخدمات الصحية','مستشفى واحد','وزارة المالية فقط'],
+['توفير الأموال ليحصل الناس على رعاية بتكلفة مناسبة (تأمين وضرائب ودفع مباشر) هو…','التمويل الصحي','المعلومات الصحية','حماية الصحة'],
+['جمع وتحليل ونشر البيانات الصحية لدعم القرار هو…','المعلومات الصحية','الحوكمة الصحية','تقديم الخدمة'],
+['وضع السياسات واللوائح والاستراتيجيات لضمان العدالة في الوصول هو…','الحوكمة الصحية','البحث والابتكار','تعزيز الصحة'],
+['برامج التطعيم والفحص الدوري تدخل ضمن…','الوقاية من الأمراض','التمويل الصحي','تنمية القوى العاملة'],
+['كم عدد مكونات النظام الصحي في المحاضرة؟','ثمانية','ثلاثة','اثنا عشر'],
+['نقطة الاتصال الأولى للمريض هي…','الرعاية الأولية','الرعاية التخصصية','الرعاية طويلة الأمد'],
+['من يحوّل المريض إلى الأخصائي؟','مقدمو الرعاية الأولية','الصيادلة فقط','شركات التأمين'],
+['السجلات الصحية الإلكترونية والطب عن بُعد من أمثلة…','تكنولوجيا المعلومات الصحية (HIT)','خدمات الصحة العامة','الرعاية طويلة الأمد'],
+['من تحديات تقديم الرعاية الصحية…','نقص العاملين الصحيين خاصة في الريف','وجود أخصائيين في كل قرية','عدم وجود أمراض مزمنة'],
+['تُدار الخدمات الصحية في مصر وتُموَّل وتُقدَّم عبر ثلاثة قطاعات هي…','الحكومي وشبه الحكومي والخاص','العسكري والسياحي والصناعي','الحضري والريفي والساحلي'],
+['المقدم الرئيسي للرعاية الأولية والوقائية والعلاجية في مصر هو…','وزارة الصحة والسكان (MOHP)','القطاع الخاص','الجمعيات الأهلية فقط'],
+['المستشفيات المتكاملة في الريف سعتها حوالي…','20 إلى 60 سريرًا','أكثر من 200 سرير','5 أسرّة'],
+['المستشفيات العامة (أكثر من 200 سرير بكل التخصصات) توجد في…','كل عاصمة محافظة','كل قرية','القاهرة فقط'],
+['من القطاع شبه الحكومي…','هيئة التأمين الصحي وهيئة الرعاية العلاجية وهيئة المستشفيات والمعاهد التعليمية','الصيدليات الخاصة','القابلات التقليديات'],
+['يمثل القطاع الخاص تقريبًا من سعة أسرّة التنويم…','حوالي 16%','حوالي 80%','حوالي 50%'],
+['من مبادرات الحكومة المصرية للوصول للمناطق المحرومة…','العيادات المتنقلة وبناء مرافق جديدة','إغلاق الوحدات الريفية','تقليل الرعاية الأولية']]);
+trEN('hcds',[
+['The healthcare delivery system is defined as…','The network of organizations, institutions, professionals and resources providing healthcare services','A single hospital','The Ministry of Finance only'],
+['Mobilizing funds so people can access affordable care (insurance, taxation, out-of-pocket) is…','Health financing','Health information','Health protection'],
+['Collecting, analyzing and disseminating health data to inform decisions is…','Health information','Health governance','Service provision'],
+['Developing policies, regulations and strategies for equitable access is…','Health governance','Research and innovation','Health promotion'],
+['Vaccination programs and screenings belong to…','Disease prevention','Health financing','Workforce development'],
+['How many components of the health system does the lecture list?','Eight','Three','Twelve'],
+['The initial point of contact for patients is…','Primary care','Specialty care','Long-term care'],
+['Who refers patients to specialists?','Primary care providers','Pharmacists only','Insurance companies'],
+['Electronic health records and telemedicine are examples of…','Health information technology (HIT)','Public health services','Long-term care'],
+['A challenge to effective health care delivery is…','Workforce shortages, especially in rural areas','Specialists in every village','No chronic diseases'],
+['Health services in Egypt are managed, financed and provided by which three sectors?','Government, parastatal and private','Military, tourism and industry','Urban, rural and coastal'],
+['The major provider of primary, preventive and curative care in Egypt is…','The Ministry of Health and Population (MOHP)','The private sector','NGOs only'],
+['Integrated hospitals in rural areas have about…','20 to 60 beds','More than 200 beds','5 beds'],
+['General hospitals (200+ beds, all specialties) are found in…','Every governorate capital','Every village','Cairo only'],
+['The parastatal sector includes…','The Health Insurance Organization, Curative Care Organization and Teaching Hospitals and Institutes Organization','Private pharmacies','Traditional midwives'],
+['The private sector accounts for approximately what share of inpatient bed capacity?','About 16 percent','About 80 percent','About 50 percent'],
+['A government initiative to reach underserved areas in Egypt is…','Deploying mobile clinics and building new facilities','Closing rural units','Reducing primary care']]);
+errands.hcds={ask:tx('قبل ما نتكلم عن النظام الصحي كله: روح لد. سليم (الرعاية الأولية) وهات منه ورقة تحويل مريض للأخصائي.','Before we discuss the whole health system: go to Dr. Salim (primary care) and bring a patient referral slip for a specialist.'),steps:[['د. سليم',tx('د. سليم: المريض بيبدأ عندي في الرعاية الأولية، ولو حالته محتاجة متخصص بحوّله للأخصائي. اتفضل ورقة التحويل.','Dr. Salim: patients start with me in primary care, and if the case needs a specialist I refer them. Here is the referral slip.'),'ورقة التحويل',[tx('مين اللي بيحوّل المريض للأخصائي؟','Who refers the patient to the specialist?'),tx('مقدم الرعاية الأولية','The primary care provider'),tx('الصيدلي فقط','The pharmacist only')]]],done:tx('ممتاز! فهمت إن الرعاية الأولية هي بوابة النظام الصحي. دلوقتي نشوف النظام كله.','Excellent! You see that primary care is the gateway to the health system. Now let us see the whole system.')};
 setInterval(()=>{if(game.started)saveProgress()},4000);
 if(savedProgress&&savedProgress.chosen){const sb=document.querySelector('.choice[data-char="'+savedProgress.chosen+'"]');if(sb)sb.click()}
 function awardMissionBadge(id){
