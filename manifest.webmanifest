@@ -1,0 +1,19 @@
+{
+  "name": "Community Health Nursing RPG",
+  "short_name": "CHN RPG",
+  "description": "Offline-first Community Health Nursing learning RPG",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "landscape",
+  "background_color": "#123b46",
+  "theme_color": "#123b46",
+  "icons": [
+    {
+      "src": "./icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

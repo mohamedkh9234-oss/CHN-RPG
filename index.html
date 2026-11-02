@@ -2,7 +2,7 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<meta name="theme-color" content="#123b46"><title>Community Health Nursing RPG — Open World Prototype — Start Fix</title>
+<meta name="theme-color" content="#123b46"><title>Community Health Nursing RPG</title>
 <style>
 :root{--glass:rgba(9,30,39,.88);--line:#ffffff30;--mint:#64e3c1;--cream:#fff8e9}
 *{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#b7d3d5;color:#f5fbfb;font-family:system-ui,-apple-system,"Segoe UI",sans-serif;touch-action:none}canvas{display:block;width:100%;height:100%}
@@ -39,7 +39,34 @@ h1{margin:0 0 8px;font-size:clamp(22px,4vw,34px)}.sub{color:#547176;line-height:
 @media (max-width:900px) and (orientation:landscape){#brand{top:5px;padding:4px 12px;max-width:48vw}#brand b{font-size:10px}#brand small{font-size:8px}#stats{top:6px;left:7px;padding:5px 8px;font-size:9px;line-height:1.45;min-width:86px}#stamina{top:78px;left:7px;width:112px;padding:5px 8px;font-size:9px}#track{height:6px;margin-top:3px}#minimap{top:6px;right:7px;width:86px;height:86px}#quest{top:98px;right:7px;width:clamp(145px,28vw,240px);font-size:9px;padding:6px 8px}#quest div{font-size:8px!important;margin-top:3px!important;padding-top:3px!important}#cameraHint{right:7px;bottom:93px;font-size:8px;max-width:120px;padding:5px 7px}#controls{bottom:max(6px,env(safe-area-inset-bottom));padding:0 10px}#stick{width:76px;height:76px}#knob{width:34px;height:34px;left:19px;top:19px}#actions{gap:6px}.action{width:48px;height:48px;font-size:10px}#interact{width:58px;height:58px}#desktophelp{display:none}#toast{bottom:74px;font-size:10px}}
 @media (max-width:900px) and (orientation:portrait){body.gameStarted #rotateNotice{display:flex}body.gameStarted #hud,body.gameStarted canvas,body.gameStarted #toast,body.gameStarted #modal{visibility:hidden}body.gameStarted #rotateNotice{visibility:visible}}
 @media (max-height:430px) and (orientation:landscape){#screen .sheet{max-height:98vh;padding:10px 16px}#screen h1{font-size:20px}#screen .sub{font-size:12px;margin-bottom:8px}#avatars{gap:8px}.choice{padding:7px}.avatarArt{height:65px}.primary{margin-top:8px;padding:10px 16px}}
-.previewHair{width:40px!important;height:24px!important;bottom:106px!important;border-radius:50% 50% 25% 25%!important}.choice[data-char=adam] .previewBody{background:#ece6d6!important;border-radius:15px 15px 4px 4px!important}.choice[data-char=adam] .previewHead{background:#c68863!important}.choice[data-char=mariam] .previewHead{background:#f1c9a5!important}#stick{width:136px!important;height:136px!important}#knob{width:60px!important;height:60px!important;left:38px!important;top:38px!important}#actions{gap:10px!important}.action{width:80px!important;height:80px!important;font-size:13px!important}@media (max-height:520px){#stick{width:120px!important;height:120px!important}#knob{width:54px!important;height:54px!important;left:33px!important;top:33px!important}.action{width:68px!important;height:68px!important;font-size:12px!important}}.avatarArt{height:150px!important}.choice{padding:10px!important}.avatarArt canvas{position:absolute;inset:0;width:100%;height:100%}@media (max-height:520px){.avatarArt{height:104px!important}}</style></head>
+.previewHair{width:40px!important;height:24px!important;bottom:106px!important;border-radius:50% 50% 25% 25%!important}.choice[data-char=adam] .previewBody{background:#ece6d6!important;border-radius:15px 15px 4px 4px!important}.choice[data-char=adam] .previewHead{background:#c68863!important}.choice[data-char=mariam] .previewHead{background:#f1c9a5!important}#stick{width:136px!important;height:136px!important}#knob{width:60px!important;height:60px!important;left:38px!important;top:38px!important}#actions{gap:10px!important}.action{width:80px!important;height:80px!important;font-size:13px!important}@media (max-height:520px){#stick{width:120px!important;height:120px!important}#knob{width:54px!important;height:54px!important;left:33px!important;top:33px!important}.action{width:68px!important;height:68px!important;font-size:12px!important}}.avatarArt{height:150px!important}.choice{padding:10px!important}.avatarArt canvas{position:absolute;inset:0;width:100%;height:100%}@media (max-height:520px){.avatarArt{height:104px!important}}</style><!-- Google Analytics 4: Community Health Nursing RPG only -->
+<script>
+(function(){
+  var MEASUREMENT_ID='G-XV404W2HM9';
+  window.dataLayer=window.dataLayer||[];
+  window.gtag=window.gtag||function(){dataLayer.push(arguments)};
+  gtag('js',new Date());
+  gtag('config',MEASUREMENT_ID,{send_page_view:false});
+  var KEY='chn_rpg_ga_queue_v1',ready=false;
+  function readQueue(){try{return JSON.parse(localStorage.getItem(KEY)||'[]')}catch(e){return []}}
+  function writeQueue(q){try{localStorage.setItem(KEY,JSON.stringify(q.slice(-100)))}catch(e){}}
+  function flush(){if(!ready||!navigator.onLine)return;var q=readQueue();if(!q.length)return;writeQueue([]);q.forEach(function(x){gtag('event',x.name,x.params||{})})}
+  window.chnTrack=function(name,params){var item={name:name,params:params||{}};if(ready&&navigator.onLine){gtag('event',item.name,item.params)}else{var q=readQueue();q.push(item);writeQueue(q)}};
+  var script=document.createElement('script');script.async=true;script.src='https://www.googletagmanager.com/gtag/js?id='+MEASUREMENT_ID;
+  script.onload=function(){ready=true;gtag('event','page_view',{page_title:document.title,page_location:location.href});flush()};
+  document.head.appendChild(script);
+  window.addEventListener('online',flush);
+})();
+</script>
+<link rel="manifest" href="./manifest.webmanifest">
+<script>
+if('serviceWorker' in navigator){
+  window.addEventListener('load',function(){
+    navigator.serviceWorker.register('./sw.js').catch(function(err){console.warn('Offline support could not be enabled:',err)});
+  });
+}
+</script>
+</head>
 <body>
 <div id="hud">
  <div id="brand" class="panel"><b>COMMUNITY HEALTH NURSING RPG</b><small>العالم المفتوح • نموذج تجريبي</small></div>
@@ -311,15 +338,11 @@ let chosen='adam';const player=createHumanoid('adam');scene.add(player);player.p
 document.querySelectorAll('.choice').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('.choice').forEach(x=>x.classList.remove('selected'));b.classList.add('selected');chosen=b.dataset.char}));
 const SAVE_KEY='chn_rpg_progress_v1';
 function readSavedProgress(){try{const raw=localStorage.getItem(SAVE_KEY);return raw?JSON.parse(raw):null}catch(e){return null}}
-function saveProgress(){try{localStorage.setItem(SAVE_KEY,JSON.stringify({xp:game.xp,completed:[...game.completed],passedMissions:[...passedMissions],sideDone:[...sideDone],missionIndex,badges:[...earnedBadges],met:[...metNpcs],track:trackId,easked:[...errandAsk],tasks:[...tasksDone],errs:errandStep,efin:[...errandFin],inv:[...inv],chosen,pos:game.started&&game.player?[game.player.position.x,game.player.position.z]:null}))}catch(e){/* current-session play still works if storage is unavailable */}}
-// Keep the same storage key across game updates. Save when the tab is hidden or the page is closed, too.
-addEventListener('pagehide',()=>{try{saveProgress()}catch(e){}});
-document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='hidden'){try{saveProgress()}catch(e){}}});
-
+function saveProgress(){try{localStorage.setItem(SAVE_KEY,JSON.stringify({xp:game.xp,completed:[...game.completed],passedMissions:[...passedMissions],sideDone:[...sideDone],missionIndex,badges:[...earnedBadges],met:[...metNpcs],track:trackId,story:[...storySeen],easked:[...errandAsk],tasks:[...tasksDone],errs:errandStep,efin:[...errandFin],inv:[...inv],chosen,pos:game.started&&game.player?[game.player.position.x,game.player.position.z]:null}))}catch(e){/* current-session play still works if storage is unavailable */}}
 const game={player,started:false,xp:0,stamina:100,completed:new Set(),activeMission:'community',running:false,camYaw:0,camPitch:.24,interacting:false,openDoor:null};
 // Install the start action immediately so later optional lesson/UI code cannot leave the button inert.
 document.getElementById('start').addEventListener('click',async()=>{
- try { if(game.started)return; if(chosen==='mariam' && game.player===player){scene.remove(player);game.player=createHumanoid('mariam');game.player.position.set(0,0,10);scene.add(game.player);document.getElementById('playerName').textContent='مريم';} game.started=true;document.body.classList.add('gameStarted');try{const sv=readSavedProgress();if(sv&&sv.pos&&!game.restored){game.player.position.set(sv.pos[0],0,sv.pos[1]);game.restored=true}}catch(e){}document.getElementById('screen').style.display='none';await requestLandscapeMode();showToast('بدأ الاستكشاف! اقترب من شخصية عليها اسم ودور، اضغط E، تعلّم ثم اجتز الأسئلة المطلوبة لفتح المهمة التالية. المهمات الجانبية متاحة في أي وقت.'); }
+ try { if(game.started)return; if(chosen==='mariam' && game.player===player){scene.remove(player);game.player=createHumanoid('mariam');game.player.position.set(0,0,10);scene.add(game.player);document.getElementById('playerName').textContent='مريم';} game.started=true;document.body.classList.add('gameStarted');if(window.chnTrack)window.chnTrack('game_start',{character:chosen});try{const sv=readSavedProgress();if(sv&&sv.pos&&!game.restored){game.player.position.set(sv.pos[0],0,sv.pos[1]);game.restored=true}}catch(e){}document.getElementById('screen').style.display='none';await requestLandscapeMode();showToast('بدأ الاستكشاف! اقترب من شخصية عليها اسم ودور، اضغط E، تعلّم ثم اجتز 4 من 5 أسئلة لفتح المهمة التالية. المهمات الجانبية متاحة في أي وقت.'); }
  catch(err){ console.error('Start error:',err); const screen=document.getElementById('screen');screen.style.display='flex';const msg=document.getElementById('startError');if(msg)msg.textContent='حصل خطأ أثناء التشغيل. أعد فتح الملف وتأكد من اتصال الإنترنت.'; }
 });
 
@@ -355,9 +378,13 @@ const questDefs=[
  {id:'phc',name:'بوابة الرعاية الصحية الأولية',npc:'د. سليم',zone:'مركز الرعاية الصحية',brief:'تحدث مع د. سليم حول مبادئ الرعاية الصحية الأولية.',q:'أي اختيار يتفق مع خصائص الرعاية الصحية الأولية المذكورة في المحاضرة؟',answers:['مشاركة المجتمع واستخدام التكنولوجيا المناسبة واستمرارية الرعاية','العلاج بالمستشفى فقط دون وقاية','استبعاد التثقيف الصحي'],correct:0,explain:'المحاضرة تذكر مشاركة المجتمع والتكنولوجيا المناسبة واستمرارية الرعاية والتثقيف والوقاية.',x:2,z:-12},
  {id:'mch',name:'دعم صحة الأم والطفل',npc:'الأم هناء',zone:'مركز صحة الأم والطفل',brief:'تعرّف إلى موضوعات خدمات صحة الأم والطفل التي تناولتها المحاضرة.',q:'أي مجموعة من الموضوعات مذكورة في محاضرة MCH؟',answers:['رعاية ما قبل الحمل والحمل والولادة وما بعد الولادة وصحة الطفل','الصيانة المدرسية فقط','إدارة مخازن الأدوية فقط'],correct:0,explain:'المحاضرة تشمل رعاية ما قبل الحمل، وما قبل الولادة، وأثناء الولادة، وما بعدها، وخدمات صحة الطفل.',x:17,z:14},
  {id:'women',name:'جولة صحة المرأة',npc:'الممرضة نور',zone:'مركز صحة المرأة',brief:'ناقش مع الممرضة نور العوامل المؤثرة في صحة المرأة عبر مراحل الحياة.',q:'أي عامل من التالي ورد ضمن العوامل المؤثرة في صحة المرأة في المحاضرة؟',answers:['التعليم والوضع الاقتصادي والمعتقدات الثقافية والتغذية','لون المبنى فقط','نوع الهاتف فقط'],correct:0,explain:'تذكر المحاضرة التعليم والوضع الاقتصادي والمعتقدات الثقافية والتغذية ونمط الحياة وعوامل أخرى.',x:-19,z:-10},
- {id:'hcds',name:tx('نظام تقديم الرعاية الصحية','Health Care Delivery System'),npc:'د. هالة',zone:tx('مديرية الشؤون الصحية','Health Affairs Directorate'),brief:tx('المهمة الأخيرة في القصة: تعلّم مع د. هالة كيف تتكامل مكونات النظام الصحي ووظائفه وتحدياته، والنظام الصحي في مصر.','Final mission of the story: learn with Dr. Hala how the health system\'s components, functions and challenges fit together, and how the Egyptian health system works.'),q:'',answers:[],correct:0,explain:'',x:12,z:-26} ]; let activeMission=0;const missionOrder=['community','school','phc','mch','women','hcds'];let missionIndex=0;const passedMissions=new Set();const sideDone=new Set();
+ {id:'hcds',name:tx('نظام تقديم الرعاية الصحية','Health Care Delivery System'),npc:'د. هالة',zone:tx('مديرية الشؤون الصحية','Health Affairs Directorate'),brief:tx('المهمة الأخيرة في القصة: تعلّم مع د. هالة كيف تتكامل مكونات النظام الصحي ووظائفه وتحدياته، والنظام الصحي في مصر.','Final mission of the story: learn with Dr. Hala how the health system\'s components, functions and challenges fit together, and how the Egyptian health system works.'),q:'',answers:[],correct:0,explain:'',x:12,z:-26},
+ {id:'chr1',name:tx('الوباء الصامت','The Silent Epidemic'),npc:'نبض الذكي',zone:tx('المنطقة الخضراء','Green Park'),brief:tx('الفصل الثاني: تعرّف مع نبض على الأمراض المزمنة وخصائصها وتأثيرها على المجتمع، وأنقذ الحاجة أمينة.','Chapter 2: learn with NABD about chronic diseases, their characteristics and community impact, and help Hajja Amina.'),q:'',answers:[],correct:0,explain:'',x:-26,z:-19},
+ {id:'chr2',name:tx('عوامل الخطر الخفية','Hidden Risk Factors'),npc:'نبض الذكي',zone:tx('المنطقة الخضراء','Green Park'),brief:tx('اجمع عوامل الخطر من أهل الحي واعرف استراتيجيات الوقاية ودور ممرضة صحة المجتمع.','Collect risk factors from the neighbors and learn prevention strategies and the community health nurse role.'),q:'',answers:[],correct:0,explain:'',x:-26,z:-19},
+ {id:'chr3',name:tx('إعادة كتابة المستقبل','Rewriting the Future'),npc:'نبض الذكي',zone:tx('المنطقة الخضراء','Green Park'),brief:tx('اكتشف سر ياسين وتعلّم عملية التمريض ومستويات الوقاية لنظّم يوم الصحة.','Discover Yassin\'s secret and learn the nursing process and levels of prevention to organize Health Day.'),q:'',answers:[],correct:0,explain:'',x:-26,z:-19} ]; let activeMission=0;const missionOrder=['community','school','phc','mch','women','hcds','chr1','chr2','chr3'];let missionIndex=0;const passedMissions=new Set();const sideDone=new Set();
 const savedProgress=readSavedProgress();
 if(savedProgress){game.xp=Number(savedProgress.xp)||0;(savedProgress.completed||[]).forEach(id=>game.completed.add(id));(savedProgress.passedMissions||[]).forEach(id=>passedMissions.add(id));(savedProgress.sideDone||[]).forEach(id=>sideDone.add(id));missionIndex=Math.max(0,Math.min(missionOrder.length,Number(savedProgress.missionIndex)||0));const xpNode=document.getElementById('xp');if(xpNode)xpNode.textContent=game.xp;}
+if(savedProgress&&['adam','mariam'].includes(savedProgress.chosen)){chosen=savedProgress.chosen;document.querySelectorAll('.choice').forEach(b=>b.classList.toggle('selected',b.dataset.char===chosen));}
 function updateQuest(){const def=questDefs.find(q=>q.id===missionOrder[missionIndex]);document.getElementById('questText').textContent=def?`${def.name} — ${def.npc} • Learn, then pass the quiz`:'أنهيت المهمات الأساسية! يمكنك التجول وتنفيذ المهمات الجانبية. | Main missions complete — explore side quests.';document.getElementById('missionCount').textContent=`${Math.min(missionIndex+1,missionOrder.length)}/${missionOrder.length}`;}
 function showToast(msg){const el=document.getElementById('toast');el.textContent=msg;el.style.display='block';clearTimeout(showToast.timer);showToast.timer=setTimeout(()=>el.style.display='none',2200)}
 function openModal(title,body,buttons){const modal=document.getElementById('modal'),c=document.getElementById('modalContent');c.innerHTML='';const h=document.createElement('h2');h.textContent=title;c.append(h);const p=document.createElement('p');p.textContent=body;c.append(p);buttons.forEach(b=>{const btn=document.createElement('button');btn.textContent=b.label;btn.className=b.className||'';btn.onclick=()=>{if(b.action)b.action();};c.append(btn)});modal.style.display='flex';speakNpc(title,body)}
@@ -701,7 +728,7 @@ function errandHook(n){
    if(st[3])openModal(n.name,st[1]+'\n\n❓ '+((lang==='en'&&errqEN[id])||st[3])[0],[((lang==='en'&&errqEN[id])||st[3])[1],((lang==='en'&&errqEN[id])||st[3])[2]].map((t,i)=>({t,i})).sort(()=>Math.random()-.5).map(o=>({label:o.t,action:()=>o.i===0?adv():showToast('فكّر تاني 🤔')})));
    else openModal(n.name,st[1],[{label:'تمام ✔',action:adv}]);
    return true}}
- const def=questDefs.find(d=>d.id===n.quest),E=def&&errands[def.id];
+ const def=defFor(n),E=def&&errands[def.id];
  if(E&&!errandFin.has(def.id)&&!passedMissions.has(def.id)&&unlocked(def.id)){const k=errandStep[def.id]||0;
   if(k>=E.steps.length){errandFin.add(def.id);E.steps.forEach(s=>s[2]&&inv.delete(s[2]));saveProgress();openModal(def.npc,'✅ '+E.done,[{label:'يلا نكمل ▶',action:()=>{closeM();missionDialogue(def)}}]);return true}
   const st=E.steps[k],b=bios[st[0]]||['',''],tn=npcs.find(x=>x.name===st[0]);errandAsk.add(def.id);saveProgress();
@@ -935,6 +962,157 @@ trEN('hcds',[
 ['The private sector accounts for approximately what share of inpatient bed capacity?','About 16 percent','About 80 percent','About 50 percent'],
 ['A government initiative to reach underserved areas in Egypt is…','Deploying mobile clinics and building new facilities','Closing rural units','Reducing primary care']]);
 errands.hcds={ask:tx('قبل ما نتكلم عن النظام الصحي كله: روح لد. سليم (الرعاية الأولية) وهات منه ورقة تحويل مريض للأخصائي.','Before we discuss the whole health system: go to Dr. Salim (primary care) and bring a patient referral slip for a specialist.'),steps:[['د. سليم',tx('د. سليم: المريض بيبدأ عندي في الرعاية الأولية، ولو حالته محتاجة متخصص بحوّله للأخصائي. اتفضل ورقة التحويل.','Dr. Salim: patients start with me in primary care, and if the case needs a specialist I refer them. Here is the referral slip.'),'ورقة التحويل',[tx('مين اللي بيحوّل المريض للأخصائي؟','Who refers the patient to the specialist?'),tx('مقدم الرعاية الأولية','The primary care provider'),tx('الصيدلي فقط','The pharmacist only')]]],done:tx('ممتاز! فهمت إن الرعاية الأولية هي بوابة النظام الصحي. دلوقتي نشوف النظام كله.','Excellent! You see that primary care is the gateway to the health system. Now let us see the whole system.')};
+// ===== Progress tools: export/import file or code so updates never restart the game =====
+function applyProgressText(t){try{t=String(t||'').trim();const j=t[0]==='{'?t:decodeURIComponent(escape(atob(t)));const o=JSON.parse(j);if(!o||typeof o!=='object')throw 0;localStorage.setItem(SAVE_KEY,JSON.stringify(o));location.reload()}catch(e){showToast(tx('الكود أو الملف غير صحيح','Invalid code or file'))}}
+function openProgressTools(){
+ try{saveProgress()}catch(e){}let raw='';try{raw=localStorage.getItem(SAVE_KEY)||''}catch(e){}
+ const code=raw?btoa(unescape(encodeURIComponent(raw))):'';
+ const ov=document.createElement('div');ov.style.cssText='position:fixed;inset:0;z-index:9999;background:#000b;display:flex;align-items:center;justify-content:center;padding:14px;overflow:auto';
+ const bx=document.createElement('div');bx.style.cssText='background:#f7fbfa;color:#173a36;border-radius:18px;padding:16px;max-width:560px;width:100%;max-height:92vh;overflow:auto;line-height:1.7;font-family:inherit';
+ const el=(t,x,c)=>{const e=document.createElement(t);if(x)e.textContent=x;if(c)e.style.cssText=c;bx.append(e);return e};
+ el('h3',tx('💾 حفظ وتحميل التقدم','💾 Save & load progress'),'margin:0 0 6px');
+ el('p',tx('لو نزّلت نسخة جديدة من اللعبة وبدأت من الأول: احفظ تقدمك كملف أو كود من النسخة القديمة، وحمّله في الجديدة. التقدم بيشمل المهمات والشارات والمكان.','If a new version of the game starts from the beginning: save your progress as a file or code from the old version and load it in the new one. It includes missions, badges and position.'),'margin:0 0 8px');
+ const bs='margin:4px;padding:10px 14px;border-radius:12px;border:0;background:#13735f;color:#fff;font-size:15px';
+ const b1=el('button',tx('⬇️ حفظ كملف','⬇️ Save as file'),bs);b1.onclick=()=>{const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([raw||'{}'],{type:'application/json'}));a.download='community_health_progress_'+new Date().toISOString().slice(0,10)+'.json';document.body.append(a);a.click();a.remove()};
+ const inp=document.createElement('input');inp.type='file';inp.accept='.json,.txt,application/json,text/plain';inp.style.display='none';inp.onchange=()=>{const f=inp.files&&inp.files[0];if(!f)return;const r=new FileReader();r.onload=()=>applyProgressText(r.result);r.readAsText(f)};bx.append(inp);
+ const b2=el('button',tx('📂 تحميل من ملف','📂 Load from file'),bs);b2.onclick=()=>inp.click();
+ el('div',tx('أو استخدم الكود:','Or use the code:'),'margin-top:8px;font-weight:700');
+ const ta=el('textarea',null,'width:100%;height:80px;direction:ltr;font-size:12px;box-sizing:border-box');ta.value=code;
+ const b3=el('button',tx('📋 نسخ الكود','📋 Copy code'),bs);b3.onclick=()=>{ta.select();try{navigator.clipboard.writeText(ta.value)}catch(e){document.execCommand('copy')}showToast(tx('اتنسخ','Copied'))};
+ const b4=el('button',tx('✅ تحميل من الكود (الصق الكود فوق)','✅ Load from code (paste it above)'),bs);b4.onclick=()=>applyProgressText(ta.value);
+ const b5=el('button',tx('إغلاق','Close'),bs+';background:#5b6b68');b5.onclick=()=>ov.remove();
+ ov.append(bx);document.body.append(ov)}
+{const pbn=document.getElementById('btnProgress');if(pbn)pbn.onclick=openProgressTools;
+ const st=document.getElementById('start');if(st){const sb=document.createElement('button');sb.type='button';sb.textContent=tx('📂 تحميل / حفظ التقدم','📂 Load / save progress');sb.style.cssText='margin-top:8px;padding:10px 16px;border-radius:14px;border:1px solid #ffffff90;background:#0e3b3a;color:#fff;font-size:14px;display:block;margin-left:auto;margin-right:auto';sb.onclick=openProgressTools;st.after(sb)}}
+// ===== CHAPTER 2 (drama + sci-fi): "The Silent Epidemic" - chronic disease lecture =====
+TR.push(['نبض الذكي','NABD'],['ذكاء اصطناعي من 2049','AI from 2049'],['قراءة الضغط','Blood pressure reading'],['سجل السكر','Sugar log'],['قياس عم عبده',"Uncle Abdo's reading"],['جهاز الإشارة','Signal device'],['خطة يوم الصحة','Health day plan'],['حديقة المنطقة الخضراء','Green Park']);TR.sort((a,b)=>b[0].length-a[0].length);
+const ORB={x:-26,z:-19};
+createNPC('نبض الذكي','mariam',ORB.x+1.6,ORB.z,'ذكاء اصطناعي من 2049','chr1');
+const nabd=npcs[npcs.length-1],nabdLbl=scene.children[scene.children.length-1];
+nabd.root.traverse(o=>{if(o.isMesh&&o.material){const m=o.material.clone();if(m.emissive){m.emissive.setHex(0x2bd4ff);m.emissiveIntensity=.55}m.transparent=true;m.opacity=.8;o.material=m}});
+bios['نبض الذكي']=[tx('مساعد ذكي جاي من عام 2049. في زمنه الحي اتحوّل لشبح بسبب أمراض مزمنة صامتة، وجاي يطلب من ممرضة صحة المجتمع تغيّر المسار.','A smart assistant from the year 2049. In his time the neighborhood became a ghost town because of silent chronic diseases, and he asks a community health nurse to change the course.'),tx('المنطقة الخضراء','The Green Park')];
+const storySeen=new Set((savedProgress&&savedProgress.story)||[]);
+let ch2On=null;const dr=[];
+function mkDrone(cx,cz,R,h,sp){const g=new THREE.Group(),m1=new THREE.MeshStandardMaterial({color:0x2a3340,roughness:.5}),m2=new THREE.MeshBasicMaterial({color:0x58e1ff});
+ g.add(new THREE.Mesh(new THREE.BoxGeometry(.5,.14,.5),m1));
+ for(const [x,z] of [[.3,.3],[-.3,.3],[.3,-.3],[-.3,-.3]]){const r=new THREE.Mesh(new THREE.CylinderGeometry(.16,.16,.02,12),m2);r.position.set(x,.1,z);g.add(r)}
+ const l=new THREE.Mesh(new THREE.SphereGeometry(.07,8,6),m2);l.position.y=-.12;g.add(l);g.visible=false;scene.add(g);dr.push({g,cx,cz,R,h,sp,a:Math.random()*6.28})}
+mkDrone(ORB.x,ORB.z,6,6.5,.5);mkDrone(ORB.x,ORB.z,10,8,-.35);mkDrone(9,-19,9,7,.3);mkDrone(12,-31,7,6,-.4);
+const orb=new THREE.Group();
+{const bm=(c,o)=>new THREE.MeshBasicMaterial({color:c,transparent:true,opacity:o,depthWrite:false});
+ const core=new THREE.Mesh(new THREE.SphereGeometry(.55,16,12),bm(0x58e1ff,.55));core.position.y=1.4;
+ const r1=new THREE.Mesh(new THREE.TorusGeometry(.9,.04,8,36),bm(0x9fefff,.8));r1.position.y=1.4;r1.rotation.x=Math.PI/2;
+ const r2=new THREE.Mesh(new THREE.TorusGeometry(1.15,.035,8,36),bm(0x7fb8ff,.7));r2.position.y=1.4;
+ const beam=new THREE.Mesh(new THREE.CylinderGeometry(.22,.22,7,12),bm(0x58e1ff,.18));beam.position.y=3.5;
+ const base=new THREE.Mesh(new THREE.CylinderGeometry(1.6,1.6,.03,28),bm(0x58e1ff,.35));base.position.y=.03;
+ orb.add(core,r1,r2,beam,base);orb.position.set(ORB.x,0,ORB.z);orb.visible=false;scene.add(orb)}
+function updateChapter2(p){const on=passedMissions.has('hcds'),t=performance.now()/1000;
+ if(on!==ch2On){ch2On=on;orb.visible=on;dr.forEach(d=>{d.g.visible=on});const nx=on?ORB.x+1.6:1000,nz=on?ORB.z:1000;nabd.root.position.x=nx;nabd.root.position.z=nz;nabd.x=nx;nabd.z=nz;nabdLbl.position.x=nx;nabdLbl.position.z=nz;
+  if(scene.background&&scene.background.setHex){scene.background.setHex(on?0x8fa4cf:0xaed0d2);if(scene.fog&&scene.fog.color)scene.fog.color.setHex(on?0x8fa4cf:0xaed0d2)}}
+ if(!on)return;
+ orb.children[1].rotation.z=t*1.2;orb.children[2].rotation.x=t*.9;orb.children[0].scale.setScalar(1+Math.sin(t*3)*.06);nabd.root.position.y=.35+Math.sin(t*2)*.12;
+ dr.forEach(d=>{d.a+=d.sp*.016;d.g.position.set(d.cx+Math.cos(d.a)*d.R,d.h+Math.sin(t*2+d.R)*.2,d.cz+Math.sin(d.a)*d.R);d.g.rotation.y=-d.a})}
+function defFor(n){const L=questDefs.filter(d=>d.npc===n.name&&!passedMissions.has(d.id)&&unlocked(d.id));return L[0]||questDefs.find(d=>d.id===n.quest)}
+// ---- lessons ----
+lessonContent.chr1={title:tx('الوباء الصامت: الأمراض المزمنة','The Silent Epidemic: Chronic Diseases'),sections:[
+['مقدمة وتعريف','الأمراض المزمنة من أهم أسباب الوفاة عالميًا (WHO) ومعظمها غير معدٍ، وهي الأكثر شيوعًا وتكلفة، لذا لازم الوقاية منها والسيطرة عليها ببرامج الصحة العامة والتثقيف وتعزيز نمط الحياة الصحي. المرض المزمن يستمر 3 شهور أو أكتر، وغالبًا لا تمنعه اللقاحات ولا تشفيه الأدوية، ونادرًا ما يُشفى تمامًا.'],
+['خصائص المرض المزمن','دائم، يترك عجزًا متبقيًا، سببه تغيّر مرضي غير قابل للعكس، ويحتاج فترة طويلة من الإشراف والرعاية.'],
+['تأثيره على صحة المجتمع','عبء اقتصادي ومالي على الأسرة والمجتمع، وزيادة معدلات الاعتلال والوفيات، وقد يشعر المريض بالعزلة وعدم القدرة على أداء أدواره الأسرية، وزيادة العمر المتوقع ترفع أعداد كبار السن وبالتالي حالات الأمراض المزمنة.'],
+['أمثلة على الأمراض المزمنة','ألزهايمر وباركنسون، السرطان، أمراض القلب والأوعية، ارتفاع ضغط الدم، الشلل الدماغي، السكري، الأمراض النفسية، الصرع، التهاب الكبد المزمن، وهشاشة العظام.']]};
+lessonEnglish.chr1=[
+['Introduction & definition','Chronic diseases are a leading cause of death worldwide (WHO), mostly non-communicable. They are the most common and costly health problems, so they must be prevented and effectively controlled through public health programs that educate people and promote healthy lifestyles. A chronic disease lasts 3 months or more; it generally cannot be prevented by vaccines or cured by medication, and is rarely cured completely.'],
+['Characteristics of chronic disease','Permanent; leaves residual disability; caused by a non-reversible pathological alteration; needs a long period of supervision and care.'],
+['Impact on community health','An economic and financial burden on the family and community; rising morbidity and mortality; the ill person may feel socially isolated and unable to fill usual family roles; longer life spans increase the number of elderly people and therefore the incidence of chronic diseases.'],
+['Examples of chronic diseases',"Alzheimer's and Parkinson's disease, cancer, cardiovascular diseases, hypertension, cerebral palsy, diabetes mellitus, mental illness, epilepsy, chronic hepatitis and osteoporosis."]];
+lessonContent.chr2={title:tx('عوامل الخطر الخفية','Hidden Risk Factors'),sections:[
+['الأسباب وعوامل الخطر','أسباب الأمراض المزمنة غالبًا غير معروفة، لكن عوامل الخطر تشمل: السن والنوع، عادات الأكل السيئة وعوامل الأيض، قلة النشاط البدني، التدخين والكحول، تلوث الهواء، العوامل الاجتماعية (المستوى الاجتماعي والاقتصادي والتعليم والعِرق)، الوراثة، الولادة المبكرة وإصابات الولادة، والعوامل المهنية.'],
+['استراتيجية الوقاية على مستوى المجتمع','بناء بيئات أصحّ وأأمن، وإزالة الفوارق الصحية، ومساعدة الأفراد على اختيارات صحية، وزيادة تغطية الخدمات الطبية وإتاحتها، وتوسيع الخدمات الوقائية السريرية المثبتة الفائدة.'],
+['ممرضة صحة المجتمع','تعمل مع مرضى الأمراض المزمنة في الزيارات المنزلية ومراكز الأمومة والعيادات الخارجية والمدارس وأماكن العمل، كمحرّك رئيسي يمكّن المريض ويعمل مع المجتمع للتحكم في الأمراض المتفاقمة. أهدافها: حشد وتنسيق جهود الأسرة والمجتمع، الحفاظ على القدرة الوظيفية، دعم النظام العلاجي، ملاحظة وإبلاغ أي أنماط جديدة، وتقليل ضغط المريض والأسرة.']]};
+lessonEnglish.chr2=[
+['Causes and risk factors','The causes of chronic diseases are often unknown, but risk factors include age and gender, bad dietary habits and metabolic risk factors, lack of physical activity, tobacco use and alcohol, air pollution, social factors (socioeconomic status, education, race), heredity, premature birth and birth injury, and occupational factors.'],
+['Prevention strategy at the community level','Build healthier and safer environments; eliminate health disparities; help individuals make healthy choices; increase coverage and access to medical services; expand coverage of clinical preventive services recommended on the basis of proven benefits.'],
+['The community health nurse','Works with chronically ill patients in home visits, MCH centers, outpatient clinics, schools and occupational areas, as a key mobilizer who empowers patients and works with the community to take control of progressive chronic diseases. Objectives: mobilize and coordinate community and family care efforts; maintain the ability to function; support the care regimen; observe and report new patterns or unexpected occurrences; reduce patient and family stress.']];
+lessonContent.chr3={title:tx('إعادة كتابة المستقبل: الوقاية','Rewriting the Future: Prevention'),sections:[
+['عملية التمريض: التقييم والتخطيط','التقييم: جمع بيانات عن طبيعة المرض (السبب والأعراض والتشخيص والعلاج) وتوزيعه حسب النوع والسن والمهنة واتجاهات الناس ووعيهم والاعتلال والوفيات. التخطيط: تحديد الاحتياجات والأولويات وحجم المشكلة، ووضع أهداف معقولة مع فريق الرعاية لاستعادة الوظيفة، وتنمية مهارات الممرضة بالتدريب أو العمل مع كوادر مثل أخصائي العلاج الطبيعي.'],
+['التنفيذ والتقييم','التنفيذ: المساعدة في الاكتشاف المبكر والتشخيص المبكر، وتثقيف الناس بالأعراض وأهمية التشخيص المبكر وطرق السيطرة، وبقيمة الفحص الطبي الدوري. التقييم: تقييم دوري لفعالية الأنشطة التمريضية في تلبية احتياجات المرضى وتحقيق الأهداف.'],
+['الوقاية الأولية','تهدف لتعزيز الصحة ومنع المرض. تعزيز الصحة العام: تشريعات وتنمية مجتمعية، تحسين البيئة (منزل نظيف ومنظم وهادئ وآمن وجيد التهوية، غذاء وماء صحي، صرف مخلفات، بدون تلوث)، وتثقيف عن التغذية والنظافة والرياضة والنوم والراحة ونمط حياة صحي (بدون تدخين وكحول) وفحص سنوي وإدارة التوتر. الحماية النوعية: تحصين، وقاية كيميائية (فيتامينات ومضادات حيوية)، مكملات غذائية للفئات المعرضة، إجراءات دولية، واحتياطات عامة وملابس واقية للعاملين الصحيين.'],
+['الوقاية الثانوية والثالثية والتأهيل','الثانوية: كشف مبكر واكتشاف الحالات بالمسوح وبرامج الفحص (الشامل والانتقائي والانتهازي) والفحص السنوي، ثم علاج مبكر طبي وتمريضي. الثالثية: منع المضاعفات والعجز بالمتابعة المستمرة وعلاج الأعراض المصاحبة والآثار الجانبية مبكرًا. التأهيل: طبي/بدني، مهني، اجتماعي، نفسي، ووظيفي.']]};
+lessonEnglish.chr3=[
+['Nursing process: assessment & planning','Assessment: collect data on the nature of the disease (etiology, signs and symptoms, diagnosis, treatment), its distribution by sex, age and occupation, public attitudes and awareness, and morbidity and mortality. Planning: determine needs and priorities and the extent of the problems; set reasonable goals with the care team to restore function; build her own skills through training or by working with agency staff such as physical therapists.'],
+['Implementation & evaluation','Implementation: help with early case finding and early diagnosis; educate the public about signs and symptoms, the importance of early diagnosis and control measures; educate about the value of periodic medical checkups. Evaluation: periodically evaluate the effectiveness of nursing activities in meeting patients\' needs and achieving the established goals.'],
+['Primary prevention','Aims at health promotion and disease prevention. General health promotion: health legislation and community development; improving the physical environment (clean, organized, quiet, safe, well-ventilated homes; sanitary food and water; waste disposal; no pollution); health education on nutrition, hygiene, exercise, sleep and rest, healthy lifestyle (no smoking or alcohol), annual checkups and stress management. Specific protection: immunization, chemoprophylaxis (vitamins and antibiotics), nutritional supplementation for high-risk groups, international measures, universal precautions and protective clothing for health workers.'],
+['Secondary and tertiary prevention, rehabilitation','Secondary: early detection and case finding through surveys and screening programs (mass, selective, opportunistic) and annual checkups, then early medical and nursing treatment. Tertiary: prevent complications and disability through continuous follow-up and early treatment of associated signs, symptoms and side effects. Rehabilitation: medical or physical, vocational, social, psychological and occupational.']];
+// ---- quizzes (Arabic + English) ----
+quizBank.chr1=[];quizBank.chr2=[];quizBank.chr3=[];
+addQ('chr1',[
+['المرض المزمن هو الذي يستمر…','3 شهور أو أكتر','أسبوعًا واحدًا','يومًا واحدًا'],
+['المرض المزمن غالبًا…','لا تمنعه اللقاحات ولا تشفيه الأدوية تمامًا','يُشفى بحقنة واحدة','تمنعه اللقاحات'],
+['من خصائص المرض المزمن…','تغيّر مرضي غير قابل للعكس ويحتاج رعاية وإشرافًا طويلين','قصير ويزول تمامًا','لا يترك عجزًا أبدًا'],
+['من آثار الأمراض المزمنة على المجتمع…','عبء مالي واقتصادي على الأسرة والمجتمع','انخفاض الاعتلال والوفيات','قلة كبار السن'],
+['المريض المزمن قد يشعر…','بالعزلة وعدم القدرة على أداء أدواره الأسرية','بأنه أكثر اجتماعية دائمًا','بلا أي تغيير في أدواره'],
+['من أمثلة الأمراض المزمنة…','السكري','نزلة البرد العابرة','التسمم الغذائي'],
+['زيادة العمر المتوقع تؤدي إلى…','زيادة كبار السن وارتفاع حالات الأمراض المزمنة','قلة الأمراض المزمنة','لا تأثير']]);
+trEN('chr1',[
+['A chronic disease is one that lasts…','3 months or more','One week','One day'],
+['A chronic disease generally…','Cannot be prevented by vaccines or fully cured by medication','Is cured by a single injection','Is prevented by vaccines'],
+['A characteristic of chronic disease is…','A non-reversible pathological alteration needing long supervision and care','Short and fully reversible','It never leaves disability'],
+['One impact of chronic diseases on the community is…','A financial and economic burden on the family and community','Lower morbidity and mortality','Fewer elderly people'],
+['A chronically ill person may feel…','Socially isolated and unable to fill usual family roles','Always more social','No change in roles'],
+['An example of a chronic disease is…','Diabetes mellitus','A passing common cold','Food poisoning'],
+['Longer life spans lead to…','More elderly people and a higher incidence of chronic diseases','Fewer chronic diseases','No effect']]);
+addQ('chr2',[
+['من عوامل خطر الأمراض المزمنة…','قلة النشاط البدني والتدخين وعادات الأكل السيئة','ممارسة الرياضة','هواء نظيف فقط'],
+['تلوث الهواء يُعد…','عامل خطر','علاجًا','لقاحًا'],
+['السن والنوع والوراثة تُعد…','عوامل خطر','علاجات','إجراءات وقائية'],
+['من استراتيجيات الوقاية على مستوى المجتمع…','بناء بيئات أصحّ وأأمن','تجاهل الفوارق الصحية','تقليل إتاحة الخدمات'],
+['إزالة الفوارق الصحية ومساعدة الأفراد على اختيارات صحية هما…','استراتيجيات وقاية مجتمعية','أسباب للأمراض المزمنة','أنواع تأهيل'],
+['أسباب الأمراض المزمنة…','غالبًا غير معروفة وتوجد عوامل خطر متعددة','دائمًا جرثومة واحدة معروفة','دائمًا تُمنع باللقاح'],
+['أين تعمل ممرضة صحة المجتمع مع مرضى الأمراض المزمنة؟','الزيارات المنزلية ومراكز الأمومة والعيادات الخارجية والمدارس وأماكن العمل','المستشفيات فقط','الصيدلية فقط']]);
+trEN('chr2',[
+['A risk factor for chronic diseases is…','Lack of physical activity, tobacco use and bad dietary habits','Regular exercise','Clean air only'],
+['Air pollution is…','A risk factor','A cure','A vaccine'],
+['Age, gender and heredity are…','Risk factors','Treatments','Preventive measures'],
+['A community-level prevention strategy is…','Building healthier and safer environments','Ignoring health disparities','Reducing access to services'],
+['Eliminating health disparities and helping individuals make healthy choices are…','Community-level prevention strategies','Causes of chronic disease','Types of rehabilitation'],
+['The causes of chronic diseases are…','Often unknown, with several risk factors','Always one known germ','Always prevented by a vaccine'],
+['Where does the community health nurse work with chronically ill patients?','Home visits, MCH centers, outpatient clinics, schools and occupational areas','Only in hospitals','Only in the pharmacy']]);
+addQ('chr3',[
+['من أهداف رعاية مريض المرض المزمن…','حشد وتنسيق جهود الأسرة والمجتمع','عزل المريض','التوقف عن دعم النظام العلاجي'],
+['خطوات عملية التمريض في المحاضرة…','التقييم والتخطيط والتنفيذ والتقييم','التقييم فقط','التشخيص فقط'],
+['في مرحلة التنفيذ تساعد الممرضة في…','الاكتشاف والتشخيص المبكر وتثقيف الناس بالأعراض والفحص الدوري','تجاهل الأعراض','إيقاف الفحوص'],
+['تعزيز الصحة العام (وقاية أولية) يشمل…','تحسين البيئة والتثقيف عن التغذية والنظافة والرياضة والنوم وإدارة التوتر','العلاج المبكر','التأهيل'],
+['الحماية النوعية تشمل…','التحصين والوقاية الكيميائية والمكملات الغذائية والاحتياطات العامة','الفحص السنوي','التأهيل المهني'],
+['برامج الفحص والفحص السنوي تُعد…','وقاية ثانوية (كشف مبكر)','وقاية أولية','وقاية ثالثية'],
+['المتابعة المستمرة لمنع المضاعفات والعجز هي…','وقاية ثالثية','وقاية أولية','وقاية ثانوية'],
+['أنواع التأهيل تشمل…','الطبي والمهني والاجتماعي والنفسي والوظيفي','الطبي فقط','المالي فقط']]);
+trEN('chr3',[
+['An objective of chronic disease care is…','To mobilize and coordinate community and family care efforts','To isolate the patient','To stop supporting the care regimen'],
+['The nursing process steps in the lecture are…','Assessment, planning, implementation, evaluation','Evaluation only','Diagnosis only'],
+['During implementation the nurse helps with…','Early case finding and diagnosis, and educating the public about signs and periodic checkups','Ignoring symptoms','Stopping screening'],
+['General health promotion (primary prevention) includes…','Improving the environment and education on nutrition, hygiene, exercise, sleep and stress management','Early treatment','Rehabilitation'],
+['Specific protection includes…','Immunization, chemoprophylaxis, nutritional supplementation and universal precautions','Annual checkup','Vocational rehabilitation'],
+['Screening programs and annual checkups are…','Secondary prevention (early detection)','Primary prevention','Tertiary prevention'],
+['Continuous follow-up to prevent complications and disability is…','Tertiary prevention','Primary prevention','Secondary prevention'],
+['Types of rehabilitation include…','Medical, vocational, social, psychological and occupational','Medical only','Financial only']]);
+// ---- errands with drama ----
+errands.chr1={ask:tx('نبض: ماسح الإشارات بيقول إن الحاجة أمينة وقعت قرب دار المجتمع! اطمّن عليها بسرعة وارجعلي.','NABD: My scanner says Hajja Amina collapsed near the community house! Check on her quickly and come back.'),steps:[['الحاجة أمينة',tx('الحاجة أمينة (ماسكة راسها): "الحمد لله... ضغطي طلع فجأة. نسيت أدويتي والمركز بعيد. أنا عيانة بالضغط والسكر من سنين، والمرض ده عمره ما بيروح!"','Hajja Amina (holding her head): "Thank God... my blood pressure shot up. I forgot my pills and the center is far. I have had pressure and sugar problems for years, and this illness never goes away!"'),'قراءة الضغط',[tx('إيه اللي بيميز مرض الحاجة أمينة؟','What describes Hajja Amina\'s illness?'),tx('مرض مزمن بيدوم 3 شهور أو أكتر ونادرًا بيتشفى تمامًا','A chronic disease lasting 3 months or more, rarely cured completely'),tx('نزلة برد عابرة','A passing cold')]]],done:tx('أمينة استقرت. المرض المزمن محتاج متابعة طويلة... يلا نفهمه كويس قبل ما الإشارة تضعف.','Amina is stable. A chronic illness needs long follow-up... let us understand it before the signal fades.')};
+errands.chr2={ask:tx('نبض: الإشارة بتضعف! لازم نجمع عوامل الخطر في الحي. روح لأم محمود وعم عبده، وبعدين اسمع خلاف د. هالة.','NABD: The signal is weakening! We must collect the risk factors in the neighborhood. Go to Umm Mahmoud and Uncle Abdo, then hear Dr. Hala\'s dispute.'),steps:[
+['أم محمود',tx('أم محمود: "سكري عالي بس ده نصيبي! مفيش مشي ولا رياضة، وأكل الشارع أسهل من الطبخ."','Umm Mahmoud: "My sugar is high but it is my fate! No walking or exercise, and street food is easier than cooking."'),'سجل السكر',[tx('ده بيوضح أي عامل خطر؟','Which risk factor does this show?'),tx('نمط الحياة: قلة الحركة وعادات الأكل السيئة','Lifestyle: lack of activity and bad dietary habits'),tx('عامل وراثي فقط','A hereditary factor only')]],
+['عم عبده',tx('عم عبده: "ضغطي عالي زي أبويا الله يرحمه، وشغال في ورشة دخان وتلوث، وبدخّن كمان."','Uncle Abdo: "My pressure is high like my late father, I work in a smoky, polluted workshop, and I smoke too."'),'قياس عم عبده',[tx('أي دي عوامل خطر؟','Which are risk factors?'),tx('التدخين والتلوث والوراثة والعوامل المهنية','Smoking, pollution, heredity and occupational factors'),tx('الرياضة اليومية','Daily exercise')]],
+['د. هالة',tx('د. هالة (بتوتر): "لازم نخبّي موضوع نبض لحد ما نتأكد، الناس هتتخض!" ... وبعيد د. سليم بيقول: "من حق الناس تعرف وتحمي نفسها!"','Dr. Hala (tense): "We must hide the NABD matter until we are sure, people will panic!" ... Dr. Salim, from afar: "People have the right to know and protect themselves!"'),null,[tx('القرار الأنسب مجتمعيًا؟','The most appropriate community decision?'),tx('تثقيف الناس وتمكينهم وتقليل الفوارق الصحية','Educate and empower people and reduce health disparities'),tx('إخفاء المعلومات عنهم','Hiding the information from them')]]],
+done:tx('قرارك خلّى الناس شركاء في الحل. ده بالظبط بناء مجتمع أصحّ.','Your decision made people partners in the solution. That is exactly how a healthier community is built.')};
+errands.chr3={ask:tx('نبض: ياسين اختفى من دار المجتمع... بس إشارتي بتوصله! دوّر عليه، وبعدين خد من د. سليم خطة يوم الصحة.','NABD: Yassin disappeared from the community house... but my signal still reaches him! Find him, then get the health day plan from Dr. Salim.'),steps:[
+['ياسين',tx('ياسين (بصوت مخنوق): "أنا اللي استقبلت إشارة نبض أول مرة... بعد ما أبويا مات بمرض مزمن اتأخر اكتشافه. بنيت الجهاز ده علشان محدش تاني يضيّع حد."','Yassin (voice shaking): "I am the one who first received NABD\'s signal... after my father died of a chronic disease found too late. I built this device so no one else loses someone."'),'جهاز الإشارة',[tx('الفحص الدوري والكشف المبكر مستوى وقاية…','Periodic screening and early detection is which level of prevention?'),tx('ثانوي','Secondary'),tx('أولي','Primary')]],
+['د. سليم',tx('د. سليم: "وقّعت خطة يوم الصحة: وقاية أولية (توعية وتطعيم)، كشف مبكر (فحوص)، ومتابعة وتأهيل للمرضى."','Dr. Salim: "I signed the health day plan: primary prevention (awareness and immunization), early detection (screening), and follow-up and rehabilitation for patients."'),'خطة يوم الصحة',[tx('المتابعة المستمرة لمنع المضاعفات والعجز؟','Continuous follow-up to prevent complications and disability?'),tx('وقاية ثالثية','Tertiary prevention'),tx('وقاية أولية','Primary prevention')]]],
+done:tx('تمام! خطة يوم الصحة جاهزة والإشارة بتقوى. دلوقتي نتعلم الدور التمريضي كامل.','Great! The health day plan is ready and the signal is strengthening. Now we learn the full nursing role.')};
+// ---- story cutscenes ----
+function showStory(title,text){const c=document.getElementById('modalContent');c.innerHTML='';const h=document.createElement('h2');h.textContent='🎬 '+title;c.append(h);const p=document.createElement('p');p.style.cssText='white-space:pre-line;line-height:1.9';p.textContent=text;c.append(p);const b=document.createElement('button');b.textContent=tx('كمّل ▶','Continue ▶');b.onclick=()=>{document.getElementById('modal').style.display='none'};c.append(b);document.getElementById('modal').style.display='flex';speak(text,'')}
+const BEATS=[
+['s1',()=>passedMissions.has('hcds'),tx('الفصل الثاني: الوباء الصامت','Chapter 2: The Silent Epidemic'),tx('بعد درس د. هالة حلّ الليل على الحي. فجأة سقط ضوء أزرق في المنطقة الخضراء، وظهرت طائرات صغيرة تحوم فوق الأسطح.\n\nمن قلب الضوء ظهر كائن شفاف يقول: "أنا نبض، مساعد ذكي من عام 2049. في زمني الحي اتحوّل لشبح... أمراض مزمنة صامتة أخدت أهله واحد ورا التاني. محتاج ممرضة صحة مجتمع تغيّر المسار قبل ما الخط الزمني يتجمّد."\n\nوفجأة وصلتك رسالة: الحاجة أمينة وقعت قرب دار المجتمع!','After Dr. Hala\'s lesson, night fell on the neighborhood. Suddenly a blue light fell in the Green Park and small drones began hovering above the rooftops.\n\nFrom the heart of the light a translucent being said: "I am NABD, a smart assistant from the year 2049. In my time the neighborhood became a ghost town... silent chronic diseases took its people one after another. I need a community health nurse to change the course before the timeline freezes."\n\nThen a message reached you: Hajja Amina collapsed near the community house!')],
+['s2',()=>passedMissions.has('chr1'),tx('خلاف في المديرية','A Rift at the Directorate'),tx('الحاجة أمينة بخير، لكنها همست لك: "الصوت الأزرق ده... سمعته في حلم من سنين!"\n\nفي المديرية، د. هالة وd. سليم بيتخانقوا: هي عايزة تخبّي سر نبض كي لا يحصل ذعر، وهو شايف إن من حق الناس تعرف. ونبض بيحذّر: الإشارة الزمنية بتضعف، وفاضل وقت قليل.','Hajja Amina is fine, but she whispers: "That blue voice... I heard it in a dream years ago!"\n\nAt the directorate, Dr. Hala and Dr. Salim are arguing: she wants to hide NABD\'s secret to avoid panic, and he believes people have the right to know. NABD warns: the time signal is weakening and little time remains.')],
+['s3',()=>passedMissions.has('chr2'),tx('تحذير أحمر','Red Alert'),tx('القرار اتاخد: التوعية قوة. لكن الشاشات في السماء بدأت تتشوّش، ونبض بيقول: "الخط الزمني القادم بيتكتب على ثلاث مستويات للوقاية!"\n\nوفي نفس اللحظة اكتشفت إن ياسين اختفى من دار المجتمع... وإن إشارة نبض بتتجه ناحيته.','The decision is made: awareness is power. But the screens in the sky begin to flicker, and NABD says: "The coming timeline is written on three levels of prevention!"\n\nAt that very moment you discover that Yassin has vanished from the community house... and NABD\'s signal points toward him.')],
+['s4',()=>passedMissions.has('chr3'),tx('يوم الصحة: مستقبل جديد','Health Day: A New Future'),tx('يوم الصحة المجتمعي: فحوص وتوعية ومتابعة وتأهيل، والحي كله مشارك. الشاشات في السماء بتعرض مستقبلًا جديدًا: الحي مليان حياة وكبار السن بصحة أحسن.\n\nنبض بيتلاشى بابتسامة: "شكرًا يا ممرضة... الوقاية كتبت مستقبل مختلف." وياسين بيمسك جهازه الصامت، ودمعة فخر في عينه.\n\nبس في الأفق إشارة جديدة بتنبض... (يتبع في الفصل القادم مع المحاضرات الجديدة).','Community Health Day: screening, awareness, follow-up and rehabilitation, with the whole neighborhood taking part. The screens in the sky show a new future: the neighborhood full of life and its elders in better health.\n\nNABD fades with a smile: "Thank you, nurse... prevention wrote a different future." Yassin holds his silent device, a tear of pride in his eye.\n\nBut on the horizon a new signal is pulsing... (to be continued in the next chapter with the new lectures).')]];
+setInterval(()=>{if(!game.started||paused||document.getElementById('modal').style.display==='flex')return;for(const [id,cond,ti,body] of BEATS){if(!storySeen.has(id)&&cond()){storySeen.add(id);saveProgress();showStory(ti,body);break}}},1500);
 setInterval(()=>{if(game.started)saveProgress()},4000);
 if(savedProgress&&savedProgress.chosen){const sb=document.querySelector('.choice[data-char="'+savedProgress.chosen+'"]');if(sb)sb.click()}
 function awardMissionBadge(id){
@@ -1014,7 +1192,7 @@ function openMissionQuiz(def){
   awardMissionBadge(def.id);
   const pass=score>=Math.min(4,questions.length);
   if(pass&&!passedMissions.has(def.id)){
-   passedMissions.add(def.id);game.completed.add(def.id);game.xp+=50;document.getElementById('xp').textContent=game.xp;
+   passedMissions.add(def.id);game.completed.add(def.id);if(window.chnTrack)window.chnTrack('mission_complete',{mission_id:def.id});game.xp+=50;document.getElementById('xp').textContent=game.xp;
    const idx=missionOrder.indexOf(def.id);if(idx===missionIndex)missionIndex=Math.min(missionOrder.length,missionIndex+1);
    updateQuest();saveProgress();
   }
@@ -1067,7 +1245,7 @@ function openComprehensiveExam(){
   next();
  }
  function finish(){
-  const pct=Math.round(firstCorrect/questions.length*100),passed=pct>=90;
+  const pct=Math.round(firstCorrect/questions.length*100),passed=pct>=90;if(window.chnTrack)window.chnTrack('exam_complete',{score_percent:pct,passed:passed});
   const c=document.getElementById('modalContent');c.innerHTML='';
   const h=document.createElement('h2');h.textContent=passed?'🏅 شارة الامتحان الشامل | Comprehensive Badge':'انتهى الامتحان | Exam complete';c.append(h);
   const p=document.createElement('p');p.textContent=`نتيجتك في المحاولة الأولى: ${firstCorrect}/${questions.length} (${pct}%). ${passed?'حققت شرط الشارة: 90% أو أكثر.':'الشارة تتطلب 90% على الأقل في المحاولة الأولى. راجع الدروس وأعد الامتحان.'}`;c.append(p);
@@ -1119,7 +1297,7 @@ function interact(){
    openModal('ياسين — متطوع الحي | Yassin — Community Volunteer',
     lang==='en'?'I am Yassin, a community volunteer. Some families do not know where to find health education. I help connect residents with appropriate services. Talk to me after finishing the community mission to unlock the side exploration activity.':'أنا ياسين، متطوع مع فريق الحي.',
     [{label:'فهمت | Got it',action:()=>document.getElementById('modal').style.display='none'}]);return}
-   if(nearest.quest&&nearest.quest.startsWith('side:')){const side=sideMissions.find(x=>x.id===nearest.quest.split(':')[1]);if(side){sideMissionDialogue(side);return}}const def=questDefs.find(q=>q.id===nearest.quest);if(def){missionDialogue(def);return}openModal(nearest.name,tx(`أهلًا! أنا ${nearest.name}. استكشف الحي وتحدث مع فريق صحة المجتمع.`,`Hello! I am ${nearest.name}. Explore the neighborhood and talk to the community health team.`),[{label:'تمام',action:()=>document.getElementById('modal').style.display='none'}]);return}
+   if(nearest.quest&&nearest.quest.startsWith('side:')){const side=sideMissions.find(x=>x.id===nearest.quest.split(':')[1]);if(side){sideMissionDialogue(side);return}}const def=defFor(nearest);if(def){missionDialogue(def);return}openModal(nearest.name,tx(`أهلًا! أنا ${nearest.name}. استكشف الحي وتحدث مع فريق صحة المجتمع.`,`Hello! I am ${nearest.name}. Explore the neighborhood and talk to the community health team.`),[{label:'تمام',action:()=>document.getElementById('modal').style.display='none'}]);return}
  let nearDoor=null,dd=3.3;for(const d of doors){const dx=p.position.x-d.x,dz=p.position.z-d.z,dist2=Math.hypot(dx,dz);if(dist2<dd){nearDoor=d;dd=dist2}}
  if(nearDoor){nearDoor.open=!nearDoor.open;nearDoor.mesh.rotation.y=nearDoor.open?Math.PI/2:0;const col=colliders.find(c=>c.door===nearDoor);if(col)col.open=nearDoor.open;showToast(nearDoor.open?tx(`فُتح باب ${nearDoor.name}. تقدر تدخل.`,`The door of ${nearDoor.name} is open. You can enter.`):tx(`اتقفل باب ${nearDoor.name}.`,`The door of ${nearDoor.name} is closed.`));return}
  if(p.position.distanceTo(greenMarker.position)<4){openModal(tx('المنطقة الخضراء','Green Park'),tx('دي مساحة استراحة واستكشاف في الحي. تقدر تمشي حول الأشجار والمقاعد، ثم تابع المهام التعليمية عند الشخصيات ذات علامات المهمات.','A rest and exploration area in the neighborhood. Walk around the trees and benches, then continue the learning missions with the characters who have mission markers.'),[{label:tx('استمرار','Continue'),action:()=>document.getElementById('modal').style.display='none'}]);return}
@@ -1179,13 +1357,15 @@ const clock=new THREE.Clock();function animate(){
  for(const q of questPoints){q.rotation.y+=dt*.6;q.children[1].position.y=1.25+Math.sin(performance.now()*.002+q.position.x)*.12}
  for(const a of animatedParts){const t=performance.now()/1000+a.phase;a.rig.scale.y=1+Math.sin(t*2.2)*.008;const cl=(t%4)<.12;for(const e of a.bl||[]){if(e.userData.sy===undefined)e.userData.sy=e.scale.y;e.scale.y=cl?.05:e.userData.sy}if(a.talking||(a.npc&&a.root.position.distanceTo(p.position)<7)){a.arms[1].rotation.x=-2.5+Math.sin(t*6)*.25;a.rig.rotation.z=Math.sin(t*1.3)*.02;a.rig.rotation.x=a.talking?Math.sin(t*9)*.04:0}}
   for(const c of cars){const L=c.axis==='z'?'z':'x';c.g.position[L]+=c.dir*c.sp*dt;if(Math.abs(c.g.position[L])>60)c.g.position[L]=-c.dir*60}
-  updateArrow(p);for(const b of buildings){const inn=Math.abs(p.position.x-b.x)<b.w/2+.2&&Math.abs(p.position.z-b.z)<b.d/2+.2;if(inn!==b.inn){b.inn=inn;b.roof.visible=!inn;b.wm.transparent=inn;b.wm.opacity=inn?.2:1;b.wm.needsUpdate=true}}
+  updateArrow(p);updateChapter2(p);for(const b of buildings){const inn=Math.abs(p.position.x-b.x)<b.w/2+.2&&Math.abs(p.position.z-b.z)<b.d/2+.2;if(inn!==b.inn){b.inn=inn;b.roof.visible=!inn;b.wm.transparent=inn;b.wm.opacity=inn?.2:1;b.wm.needsUpdate=true}}
   for(const wk of walkers){const t=wk.pts[wk.i],dx=t[0]-wk.r.position.x,dz=t[1]-wk.r.position.z,l=Math.hypot(dx,dz);if(l<.4){wk.pts.reverse();wk.i=1}else{wk.r.position.x+=dx/l*wk.sp*dt;wk.r.position.z+=dz/l*wk.sp*dt;wk.r.rotation.y=Math.atan2(dx,dz)}wk.a.walk=true}
   if(((window.__f=(window.__f||0)+1)%6)===0)drawMap(p);renderer.render(scene,camera)
 
 }
 function drawMap(p){const c=document.getElementById('mapCanvas'),ctx=c.getContext('2d'),w=c.width,h=c.height;ctx.clearRect(0,0,w,h);ctx.fillStyle='#7da86b';ctx.fillRect(0,0,w,h);ctx.fillStyle='#747c78';ctx.fillRect(0,h*.45,w,h*.12);ctx.fillRect(w*.45,0,w*.12,h);for(let i=0.12;i<0.9;i+=0.13){ctx.fillRect(0,h*i,w,h*.025);ctx.fillRect(w*i,0,w*.025,h);}ctx.fillStyle='#c4b89e';ctx.fillRect(w*.08,h*.08,w*.18,h*.12);ctx.fillRect(w*.63,h*.15,w*.22,h*.15);ctx.fillRect(w*.12,h*.68,w*.23,h*.16);ctx.fillRect(w*.64,h*.67,w*.23,h*.17);ctx.fillStyle='#2b965f';ctx.fillRect(w*.02,h*.04,w*.22,h*.21);ctx.fillStyle='#fff';ctx.font='bold 13px sans-serif';ctx.fillText('GREEN',w*.04,h*.12);const px=(p.position.x+120)/240*w,pz=(p.position.z+110)/220*h;ctx.fillStyle='#ffdf65';ctx.beginPath();ctx.arc(px,pz,7,0,Math.PI*2);ctx.fill();ctx.strokeStyle='#1c2926';ctx.lineWidth=2;ctx.stroke()}
 updateQuest();
+window.addEventListener('pagehide',saveProgress);
+setInterval(saveProgress,15000);
 
 addEventListener('resize',()=>{camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();renderer.setPixelRatio(Math.min(devicePixelRatio,1.5));renderer.setSize(innerWidth,innerHeight);updatePortraitNotice()});
 animate();
